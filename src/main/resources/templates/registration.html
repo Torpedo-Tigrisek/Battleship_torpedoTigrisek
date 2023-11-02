@@ -8,13 +8,13 @@
 <body>
 
 <h1>Registration</h1>
-<form method="post" action="/register">
+<form method="post" th:action="@{/reg}">
     <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
+    <input th:field="*{newUser.name}" type="text" id="username" name="username" required>
     <br>
 
     <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
+    <input th:field="*{newUser.password}" type="password" id="password" name="password" required>
     <br>
 
     <label for="confirmPassword">Confirm Password:</label>
