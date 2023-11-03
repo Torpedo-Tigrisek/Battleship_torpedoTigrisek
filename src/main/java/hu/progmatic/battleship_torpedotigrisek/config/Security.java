@@ -34,11 +34,12 @@ public class Security {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests()
-                .requestMatchers("/home").authenticated()
-                .requestMatchers(  "/reg")
-                .permitAll().anyRequest().authenticated().and().formLogin()
-                .defaultSuccessUrl("/ ")
+                .authorizeHttpRequests((requests) -> requests // ez a rész engedélyezi az app-ba való belépést login nélkül
+                        .requestMatchers("/", "/home", "/reg").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin()
+                .defaultSuccessUrl("/ ") // ide majd kell egy bejelentkezett felhasználói home page
                 .permitAll()
                 .and()
                 .logout()

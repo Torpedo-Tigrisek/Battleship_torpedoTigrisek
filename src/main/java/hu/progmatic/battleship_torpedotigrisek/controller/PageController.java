@@ -20,6 +20,11 @@ public class PageController {
     public String getHome(){
         return "home";
     }
+
+    @GetMapping("/play")
+    public String getPlay(){
+        return "play";
+    }
     @GetMapping("/reg")
     public String getReg(Model model){
         model.addAttribute("newUser", new User());
