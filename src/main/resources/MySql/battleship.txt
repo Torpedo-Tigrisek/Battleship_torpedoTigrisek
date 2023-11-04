@@ -2,15 +2,15 @@ CREATE DATABASE battleship;
 USE battleship;
 
 CREATE TABLE user (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE user_profile (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
     score INT DEFAULT 0,
     wins INT DEFAULT 0,
     losses INT DEFAULT 0,
