@@ -16,14 +16,19 @@ public class PageController {
     private UserService userService;
     private PasswordEncoder passwordEncoder;
 
-    @GetMapping("/home")
+    @GetMapping({"/home","/", ""})
     public String getHome(){
         return "home";
+    }
+
+    @GetMapping("/play")
+    public String getPlay(){
+        return "play";
     }
     @GetMapping("/reg")
     public String getReg(Model model){
         model.addAttribute("newUser", new User());
-        return "reg";
+        return "registration";
     }
 
     @PostMapping("/reg")
