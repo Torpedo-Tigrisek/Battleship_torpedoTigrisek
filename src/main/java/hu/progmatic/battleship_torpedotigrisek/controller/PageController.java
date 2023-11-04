@@ -40,4 +40,9 @@ public class PageController {
         userService.save(user);
         return "redirect:/login";
     }
+
+    @GetMapping("/login")
+    public String getLogin() {
+        return "login";
+    }
 }
