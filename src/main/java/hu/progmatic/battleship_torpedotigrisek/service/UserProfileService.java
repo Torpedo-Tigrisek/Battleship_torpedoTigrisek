@@ -18,6 +18,6 @@ public class UserProfileService {
 
 
     public User getUserProfileByName(String userName) {
-        return userProfileRepository.findByUserName(userName);
+        return userProfileRepository.findByName(userName);
     }
 }
