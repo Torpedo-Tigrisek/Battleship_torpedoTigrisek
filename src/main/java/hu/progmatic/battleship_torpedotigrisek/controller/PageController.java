@@ -45,4 +45,9 @@ public class PageController {
     public String getLogin() {
         return "login";
     }
+
+    @GetMapping("/leaderboard")
+    public String getLeaderBoard(){
+        return "leaderboard";
+    }
 }

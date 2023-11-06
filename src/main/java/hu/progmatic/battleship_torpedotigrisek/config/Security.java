@@ -35,7 +35,7 @@ public class Security {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests // ez a rész engedélyezi az app-ba való belépést login nélkül
-                        .requestMatchers("/", "/home", "/reg").permitAll()
+                        .requestMatchers("/", "/home", "/reg", "/leaderboard").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin()
