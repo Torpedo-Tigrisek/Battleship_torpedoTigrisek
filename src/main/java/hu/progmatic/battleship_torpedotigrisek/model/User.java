@@ -25,6 +25,15 @@ public class User implements UserDetails {
     private String password;
     @OneToOne(mappedBy = "user")
     private UserProfile userProfile;
+
+    public User(Long id, String name, String email, String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+    public User(){}
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("USER");
