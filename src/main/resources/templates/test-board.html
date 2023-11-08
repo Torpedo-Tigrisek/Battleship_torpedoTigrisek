@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game board</title>
+    <style>
+        .board-container {
+            display: flex;
+            justify-content: space-around;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 10px;
+        }
+        td {
+            width: 30px;
+            height: 30px;
+            border: 1px solid black;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h1>Játékos táblája</h1>
+<table>
+    <tr th:each="row, rowStat : ${myGrid}">
+        <td th:each="cell : ${row}">
+            <div th:text="${cell}">-</div>
+        </td>
+    </tr>
+</table>
+
+<h1>Ellenfél táblája</h1>
+<table>
+    <tr th:each="row, rowStat : ${opponentGrid}">
+        <td th:each="cell : ${row}">
+            <div th:text="${cell}">-</div>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
