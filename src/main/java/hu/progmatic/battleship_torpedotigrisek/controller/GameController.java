@@ -15,7 +15,7 @@ public class GameController {
         Board myBoard = new Board();
         Board opponentBoard = new Board();
 
-        Ship myShip = new Ship(4, 0, 0); // 4 hosszú hajó, elhelyezve (0,0) koordinátától kezdődően
+        Ship myShip = new Ship(4, 0, 0);
         myBoard.placeShip(myShip);
 
         model.addAttribute("myGrid", myBoard.getGrid());

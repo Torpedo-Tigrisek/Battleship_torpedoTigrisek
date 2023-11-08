@@ -6,14 +6,14 @@ public class Ship {
     private int startX;
     private int startY;
 
-    // Constructors, getters, and setters
+
     public Ship(int size, int startX, int startY) {
         this.size = size;
         this.startX = startX;
         this.startY = startY;
     }
 
-    // Getterek és setterek
+
     public int getSize() { return size; }
     public void setSize(int size) { this.size = size; }
     public int getStartX() { return startX; }
