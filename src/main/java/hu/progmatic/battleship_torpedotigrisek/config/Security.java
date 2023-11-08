@@ -35,11 +35,12 @@ public class Security {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests // ez a rész engedélyezi az app-ba való belépést login nélkül
-                        .requestMatchers("/", "/home", "/reg", "/leaderboard").permitAll()
+                        .requestMatchers("/", "/reg", "/leaderboard", "/welcome").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin()
-                .defaultSuccessUrl("/ ") // ide majd kell egy bejelentkezett felhasználói home page
+                .loginPage("/login")
+                .defaultSuccessUrl("/home") // ide majd kell egy bejelentkezett felhasználói home page
                 .permitAll()
                 .and()
                 .logout()

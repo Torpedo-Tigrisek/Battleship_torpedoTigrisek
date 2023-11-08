@@ -16,7 +16,7 @@ public class PageController {
     private UserService userService;
     private PasswordEncoder passwordEncoder;
 
-    @GetMapping({"/home","/", ""})
+    @GetMapping("/home")
     public String getHome(){
         return "home";
     }
@@ -49,5 +49,10 @@ public class PageController {
     @GetMapping("/leaderboard")
     public String getLeaderBoard(){
         return "leaderboard";
+    }
+
+    @GetMapping({"","/","/welcome"})
+    public String getWelcomePage(){
+        return "welcome";
     }
 }
