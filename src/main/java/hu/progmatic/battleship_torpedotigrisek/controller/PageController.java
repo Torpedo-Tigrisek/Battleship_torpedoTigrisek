@@ -37,7 +37,7 @@ public class PageController {
             User user
     ) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.save(user);
+        userService.addUser(user);
         return "redirect:/login";
     }
 

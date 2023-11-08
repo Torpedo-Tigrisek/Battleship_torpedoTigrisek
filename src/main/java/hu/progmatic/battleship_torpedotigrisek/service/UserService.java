@@ -27,7 +27,7 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public void save(User user) {
+    public void addUser(User user) {
         userRepo.save(user);
     }
 

@@ -1,6 +1,7 @@
 package hu.progmatic.battleship_torpedotigrisek.repo;
 
 import hu.progmatic.battleship_torpedotigrisek.model.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,6 +14,11 @@ class UserRepoTest {
 
     @Autowired
     private UserRepo underTest;
+
+    @AfterEach
+    void tearDown(){
+        underTest.deleteAll();
+    }
     @Test
     void itShouldFindUserByName() {
         // given
@@ -25,4 +31,17 @@ class UserRepoTest {
         // then
         assertThat(foundUser).isEqualTo(Optional.of(user));
     }
+
+    @Test
+    void itShouldNotFindUserByName() {
+        // given
+        User user = new User(null, "Andras", "andras@andras.hu", "andras");
+
+        // when
+        Optional<User> foundUser = underTest.findByName(user.getName());
+
+        // then
+        assertThat(foundUser).isEmpty();
+    }
+
 }
