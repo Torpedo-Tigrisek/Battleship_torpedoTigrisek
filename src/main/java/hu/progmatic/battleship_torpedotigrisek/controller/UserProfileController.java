@@ -15,11 +15,11 @@ public class UserProfileController {
 
     private UserProfileService userProfileService;
 
-    @GetMapping("/profile")
-    public String userProfile(Model model, Principal principal) {
-        String userName = principal.getName();
-        User user = userProfileService.getUserProfileByName(userName);
-        model.addAttribute("user", user);
-        return "html/profile";
-    }
+ //   @GetMapping("/profile")
+ //   public String userProfile(Model model, Principal principal) {
+ //       String userName = principal.getName();
+ //       User user = userProfileService.getUserProfileByName(userName);
+ //       model.addAttribute("user", user);
+ //       return "html/profile";
+ //   }
 }
