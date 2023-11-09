@@ -1,6 +1,7 @@
 .board-container {
     display: flex;
     justify-content: space-around;
+    align-items: center;
 }
 
 .player-board,
