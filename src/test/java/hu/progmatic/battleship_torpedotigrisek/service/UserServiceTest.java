@@ -43,7 +43,7 @@ class UserServiceTest {
     }
 
     @Test
-    void canSaveAUser() {
+    void canAddAUser() {
         // given
         User user = new User(null, "Andras", "andras@andras.hu", "andras");
 

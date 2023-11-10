@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+>
 <head>
-  <title>User Profile</title>
+    <meta charset="UTF-8">
+    <title>Profile</title>
 </head>
 <body>
-<a th:href="@{/}">Home</a>
+<a th:href="@{/home}">Home</a>
 <h1>User Profile</h1>
-<p>Name: <span th:text="${user.userName}"></span></p>
-<p>Email: <span th:text="${user.email}"></span></p>
-<p>Score: <span th:text="${userProfile.score}"></span></p>
-<p>Wins: <span th:text="${userProfile.wins}"></span></p>
-<p>Losses: <span th:text="${userProfile.losses}"></span></p>
-<p>Win Ratio: <span th:text="${userProfile.winLossRatio}"></span></p>
+<p>Name: <span sec:authentication="name"></span></p>
+<p>Email: <span sec:authentication="principal.email"></span></p>
+<p>Score: <span sec:authentication="principal.userProfile.score"></span></p>
+<p>Wins: <span sec:authentication="principal.userProfile.wins"></span></p>
+<p>Losses: <span sec:authentication="principal.userProfile.losses"></span></p>
+<p>Win Ratio: <span sec:authentication="principal.userProfile.winLossRatio"></span></p>
 </body>
 </html>

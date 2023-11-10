@@ -1,6 +1,8 @@
 package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.User;
+import hu.progmatic.battleship_torpedotigrisek.model.UserProfile;
+import hu.progmatic.battleship_torpedotigrisek.service.UserProfileService;
 import hu.progmatic.battleship_torpedotigrisek.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @AllArgsConstructor
 public class PageController {
     private UserService userService;
+    private UserProfileService userProfileService;
     private PasswordEncoder passwordEncoder;
 
     @GetMapping({"/home","/", ""})
@@ -34,15 +37,22 @@ public class PageController {
     @PostMapping("/reg")
     public String saveUser(
             @ModelAttribute("newUser")
-            User user
+            User user, UserProfile userProfile
     ) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.addUser(user);
+        userProfile.setUser(user);
+        userProfileService.addUserProfile(userProfile);
         return "redirect:/login";
     }
 
     @GetMapping("/login")
     public String getLogin() {
         return "login";
+    }
+
+    @GetMapping("/profile")
+    public String userProfile() {
+        return "/html/profile";
     }
 }
