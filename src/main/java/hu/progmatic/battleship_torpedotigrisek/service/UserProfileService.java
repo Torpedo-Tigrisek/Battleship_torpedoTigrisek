@@ -3,6 +3,7 @@ package hu.progmatic.battleship_torpedotigrisek.service;
 import hu.progmatic.battleship_torpedotigrisek.model.User;
 
 
+import hu.progmatic.battleship_torpedotigrisek.model.UserProfile;
 import hu.progmatic.battleship_torpedotigrisek.repository.UserProfileRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +16,7 @@ public class UserProfileService {
         this.userProfileRepository = userProfileRepository;
     }
 
-
-
-    public User getUserProfileByName(String userName) {
-        return userProfileRepository.findByName(userName);
+    public void addUserProfile(UserProfile userProfile){
+        userProfileRepository.save(userProfile);
     }
 }
