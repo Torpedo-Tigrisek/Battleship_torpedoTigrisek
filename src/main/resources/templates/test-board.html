@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/css/style.css" type="text/css">
+</head>
+<body>
+<div class="board-container">
+    <div class="player-board">
+        <h1>Játékos táblája</h1>
+        <table>
+            <tr th:each="row, rowStat : ${myGrid}">
+                <td th:each="cell : ${row}" th:text="${cell}">-</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="opponent-board">
+        <h1>Ellenfél táblája</h1>
+        <table>
+            <tr th:each="row, rowStat : ${opponentGrid}">
+                <td th:each="cell : ${row}" th:text="${cell}">-</td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

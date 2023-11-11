@@ -17,7 +17,27 @@ CREATE TABLE user_profile (
     win_loss_ratio DECIMAL(5,2) DEFAULT 0.00,
     FOREIGN KEY (user_id) REFERENCES user(id)
 );
-INSERT INTO user (name, email, password) VALUES
+
+CREATE TABLE ship (
+    ship_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    type VARCHAR(50),
+    length INT,
+    orientation CHAR(1), -- 'H' for horizontal or 'V' for vertical
+    status VARCHAR(50), -- 'intact', 'damaged', 'sunk'
+    owner_id INT, -- Foreign key to the users table
+    game_id INT -- Foreign key to the games table
+);
+
+CREATE TABLE ship_position (
+    ship_id BIGINT,
+    x_coordinate INT,
+    y_coordinate INT,
+    PRIMARY KEY (ship_id, x_coordinate, y_coordinate),
+    FOREIGN KEY (ship_id) REFERENCES ship(ship_id)
+);
+
+
+INSERT INTO user (username, email, password) VALUES
     ('user1', 'user1@example.com', 'password123'),
     ('user2', 'user2@example.com', 'pass456'),
     ('user3', 'user3@example.com', 'secret789'),

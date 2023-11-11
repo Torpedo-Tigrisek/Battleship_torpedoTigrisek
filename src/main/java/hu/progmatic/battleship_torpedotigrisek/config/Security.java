@@ -36,6 +36,7 @@ public class Security {
         http
                 .authorizeHttpRequests((requests) -> requests // ez a rész engedélyezi az app-ba való belépést login nélkül
                         .requestMatchers("/", "/reg", "/leaderboard", "/welcome").permitAll()
+                        .requestMatchers("/", "/home", "/reg","/testBoard").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin()
