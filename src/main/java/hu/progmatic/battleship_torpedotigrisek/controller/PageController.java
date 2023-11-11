@@ -1,6 +1,8 @@
 package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.User;
+import hu.progmatic.battleship_torpedotigrisek.model.UserProfile;
+import hu.progmatic.battleship_torpedotigrisek.service.UserProfileService;
 import hu.progmatic.battleship_torpedotigrisek.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,8 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class PageController {
     private UserService userService;
     private PasswordEncoder passwordEncoder;
+    private final UserProfileService userProfileService;
 
-    @GetMapping("/home")
+    @GetMapping({"","/","/home"})
     public String getHome(){
         return "home";
     }
@@ -38,7 +41,14 @@ public class PageController {
             User user
     ) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.save(user);
+        User savedUser = userService.save(user);
+        UserProfile userProfile = new UserProfile();
+        userProfile.setUser(savedUser);
+        userProfile.setScore(0);
+        userProfile.setWins(0);
+        userProfile.setLosses(0);
+        userProfile.setWinLossRatio(0.0);
+        userProfileService.saveUserProfile(userProfile);
         return "redirect:/login";
     }
 
@@ -47,30 +57,14 @@ public class PageController {
         return "login";
     }
 
-    @PostMapping("/login")
-    public String login (@RequestParam String username,  @RequestParam String password, Model model){
 
-        boolean isAuthenticated = userService.authenticate(username, password);
-
-        if (isAuthenticated){
-            return "redirect:/home";
-        }
-        else {
-            model.addAttribute("loginerror", "Invalid username or password");
-        }
-
-        return "/login";
-
-
-    }
 
     @GetMapping("/leaderboard")
     public String getLeaderBoard(){
         return "leaderboard";
     }
 
-    @GetMapping({"","/","/welcome"})
-    public String getWelcomePage(){
-        return "welcome";
-    }
+
+
+
 }

@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 @Data
 public class User implements UserDetails {
 
@@ -22,6 +22,16 @@ public class User implements UserDetails {
     private String name;
     private String email;
     private String password;
+
+    public User(Long id, String name, String email, String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User() {
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
