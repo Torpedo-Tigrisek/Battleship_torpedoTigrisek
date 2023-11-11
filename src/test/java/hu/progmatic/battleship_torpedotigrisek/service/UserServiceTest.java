@@ -58,7 +58,6 @@ class UserServiceTest {
     void cannotLoadUserByUsername() {
         // given
         String username = "Andras";
-        User user = new User(null, username, "andras@andras.hu", "andras");
 
         // when and then
         UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> underTest.loadUserByUsername(username));
