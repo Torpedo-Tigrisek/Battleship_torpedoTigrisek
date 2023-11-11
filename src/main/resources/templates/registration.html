@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+</head>
+
+<body>
+
+<h1>Registration</h1>
+<form method="post" th:action="@{/reg}">
+    <label for="username">Username:</label>
+    <input th:field="*{newUser.name}" type="text" id="username" name="username" required>
+    <br>
+
+    <label for="password">Email:</label>
+    <input th:field="*{newUser.email}" type="email" id="email" name="email" required>
+    <br>
+
+    <label for="password">Password:</label>
+    <input th:field="*{newUser.password}" type="password" id="password" name="password" required>
+    <br>
+
+    <label for="confirmPassword">Confirm Password:</label>
+    <input type="password" id="confirmPassword" name="confirmPassword" required>
+    <br>
+
+    <input type="submit" value="Register">
+</form>
+
+</body>
+
+</html>

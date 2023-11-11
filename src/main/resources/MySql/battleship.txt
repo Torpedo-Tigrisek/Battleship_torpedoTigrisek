@@ -1,0 +1,32 @@
+CREATE DATABASE battleship;
+USE battleship;
+
+CREATE TABLE user (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE user_profile (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    score INT DEFAULT 0,
+    wins INT DEFAULT 0,
+    losses INT DEFAULT 0,
+    win_loss_ratio DECIMAL(5,2) DEFAULT 0.00,
+    FOREIGN KEY (user_id) REFERENCES user(id)
+);
+INSERT INTO user (username, email, password) VALUES
+    ('user1', 'user1@example.com', 'password123'),
+    ('user2', 'user2@example.com', 'pass456'),
+    ('user3', 'user3@example.com', 'secret789'),
+    ('user4', 'user4@example.com', 'mypassword'),
+    ('user5', 'user5@example.com', 'securepass');
+
+INSERT INTO user_profile (user_id, score, wins, losses, win_loss_ratio) VALUES
+    (1, 120, 15, 5, 3.00),
+    (2, 80, 10, 8, 1.25),
+    (3, 50, 6, 10, 0.60),
+    (4, 200, 20, 2, 10.00),
+    (5, 75, 8, 12, 0.67);
