@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class GameController {
 
     @GetMapping("/testBoard")
-    public String index(Model model) {
+    public String getTestBoard(Model model) {
         Board myBoard = new Board();
         Board opponentBoard = new Board();
 
@@ -22,5 +22,10 @@ public class GameController {
         model.addAttribute("opponentGrid", opponentBoard.getGrid());
 
         return "test-board";
+    }
+
+    @GetMapping("/dinamicboard")
+    public String getDinamycBoard(){
+        return "dinamichtml1";
     }
 }
