@@ -14,10 +14,15 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
+
 public class Security {
+
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public Security(UserService userService) {
+        this.userService = userService;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){return new BCryptPasswordEncoder();}
@@ -41,7 +46,7 @@ public class Security {
                 )
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/") // ide majd kell egy bejelentkezett felhasználói home page
+                .defaultSuccessUrl("/home") // ide majd kell egy bejelentkezett felhasználói home page
                 .permitAll()
                 .and()
                 .logout()

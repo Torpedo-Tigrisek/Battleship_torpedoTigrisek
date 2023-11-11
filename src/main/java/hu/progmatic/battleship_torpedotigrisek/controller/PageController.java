@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @AllArgsConstructor
@@ -44,6 +45,23 @@ public class PageController {
     @GetMapping("/login")
     public String getLogin() {
         return "login";
+    }
+
+    @PostMapping("/login")
+    public String login (@RequestParam String username,  @RequestParam String password, Model model){
+
+        boolean isAuthenticated = userService.authenticate(username, password);
+
+        if (isAuthenticated){
+            return "redirect:/home";
+        }
+        else {
+            model.addAttribute("loginerror", "Invalid username or password");
+        }
+
+        return "/login";
+
+
     }
 
     @GetMapping("/leaderboard")
