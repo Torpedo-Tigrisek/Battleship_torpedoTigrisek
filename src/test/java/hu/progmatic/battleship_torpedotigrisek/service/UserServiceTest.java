@@ -4,14 +4,19 @@ import hu.progmatic.battleship_torpedotigrisek.model.User;
 import hu.progmatic.battleship_torpedotigrisek.repo.UserRepo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 class UserServiceTest {
     @Mock
@@ -37,10 +42,28 @@ class UserServiceTest {
     }
 
     @Test
-    @Disabled
-    void loadUserByUsername() {
-        // secu tesztelés >> még kérdőjel
+    void canLoadUserByUsername() {
+        // given
+        String username = "Andras";
+        User user = new User(null, username, "andras@andras.hu", "andras");
+        when(userRepo.findByName(username)).thenReturn(Optional.of(user));
+
+        // when
+        UserDetails foundUser = underTest.loadUserByUsername(username);
+
+        // then
+        assertEquals(username, foundUser.getUsername());
     }
+    @Test
+    void cannotLoadUserByUsername() {
+        // given
+        String username = "Andras";
+
+        // when and then
+        UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> underTest.loadUserByUsername(username));
+        assertEquals("USER_NOT_FOUND: " + username, exception.getMessage());
+    }
+
 
     @Test
     void canAddAUser() {
