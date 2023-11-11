@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Board with Red X on Click</title>
+    <style>
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(10, 40px);
+            grid-template-rows: repeat(10, 40px);
+            gap: 2px;
+            margin: 20px auto;
+        }
+
+        .cell {
+            width: 40px;
+            height: 40px;
+            border: 1px solid black;
+            background-color: white;
+            text-align: center;
+            line-height: 40px;
+        }
+
+        .red-x {
+            color: red;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="game-board" id="game-board">
+    <div th:each="row : ${#numbers.sequence(1, 10)}">
+        <div th:each="column : ${#numbers.sequence(1, 10)}"
+             class="cell"
+             th:id="'cell-' + ${row} + '-' + ${column}"
+             onclick="placeX(this)">
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    var placedPositions = [];
+
+    function placeX(cell) {
+        var cellId = cell.id;
+
+        // Ellenőrizzük, hogy az adott helyre már lett-e "X" elhelyezve
+        if (placedPositions.includes(cellId)) {
+            alert("Ezen a helyen már van egy X!");
+            return;
+        }
+
+        var redX = document.createElement("span");
+        redX.className = "red-x";
+        redX.textContent = "X";
+        cell.appendChild(redX);
+
+        // Az "X" helyét hozzáadjuk a listához
+        placedPositions.push(cellId);
+        sendXPositionsToServer();
+    }
+
+    function sendXPositionsToServer() {
+        console.clear();
+        placedPositions.forEach(function (position) {
+            var coordinates = position.split("-");
+            var row = coordinates[1];
+            var column = coordinates[2];
+            console.log("Elhelyezett X a következő helyen: Sor: " + row + ", Oszlop: " + column);
+        });
+    }
+</script>
+</body>
+</html>
+
+
+
+
+
+
