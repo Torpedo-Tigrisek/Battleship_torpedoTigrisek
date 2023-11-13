@@ -52,7 +52,7 @@
 
 
 <div class="d-grid gap-2 col-2 mx-auto">
-    <a class="btn btn-primary" type="button" th:href="@{/play}">Play</a>
+    <a sec:authorize="isAuthenticated()" class="btn btn-primary" type="button" th:href="@{/testBoard}">Play</a>
     <a class="btn btn-primary" type="button" th:href="@{/reg}">Registration</a>
     <a class="btn btn-primary" type="button" th:href="@{/login}">Sign in</a>
 

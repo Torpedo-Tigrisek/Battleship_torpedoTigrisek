@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 public class GameController {
 
@@ -43,9 +46,15 @@ public class GameController {
     }
 
     @PostMapping("/placeShip")
-    public String placeShip(Ship ship, Model model) {
+    public String placeShip(Ship ship) {
+        List<Ship> ships = new ArrayList<>();
         playerBoard.placeShip(ship);
-        System.out.println("Hajó elhelyezve: " + ship);
+        System.out.println("Location: " + ship);
+        ships.add(ship);
+        System.out.println(ships);
+
         return "redirect:/testBoard";
     }
+
+
 }
