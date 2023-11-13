@@ -64,6 +64,6 @@ public class PageController {
 
     @GetMapping("/profile")
     public String userProfile() {
-        return "/html/profile";
+        return "/profile";
     }
 }
