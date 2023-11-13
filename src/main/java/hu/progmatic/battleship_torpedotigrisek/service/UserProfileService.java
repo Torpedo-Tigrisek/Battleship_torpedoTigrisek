@@ -20,4 +20,5 @@ public class UserProfileService {
     public User getUserProfileByName(String userName) {
         return userProfileRepository.findByName(userName);
     }
+
 }

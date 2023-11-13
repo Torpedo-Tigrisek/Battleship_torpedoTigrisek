@@ -20,6 +20,6 @@ public class UserProfileController {
         String userName = principal.getName();
         User user = userProfileService.getUserProfileByName(userName);
         model.addAttribute("user", user);
-        return "profile";
+        return "html/profile";
     }
 }
