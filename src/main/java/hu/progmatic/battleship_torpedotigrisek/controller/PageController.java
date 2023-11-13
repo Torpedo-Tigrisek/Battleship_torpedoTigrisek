@@ -11,16 +11,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @AllArgsConstructor
 public class PageController {
     private UserService userService;
+    private UserProfileService userProfileService;
     private PasswordEncoder passwordEncoder;
-    private final UserProfileService userProfileService;
 
-    @GetMapping({"","/","/home"})
+    @GetMapping({"/home","/", ""})
     public String getHome(){
         return "home";
     }
@@ -38,17 +37,12 @@ public class PageController {
     @PostMapping("/reg")
     public String saveUser(
             @ModelAttribute("newUser")
-            User user
+            User user, UserProfile userProfile
     ) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        User savedUser = userService.save(user);
-        UserProfile userProfile = new UserProfile();
-        userProfile.setUser(savedUser);
-        userProfile.setScore(0);
-        userProfile.setWins(0);
-        userProfile.setLosses(0);
-        userProfile.setWinLossRatio(0.0);
-        userProfileService.saveUserProfile(userProfile);
+        userService.addUser(user);
+        userProfile.setUser(user);
+        userProfileService.addUserProfile(userProfile);
         return "redirect:/login";
     }
 
@@ -67,4 +61,9 @@ public class PageController {
 
 
 
+
+    @GetMapping("/profile")
+    public String userProfile() {
+        return "/html/profile";
+    }
 }

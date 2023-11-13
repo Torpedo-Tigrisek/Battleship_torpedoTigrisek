@@ -1,5 +1,6 @@
 package hu.progmatic.battleship_torpedotigrisek.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -22,6 +23,16 @@ public class User implements UserDetails {
     private String name;
     private String email;
     private String password;
+    @OneToOne(mappedBy = "user")
+    private UserProfile userProfile;
+
+    public User(Long id, String name, String email, String password) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+    public User(){}
 
     public User(Long id, String name, String email, String password) {
         this.id = id;
@@ -62,5 +73,16 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", userProfile=" + userProfile +
+                '}';
     }
 }
