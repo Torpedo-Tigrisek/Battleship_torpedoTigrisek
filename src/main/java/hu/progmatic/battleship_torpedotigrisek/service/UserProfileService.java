@@ -19,4 +19,5 @@ public class UserProfileService {
     public void addUserProfile(UserProfile userProfile){
         userProfileRepository.save(userProfile);
     }
+
 }
