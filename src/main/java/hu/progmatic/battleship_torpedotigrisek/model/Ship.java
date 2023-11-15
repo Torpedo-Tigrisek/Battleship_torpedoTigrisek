@@ -12,6 +12,8 @@ public class Ship {
 
 
     public Ship(int size, int startX, int startY, List<Ship> ships) {
+
+
         this.size = size;
         this.startX = startX;
         this.startY = startY;

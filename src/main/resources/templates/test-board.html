@@ -4,67 +4,36 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="/css/testboard.css" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>
 </head>
 <body>
-<!--
-<div class="board-container">
-   <div class="player-board">
-       <h1>Játékos táblája</h1>
-       <table>
-           <tr th:each="row, rowStat : ${myGrid}">
-               <td th:each="cell : ${row}" th:text="${cell}">-</td>
-           </tr>
-       </table>
-   </div>
 
-   <div class="opponent-board">
-       <h1>Ellenfél táblája</h1>
-       <table>
-           <tr th:each="row, rowStat : ${opponentGrid}">
-               <td th:each="cell : ${row}" th:text="${cell}">-</td>
-           </tr>
-       </table>
-   </div>
-</div>
 
-<form id="place-ship-form" th:action="@{/placeShip}" method="post">
-   <label for="shipType">Hajó típusa:</label>
-   <select id="shipType" name="shipType">
-       <option value="Destroyer">Romhárító (3 egység)</option>
-       <option value="Submarine">Tengeralattjáró (4 egység)</option>
 
-    </select>
-
-    <label for="startX">Kezdő X koordináta:</label>
-    <input type="number" id="startX" name="startX" min="0" max="9">
-
-    <label for="startY">Kezdő Y koordináta:</label>
-    <input type="number" id="startY" name="startY" min="0" max="9">
-
-    <label for="orientation">Tájolás:</label>
-    <select id="orientation" name="orientation">
-        <option value="HORIZONTAL">Vízszintes</option>
-        <option value="VERTICAL">Függőleges</option>
-    </select>
-
-    <button type="submit">Hajó elhelyezése</button>
-</form>
-
--->
 <h2>Játéktábla</h2>
 <table>
     <tr th:each="row, rowStat : ${board.grid}">
-        <td th:each="cell : ${row}" th:text="${cell}">~</td>
+        <td th:each="cell, cellStat : ${row}"
+            th:id="${'cell-' + rowStat.index + '-' + cellStat.index}"
+            th:class="${cell == 'S' ? 'table-cell ship' : 'table-cell'}"
+            th:text="${cell}">~</td>
     </tr>
 </table>
 
 <h3>Hajó elhelyezése</h3>
-<form th:action="@{/placeShip}" method="post">
-    Méret: <input type="number" name="size" />
-    X koordináta: <input type="number" name="startX" />
-    Y koordináta: <input type="number" name="startY" />
+
+
+<form id="shipForm" th:action="@{/placeShip}" method="post">
+    Méret: <input type="number" name="size" id="size" />
+    X koordináta: <input type="number" name="startX"  id="startX"/>
+    Y koordináta: <input type="number" name="startY"  id="startY"/>
     <input type="submit" value="Hajó elhelyezése" />
 </form>
+<div class="board-container" id="board-container"></div>
+
+<script type="text/javascript" src="/testBoard.js"></script>
+
 
 </body>
 </html>

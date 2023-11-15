@@ -2,9 +2,25 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+
 }
 
 .player-board,
 .opponent-board {
     margin: 0 10px;
+
+}
+
+
+/* Tábla alap stílusa */
+.table-cell {
+    width: 40px;
+    height: 40px;
+    background-color: aqua;
+    border: 1px solid #000;
+}
+
+/* Hajók stílusa */
+.ship {
+    background-color: black;
 }
