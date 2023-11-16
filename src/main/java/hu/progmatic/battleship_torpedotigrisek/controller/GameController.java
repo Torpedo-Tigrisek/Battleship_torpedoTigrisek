@@ -14,8 +14,9 @@ import java.util.List;
 
 @Controller
 public class GameController {
+private final Board playerBoard = new Board();
+   private List<Ship> ships = new ArrayList<>();
 
-    private Board playerBoard = new Board();
 
     /*
     @GetMapping("/testBoard")
@@ -41,13 +42,15 @@ public class GameController {
 
     @GetMapping("/testBoard")
     public String gameBoard(Model model) {
-        model.addAttribute("board", playerBoard);
+
+        model.addAttribute("playerBoard", playerBoard);
+
         return "test-board";
     }
 
     @PostMapping("/placeShip")
     public String placeShip(Ship ship) {
-        List<Ship> ships = new ArrayList<>();
+
         playerBoard.placeShip(ship);
         System.out.println("Location: " + ship);
         ships.add(ship);

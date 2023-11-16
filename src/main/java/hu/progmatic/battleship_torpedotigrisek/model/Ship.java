@@ -12,9 +12,13 @@ public class Ship {
 
 
     public Ship(int size, int startX, int startY, List<Ship> ships) {
-
-
+    if (size > 0  && size <= 6){
         this.size = size;
+    }else {
+        throw new IllegalArgumentException();
+    }
+
+
         this.startX = startX;
         this.startY = startY;
         this.ships = ships;
