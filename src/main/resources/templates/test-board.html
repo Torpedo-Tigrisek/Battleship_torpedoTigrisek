@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/testboard.css" type="text/css">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>
+</head>
+<body>
+
+<div id="shipContainer">
+    <div id="ship1" class="ship" draggable="true" data-size="3">Hajó 1 (3 egység)</div>
+    <div id="ship2" class="ship" draggable="true" data-size="4">Hajó 2 (4 egység)</div>
+    <!-- További hajók -->
+</div>
+
+<h2>Player's board</h2>
+<table>
+    <tr th:each="row, rowStat : ${playerBoard.grid}">
+        <td th:each="cell, cellStat : ${row}"
+            th:id="${'cell-' + rowStat.index + '-' + cellStat.index}"
+            th:class="${cell == 'S' ? 'table-cell ship' : 'table-cell'}"
+            th:text="${cell}">~</td>
+    </tr>
+</table>
+
+<
+
+<h3>Hajó elhelyezése</h3>
+
+
+<form id="shipForm" th:action="@{/placeShip}" method="post">
+    Méret: <input type="number" name="size" id="size" />
+    X koordináta: <input type="number" name="startX"  id="startX"/>
+    Y koordináta: <input type="number" name="startY"  id="startY"/>
+    <input type="submit" value="Hajó elhelyezése" />
+</form>
+<div class="board-container" id="board-container"></div>
+
+<script type="text/javascript" src="/testBoard.js"></script>
+
+
+</body>
+</html>

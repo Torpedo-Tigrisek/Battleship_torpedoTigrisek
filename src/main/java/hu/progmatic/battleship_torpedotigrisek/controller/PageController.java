@@ -51,8 +51,19 @@ public class PageController {
         return "login";
     }
 
+
+
+    @GetMapping("/leaderboard")
+    public String getLeaderBoard(){
+        return "leaderboard";
+    }
+
+
+
+
+
     @GetMapping("/profile")
     public String userProfile() {
-        return "/html/profile";
+        return "/profile";
     }
 }
