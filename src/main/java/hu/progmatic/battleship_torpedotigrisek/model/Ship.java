@@ -1,52 +1,79 @@
 package hu.progmatic.battleship_torpedotigrisek.model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Ship {
 
+    private ShipType shipType;
     private int size;
     private int startX;
     private int startY;
-
-    private List<Ship> ships;
-
-
-    public Ship(int size, int startX, int startY, List<Ship> ships) {
-    if (size > 0  && size <= 6){
-        this.size = size;
-    }else {
-        throw new IllegalArgumentException();
-    }
+    private String orientation;
 
 
+
+
+    public Ship(ShipType shipType, int startX, int startY, String orientation) {
+        this.shipType = shipType;
+        this.size = shipType.getSize();
         this.startX = startX;
         this.startY = startY;
-        this.ships = ships;
+        this.orientation = orientation;
+
     }
 
 
-    public int getSize() { return size; }
 
-    public void setSize(int size) { this.size = size; }
-    public int getStartX() { return startX; }
-    public void setStartX(int startX) { this.startX = startX; }
-    public int getStartY() { return startY; }
-    public void setStartY(int startY) { this.startY = startY; }
-
-    public List<Ship> getShips() {
-        return ships;
+    public ShipType getShipType() {
+        return shipType;
     }
 
-    public void setShips(List<Ship> ships) {
-        this.ships = ships;
+    public void setShipType(ShipType shipType) {
+        this.shipType = shipType;
+    }
+
+    public int getSize() {
+        return shipType.getSize();
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public int getStartX() {
+        return startX;
+    }
+
+    public void setStartX(int startX) {
+        this.startX = startX;
+    }
+
+    public int getStartY() {
+        return startY;
+    }
+
+    public void setStartY(int startY) {
+        this.startY = startY;
+    }
+
+    public String getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(String orientation) {
+        this.orientation = orientation;
     }
 
     @Override
     public String toString() {
         return "Ship{" +
-                "size=" + size +
+                "shipType=" + shipType +
+                ", size=" + size +
                 ", startX=" + startX +
                 ", startY=" + startY +
+                ", orientation='" + orientation + '\'' +
                 '}';
     }
 }

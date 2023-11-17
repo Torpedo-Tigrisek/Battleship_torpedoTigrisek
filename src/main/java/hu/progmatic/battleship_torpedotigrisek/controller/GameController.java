@@ -3,6 +3,7 @@ package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.Board;
 import hu.progmatic.battleship_torpedotigrisek.model.Ship;
+import hu.progmatic.battleship_torpedotigrisek.model.ShipType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +15,8 @@ import java.util.List;
 
 @Controller
 public class GameController {
-private final Board playerBoard = new Board();
-   private List<Ship> ships = new ArrayList<>();
+    private final Board playerBoard = new Board();
+    private List<Ship> ships = new ArrayList<>();
 
 
     /*
@@ -47,7 +48,7 @@ private final Board playerBoard = new Board();
 
         return "test-board";
     }
-
+/*
     @PostMapping("/placeShip")
     public String placeShip(Ship ship) {
 
@@ -58,6 +59,32 @@ private final Board playerBoard = new Board();
 
         return "redirect:/testBoard";
     }
+
+ */
+
+    /*
+    @PostMapping("/placeShip")
+    public String placeShip(@RequestParam ShipType shipType,
+                            @RequestParam int startX,
+                            @RequestParam int startY,
+                            @RequestParam String orientation) {
+        // Létrehoz egy új hajót a felhasználó által megadott paraméterekkel
+        Ship newShip = new Ship(shipType, startX, startY, orientation);
+
+        // Hozzáadja a hajót a táblához
+        playerBoard.addShip(newShip);
+
+        // Elhelyezi a hajót a táblán
+        playerBoard.placeShip(newShip);
+        ships.add(newShip);
+        System.out.println("Location: " + newShip);
+        System.out.println(ships);
+
+
+        return "redirect:/testBoard";
+    }
+
+     */
 
 
 }

@@ -1,9 +1,11 @@
-document.getElementById("board-container").addEventListener("submit", function(event){
-    event.preventDefault();
-    var size = document.getElementById("size").value;
+document.getElementById("shipForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Megakadályozza az űrlap alapértelmezett beküldési viselkedését
+    var shipType = document.getElementById("shipType").value;
     var startX = document.getElementById("startX").value;
     var startY = document.getElementById("startY").value;
-    placeShip(size, startX, startY);
+    var orientation = document.getElementById("orientation").value;
+
+    placeShip(shipType, parseInt(startX, 10), parseInt(startY, 10), orientation);
 });
 
 var stompClient = null;
@@ -11,37 +13,37 @@ var stompClient = null;
 function connect() {
     var socket = new SockJS('/battleship-websocket');
     stompClient = Stomp.over(socket);
-    stompClient.connect({}, function (frame) {
+    stompClient.connect({}, function(frame) {
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/shipPlaced', function (ship) {
-            // Itt frissítsd a táblát az új hajóval
+        stompClient.subscribe('/topic/shipPlaced', function(boardMessage) {
+            console.log("Board update message:", boardMessage);
+            var board = JSON.parse(boardMessage.body);
+            updateBoard(board);
         });
     });
 }
 
-function placeShip(size, startX, startY) {
-    stompClient.send("/app/placeShip", {}, JSON.stringify({'size': size, 'startX': startX, 'startY': startY}));
+function placeShip(shipType, startX, startY, orientation) {
+    stompClient.send("/app/placeShip", {}, JSON.stringify({
+        'shipType': shipType,
+        'startX': startX,
+        'startY': startY,
+        'orientation': orientation
+    }));
 }
 
 // Hívja meg a connect funkciót az oldal betöltésekor
 connect();
 
-stompClient.subscribe('/topic/shipPlaced', function (shipMessage) {
-    var ship = JSON.parse(shipMessage.body);
-    addShipToBoard(ship);
-});
-
-function addShipToBoard(ship) {
-    for (let i = 0; i < ship.size; i++) {
-        var cell;
-        if (ship.orientation === 'HORIZONTAL') {
-            cell = document.querySelector(`#cell-${ship.startY}-${ship.startX + i}`);
-        } else {
-            cell = document.querySelector(`#cell-${ship.startY + i}-${ship.startX}`);
-        }
-        if (cell) {
-            cell.classList.add('ship');
-        }
-    }
+function updateBoard(board) {
+    board.grid.forEach((row, rowIndex) => {
+        row.forEach((cell, colIndex) => {
+            var cellId = `cell-${rowIndex}-${colIndex}`;
+            var cellElement = document.getElementById(cellId);
+            if (cellElement) {
+                cellElement.textContent = cell;
+                cellElement.className = cell === 'S' ? 'table-cell ship' : 'table-cell';
+            }
+        });
+    });
 }
-
