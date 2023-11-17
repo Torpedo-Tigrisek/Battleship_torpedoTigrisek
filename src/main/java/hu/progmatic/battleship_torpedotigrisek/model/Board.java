@@ -41,5 +41,18 @@ public class Board {
 
     }
 
+    public boolean updateCell(int rowIndex, int colIndex, String newValue) {
+        if (isCellValid(rowIndex, colIndex)) {
+            grid[rowIndex][colIndex] = newValue;
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isCellValid(int rowIndex, int colIndex) {
+        // Ellenőrizzük, hogy a koordináták érvényesek-e (a tábla méretein belül vannak-e)
+        return rowIndex >= 0 && rowIndex < height && colIndex >= 0 && colIndex < width;
+    }
+
 
 }

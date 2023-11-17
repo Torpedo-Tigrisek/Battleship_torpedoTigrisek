@@ -1,4 +1,4 @@
-document.getElementById("shipForm").addEventListener("submit", function(event) {
+document.getElementById("shipForm").addEventListener("submit", function (event) {
     event.preventDefault(); // Megakadályozza az űrlap alapértelmezett beküldési viselkedését
     var shipType = document.getElementById("shipType").value;
     var startX = document.getElementById("startX").value;
@@ -13,9 +13,9 @@ var stompClient = null;
 function connect() {
     var socket = new SockJS('/battleship-websocket');
     stompClient = Stomp.over(socket);
-    stompClient.connect({}, function(frame) {
+    stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/shipPlaced', function(boardMessage) {
+        stompClient.subscribe('/topic/shipPlaced', function (boardMessage) {
             console.log("Board update message:", boardMessage);
             var board = JSON.parse(boardMessage.body);
             updateBoard(board);
@@ -47,3 +47,33 @@ function updateBoard(board) {
         });
     });
 }
+
+// Egy funkció, amely hozzáadja a kattintás eseménykezelőket a tábla minden cellájához.
+function addClickHandlersToCells() {
+    var cells = document.querySelectorAll('.table-cell'); // Az összes cella kiválasztása.
+    cells.forEach(function(cell) {
+        cell.addEventListener('click', function() {
+            // Ellenőrzi, hogy a cella üres-e (nem tartalmaz 'S'-t vagy 'X'-et).
+            if (cell.textContent === '~') {
+                cell.textContent = 'X'; // Ha üres, akkor beír egy 'X'-et.
+            }
+        });
+    });
+}
+
+// Meghívja az addClickHandlersToCells funkciót az oldal betöltésekor.
+document.addEventListener('DOMContentLoaded', addClickHandlersToCells);
+
+cell.addEventListener('click', function() {
+    if (cell.textContent === '~') {
+        // Itt küldj WebSocket üzenetet a szervernek
+        var cellId = cell.getAttribute('id');
+        var [_, rowIndex, colIndex] = cellId.split('-');
+
+        stompClient.send("/app/updateCell", {}, JSON.stringify({
+            rowIndex: parseInt(rowIndex),
+            colIndex: parseInt(colIndex),
+            newValue: 'X'
+        }));
+    }
+});

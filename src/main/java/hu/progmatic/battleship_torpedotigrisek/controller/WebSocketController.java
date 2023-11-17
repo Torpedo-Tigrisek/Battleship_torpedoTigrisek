@@ -1,6 +1,7 @@
 package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.Board;
+import hu.progmatic.battleship_torpedotigrisek.model.CellUpdateRequest;
 import hu.progmatic.battleship_torpedotigrisek.model.Ship;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -47,6 +48,27 @@ public class WebSocketController {
         ships.add(newShip);
         System.out.println(ships);
         return playerBoard;
+    }
+
+    @MessageMapping("/updateCell")
+    @SendTo("/topic/boardUpdate")
+    public Board updateCell(CellUpdateRequest request) {
+        int rowIndex = request.getRowIndex();
+        int colIndex = request.getColIndex();
+        String newValue = request.getNewValue();
+
+        // Feltételezve, hogy van egy olyan metódusod, ami frissíti a táblát és ellenőrzi az érvényességet
+        boolean success = playerBoard.updateCell(rowIndex, colIndex, newValue);
+
+        if (success) {
+            // Ha a frissítés sikerült, küldd vissza a frissített tábla állapotát
+            return playerBoard;
+        } else {
+            // Ha a frissítés nem sikerült (pl. érvénytelen koordináták vagy érték),
+            // kezeld le a hibát megfelelően (pl. küldj vissza hibaüzenetet)
+            // Itt egy egyszerű példa, de valóságban jobb lenne valamilyen hibaobjektumot küldeni
+            return null;
+        }
     }
 
 
