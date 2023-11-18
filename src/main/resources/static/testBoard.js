@@ -54,7 +54,7 @@ function addClickHandlersToCells() {
     cells.forEach(function(cell) {
         cell.addEventListener('click', function() {
             // Ellenőrzi, hogy a cella üres-e (nem tartalmaz 'S'-t vagy 'X'-et).
-            if (cell.textContent === '~') {
+            if (cell.textContent === ' ') {
                 cell.textContent = 'X'; // Ha üres, akkor beír egy 'X'-et.
             }
         });
@@ -65,7 +65,7 @@ function addClickHandlersToCells() {
 document.addEventListener('DOMContentLoaded', addClickHandlersToCells);
 
 cell.addEventListener('click', function() {
-    if (cell.textContent === '~') {
+    if (cell.textContent === ' ') {
         // Itt küldj WebSocket üzenetet a szervernek
         var cellId = cell.getAttribute('id');
         var [_, rowIndex, colIndex] = cellId.split('-');
