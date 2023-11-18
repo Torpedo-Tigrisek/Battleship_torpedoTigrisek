@@ -19,7 +19,7 @@ public class Board {
     public Board() {
         grid = new String[height][width];
         for (String[] row : grid) {
-            Arrays.fill(row, "~");
+            Arrays.fill(row, " ");
         }
     }
 
