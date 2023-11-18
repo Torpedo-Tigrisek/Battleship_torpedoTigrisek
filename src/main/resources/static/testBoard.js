@@ -46,34 +46,33 @@ function updateBoard(board) {
             }
         });
     });
+    addClickHandlersToCells();
 }
 
-// Egy funkció, amely hozzáadja a kattintás eseménykezelőket a tábla minden cellájához.
 function addClickHandlersToCells() {
-    var cells = document.querySelectorAll('.table-cell'); // Az összes cella kiválasztása.
+    var cells = document.querySelectorAll('.table-cell');
     cells.forEach(function(cell) {
         cell.addEventListener('click', function() {
-            // Ellenőrzi, hogy a cella üres-e (nem tartalmaz 'S'-t vagy 'X'-et).
             if (cell.textContent === ' ') {
-                cell.textContent = 'X'; // Ha üres, akkor beír egy 'X'-et.
+                cell.textContent = 'X';
+                sendCellUpdate(cell);
             }
         });
     });
 }
 
-// Meghívja az addClickHandlersToCells funkciót az oldal betöltésekor.
-document.addEventListener('DOMContentLoaded', addClickHandlersToCells);
+function sendCellUpdate(cell) {
+    var cellId = cell.getAttribute('id');
+    var [_, rowIndex, colIndex] = cellId.split('-');
 
-cell.addEventListener('click', function() {
-    if (cell.textContent === ' ') {
-        // Itt küldj WebSocket üzenetet a szervernek
-        var cellId = cell.getAttribute('id');
-        var [_, rowIndex, colIndex] = cellId.split('-');
+    stompClient.send("/app/updateCell", {}, JSON.stringify({
+        rowIndex: parseInt(rowIndex),
+        colIndex: parseInt(colIndex),
+        newValue: 'X'
+    }));
+}
 
-        stompClient.send("/app/updateCell", {}, JSON.stringify({
-            rowIndex: parseInt(rowIndex),
-            colIndex: parseInt(colIndex),
-            newValue: 'X'
-        }));
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    connect();
+    addClickHandlersToCells();
 });
