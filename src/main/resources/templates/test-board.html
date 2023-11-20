@@ -4,53 +4,66 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="/css/testboard.css" type="text/css">
+    <link rel="stylesheet" href="/css/enemysboard.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>
 </head>
-<body >
+<body>
 
 
+<div class="wrapper">
+    <div class="player-board">
+        <h2>Player's board</h2>
+        <table>
+            <tr th:each="row, rowIndex : ${playerBoard.grid}">
+                <td th:each="cell, colIndex : ${row}"
+                    th:id="${'cell-' + rowIndex.index + '-' + colIndex.index}"
+                    th:class="${cell == 'S' ? 'table-cell ship' : 'table-cell'}"
+                    th:text="${cell}"></td>
+            </tr>
+        </table>
+    </div>
 
+    <div class="enemys-board">
+        <h2>Enemy's board</h2>
+        <div class="game-board" id="game-board">
+            <div th:each="row : ${#numbers.sequence(1, 10)}">
+                <div th:each="column : ${#numbers.sequence(1, 10)}"
+                     class="cell"
+                     th:id="${row} + '-' + ${column}"
+                     onclick="placeX(this)">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<h2>Player's board</h2>
-<table>
-    <tr th:each="row, rowIndex : ${playerBoard.grid}">
-        <td th:each="cell, colIndex : ${row}"
-            th:id="${'cell-' + rowIndex.index + '-' + colIndex.index}"
-            th:class="${cell == 'S' ? 'table-cell ship' : 'table-cell'}"
-            th:text="${cell}"></td>
-    </tr>
-</table>
+<div class="ship-instruction">
+    <h3>Hajó elhelyezése</h3>
+    <form id="shipForm" method="post">
+        Hajó típusa:
+        <select name="shipType" id="shipType">
+            <option value="CARRIER">Carrier</option>
+            <option value="CRUISER">Cruiser</option>
+            <option value="SUBMARINE">Submarine</option>
+            <option value="DESTROYER">Destroyer</option>
+            <option value="ATTACKER">Attacker</option>
+        </select>
+        X koordináta: <input type="number" name="startX" id="startX"/>
+        Y koordináta: <input type="number" name="startY" id="startY"/>
+        Orientáció:
+        <select name="orientation" id="orientation">
+            <option value="HORIZONTAL">Horizontal</option>
+            <option value="VERTICAL">Vertical</option>
+        </select>
+        <input type="submit" value="Hajó elhelyezése"/>
+    </form>
+</div>
 
-
-
-<h3>Hajó elhelyezése</h3>
-
-
-<form id="shipForm"  method="post">
-    Hajó típusa:
-    <select name="shipType" id="shipType">
-        <option value="CARRIER">Carrier</option>
-        <option value="CRUISER">Cruiser</option>
-        <option value="SUBMARINE">Submarine</option>
-        <option value="DESTROYER">Destroyer</option>
-        <option value="ATTACKER">Attacker</option>
-    </select>
-    X koordináta: <input type="number" name="startX" id="startX"/>
-    Y koordináta: <input type="number" name="startY" id="startY"/>
-    Orientáció:
-    <select name="orientation" id="orientation">
-        <option value="HORIZONTAL">Horizontal</option>
-        <option value="VERTICAL">Vertical</option>
-    </select>
-    <input type="submit" value="Hajó elhelyezése" />
-</form>
 <div class="board-container" id="board-container"></div>
 
+
 <script type="text/javascript" src="/testBoard.js"></script>
-
-
-
-
+<script src="/enemyshot.js"></script>
 </body>
 </html>

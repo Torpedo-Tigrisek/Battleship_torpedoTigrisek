@@ -46,20 +46,10 @@ public class PageController {
         return "redirect:/login";
     }
 
-    @GetMapping("/login")
-    public String getLogin() {
-        return "login";
-    }
-
-
-
     @GetMapping("/leaderboard")
     public String getLeaderBoard(){
         return "leaderboard";
     }
-
-
-
 
 
     @GetMapping("/profile")

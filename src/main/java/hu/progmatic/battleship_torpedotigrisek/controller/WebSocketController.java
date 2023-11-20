@@ -3,7 +3,9 @@ package hu.progmatic.battleship_torpedotigrisek.controller;
 import hu.progmatic.battleship_torpedotigrisek.model.Board;
 import hu.progmatic.battleship_torpedotigrisek.model.CellUpdateRequest;
 import hu.progmatic.battleship_torpedotigrisek.model.Ship;
+import hu.progmatic.battleship_torpedotigrisek.model.ShotCoordinate;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
@@ -69,6 +71,13 @@ public class WebSocketController {
             // Itt egy egyszerű példa, de valóságban jobb lenne valamilyen hibaobjektumot küldeni
             return null;
         }
+    }
+
+    @MessageMapping("battle.sendShot")
+    @SendTo("/topic/public")
+    public ShotCoordinate sendShot(@Payload ShotCoordinate shotCoordinate){
+        System.out.println(shotCoordinate.getCoordinates());
+        return shotCoordinate;
     }
 
 
