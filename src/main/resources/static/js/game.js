@@ -1,7 +1,7 @@
 var placedPositions = [];
 var stompClient = null;
 
-function connectToGame(event){
+function connectToGame(){
     var socket = new SockJS('/ws');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
@@ -10,7 +10,7 @@ function connectToGame(event){
     });
 
 }
-
+connectToGame();
 
 function placeX(cell) {
     var cellId = cell.id;
@@ -32,19 +32,22 @@ function placeX(cell) {
 }
 
 function sendXPositionsToServer() {
-    placedPositions.forEach(function (position) {
-        var coordinates = position.split("-");
-        var row = coordinates[1];
-        var column = coordinates[2];
-        console.log("Elhelyezett X a következő helyen: Sor: " + row + ", Oszlop: " + column);
-        var shotCoordinates = {
-            coordinates: placedPositions.value
-        }
-        stompClient.send(
-            "/app/battle.sendShot",
-            {},
-            JSON.stringify(shotCoordinates)
-        );
-        console.log("Board update message:", shotCoordinates);
-    });
+  //  placedPositions.forEach(function (position) {
+  //      var coordinates = position.split("-");
+  //  });
+
+    var coordinates = placedPositions.at(placedPositions.length-1).split("-");
+    var row = coordinates[0];
+    var column = coordinates[1];
+    console.log("Elhelyezett X a következő helyen: Sor: " + row + ", Oszlop: " + column);
+
+    var shotCoordinates = {
+        coordinates: coordinates
+    }
+    stompClient.send(
+        "/app/battle.sendShot",
+        {},
+        JSON.stringify(shotCoordinates)
+    );
+    console.log("Shot was sent to server:", shotCoordinates.coordinates);
 }

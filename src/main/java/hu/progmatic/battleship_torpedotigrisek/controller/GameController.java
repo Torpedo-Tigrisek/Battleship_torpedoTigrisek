@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class GameController {
-
     @GetMapping("/game")
     public String gameBoard(Model model) {
         return "game";
@@ -58,4 +59,5 @@ public class GameController {
         System.out.println(shotCoordinate.getCoordinates());
         return shotCoordinate;
     }
+
 }

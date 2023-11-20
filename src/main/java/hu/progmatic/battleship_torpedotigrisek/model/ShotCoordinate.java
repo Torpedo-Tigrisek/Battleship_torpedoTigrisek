@@ -11,5 +11,4 @@ import java.util.List;
 @Builder
 public class ShotCoordinate {
     private List<String> coordinates;
-    // a lövés egy X és egy Y koordinátát tartalmazzon
 }

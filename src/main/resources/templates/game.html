@@ -8,12 +8,12 @@
 
 </head>
 <body>
-<button onclick="connectToGame()"> Connect </button>
+
 <div class="game-board" id="game-board">
     <div th:each="row : ${#numbers.sequence(1, 10)}">
         <div th:each="column : ${#numbers.sequence(1, 10)}"
              class="cell"
-             th:id="'cell-' + ${row} + '-' + ${column}"
+             th:id="${row} + '-' + ${column}"
              onclick="placeX(this)">
         </div>
     </div>
