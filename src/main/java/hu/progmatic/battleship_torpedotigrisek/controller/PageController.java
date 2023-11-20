@@ -23,7 +23,7 @@ public class PageController {
 
     @GetMapping("/play")
     public String getPlay(){
-        return "play";
+        return "game";
     }
     @GetMapping("/reg")
     public String getReg(Model model){
@@ -41,8 +41,8 @@ public class PageController {
         return "redirect:/login";
     }
 
-    @GetMapping("/login")
-    public String getLogin() {
-        return "login";
+    @GetMapping("/position")
+    public String getToPositionGamePage(){
+        return "position";
     }
 }
