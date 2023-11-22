@@ -1,5 +1,6 @@
 var placedPositions = [];
 var stompClient = null;
+var messages = document.querySelector('#messages');
 
 function connectToGame(){
     var socket = new SockJS('/battleship-websocket');
@@ -50,4 +51,10 @@ function sendXPositionsToServer() {
         JSON.stringify(shotCoordinates)
     );
     console.log("Shot was sent to server:", shotCoordinates.coordinates);
+    reply();
+}
+function reply(){
+    stompClient.subscribe('/app/reply', function(message) {
+        messages.append(message.body);
+    });
 }

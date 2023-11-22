@@ -4,10 +4,13 @@ import hu.progmatic.battleship_torpedotigrisek.model.Board;
 import hu.progmatic.battleship_torpedotigrisek.model.CellUpdateRequest;
 import hu.progmatic.battleship_torpedotigrisek.model.Ship;
 import hu.progmatic.battleship_torpedotigrisek.model.ShotCoordinate;
+import hu.progmatic.battleship_torpedotigrisek.service.ShotService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +18,17 @@ import java.util.List;
 @Controller
 public class WebSocketController {
 
+    private ShotService shotService;
     private final Board playerBoard;
     private List<Ship> ships;
 
-    public WebSocketController(Board playerBoard) {
+    public WebSocketController(ShotService shotService, Board playerBoard, List<Ship> ships) {
+        this.shotService = shotService;
         this.playerBoard = playerBoard;
-        this.ships = new ArrayList<>();
+        this.ships = ships;
     }
 
-    /*
+ /*
     @MessageMapping("/placeShip")
     @SendTo("/topic/shipPlaced")
 
@@ -75,10 +80,15 @@ public class WebSocketController {
 
     @MessageMapping("battle.sendShot")
     @SendTo("/topic/public")
-    public ShotCoordinate sendShot(@Payload ShotCoordinate shotCoordinate){
+    public ShotCoordinate sendShot(@Payload ShotCoordinate shotCoordinate) {
         System.out.println(shotCoordinate.getCoordinates());
         return shotCoordinate;
     }
-
+    @SubscribeMapping("/reply")
+    public ShotCoordinate sendGeneratedShot() throws Exception {
+        ShotCoordinate generatedShot = shotService.randomGeneratedShot();
+        System.out.println("generatedShot = " + generatedShot.toString());
+        return generatedShot;
+    }
 
 }

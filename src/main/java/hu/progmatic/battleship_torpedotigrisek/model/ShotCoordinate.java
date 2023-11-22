@@ -13,4 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 public class ShotCoordinate {
     private List<String> coordinates;
+
+    @Override
+    public String toString() {
+        return "ShotCoordinate{" +
+                "coordinates=" + coordinates +
+                '}';
+    }
 }
