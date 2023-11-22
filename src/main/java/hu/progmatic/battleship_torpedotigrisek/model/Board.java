@@ -3,9 +3,7 @@ package hu.progmatic.battleship_torpedotigrisek.model;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Data
 @Component
@@ -53,6 +51,4 @@ public class Board {
         // Ellenőrizzük, hogy a koordináták érvényesek-e (a tábla méretein belül vannak-e)
         return rowIndex >= 0 && rowIndex < height && colIndex >= 0 && colIndex < width;
     }
-
-
 }

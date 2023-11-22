@@ -8,29 +8,34 @@
     <script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>
 </head>
 <body >
-
-
-
-
-<h2>Player's board</h2>
-<table>
-    <tr th:each="row, rowIndex : ${playerBoard.grid}">
-        <td th:each="cell, colIndex : ${row}"
-            th:id="${'cell-' + rowIndex.index + '-' + colIndex.index}"
-            th:class="${cell == 'S' ? 'table-cell ship' : 'table-cell'}"
-            th:text="${cell}"></td>
-    </tr>
-</table>
-
-
-
+<div class="board-container">
+    <div class="board-table player-board">
+        <h2>Player's board</h2>
+        <table>
+            <tr th:each="row, rowIndex : ${playerBoard.grid}">
+                <td th:each="cell, colIndex : ${row}"
+                    th:id="${'cell-' + rowIndex.index + '-' + colIndex.index}"
+                    th:class="${cell == 'S' ? 'table-cell ship' : 'table-cell'}"
+                    th:text="${cell}"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="board-table opponent-board">
+        <h2>Opponent's board</h2>
+        <table>
+            <tr th:each="row, rowIndex : ${enemyBoard.grid}">
+                <td th:each="cell, colIndex : ${row}"
+                    th:id="${'enemy-cell-' + rowIndex.index + '-' + colIndex.index}"
+                    th:class="${cell == 'S' ? 'opponent-table-cell ship' : 'opponent-table-cell'}"
+                    th:text="${cell}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
 <h3>Hajó elhelyezése</h3>
-
-
 <form id="shipForm"  method="post">
     Hajó típusa:
     <select name="shipType" id="shipType">
-        <option value="CARRIER">Carrier</option>
         <option value="CRUISER">Cruiser</option>
         <option value="SUBMARINE">Submarine</option>
         <option value="DESTROYER">Destroyer</option>
@@ -46,11 +51,6 @@
     <input type="submit" value="Hajó elhelyezése" />
 </form>
 <div class="board-container" id="board-container"></div>
-
 <script type="text/javascript" src="/testBoard.js"></script>
-
-
-
-
 </body>
 </html>

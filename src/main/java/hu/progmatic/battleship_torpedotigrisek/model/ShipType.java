@@ -1,7 +1,6 @@
 package hu.progmatic.battleship_torpedotigrisek.model;
 
 public enum ShipType {
-    CARRIER(6),
     CRUISER(4),
     SUBMARINE(3),
     DESTROYER(2),
@@ -15,5 +14,4 @@ public enum ShipType {
     public int getSize() {
         return size;
     }
-
 }
