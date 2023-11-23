@@ -84,7 +84,7 @@ public class WebSocketController {
         System.out.println(shotCoordinate.getCoordinates());
         return shotCoordinate;
     }
-    @SubscribeMapping("/reply")
+    @SubscribeMapping("/generatedShot")
     public ShotCoordinate sendGeneratedShot() throws Exception {
         ShotCoordinate generatedShot = shotService.randomGeneratedShot();
         System.out.println("generatedShot = " + generatedShot.toString());

@@ -77,3 +77,21 @@ cell.addEventListener('click', function() {
         }));
     }
 });
+
+var cell = document.getElementById('cell');
+function placeGeneratedShot(shot){
+
+        // Ellenőrizzük, hogy az adott helyre már lett-e "X" elhelyezve
+    if (placedPositions.includes(shot)) {
+        alert("Ezen a helyen már van egy X!");
+        return;
+    }
+    var cell = document.createElement("div");
+    cell.className = "cell";
+
+    var blueX = document.createElement("span");
+    blueX.className = "blue-x";
+    blueX.textContent = "X";
+
+    cell.appendChild(blueX);
+}
