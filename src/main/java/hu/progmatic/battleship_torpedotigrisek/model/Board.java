@@ -56,20 +56,20 @@ public class Board {
         return rowIndex >= 0 && rowIndex < height && colIndex >= 0 && colIndex < width;
     }
 
-    public void placeShipsRandomly(List<EnemyShip> ships) {
+    public void placeEnemyShipsRandomly(List<EnemyShip> ships) {
         for (EnemyShip ship : ships) {
-            placeRandomShip(ship);
+            placeRandomEnemyShip(ship);
         }
     }
 
-    public boolean placeRandomShip(EnemyShip ship) {
+    public boolean placeRandomEnemyShip(EnemyShip ship) {
         int tries = 0;
         while (tries < 100) {
             int row = (int) (Math.random() * 10);
             int col = (int) (Math.random() * 10);
             boolean orientation = Math.random() < 0.5; // true: HORIZONTAL, false: VERTICAL
 
-            if (canPlaceShip(row, col, ship, orientation)) {
+            if (canPlaceEnemyShip(row, col, ship, orientation)) {
                 ship.setOrientation(orientation);
 
                 for (int i = 0; i < ship.getSize(); i++) {
@@ -80,7 +80,9 @@ public class Board {
                     }
                 }
 
-                placeEnemyShip(ship);
+                placeEnemyShip(ship); // Elhelyezzük a hajót a táblán
+                addShip(ship); // Hozzáadjuk az EnemyShip-et a shipMap-hez
+
                 return true;
             }
             tries++;
@@ -88,7 +90,8 @@ public class Board {
         return false;
     }
 
-    public boolean canPlaceShip(int row, int col, EnemyShip ship, boolean orientation) {
+
+    public boolean canPlaceEnemyShip(int row, int col, EnemyShip ship, boolean orientation) {
         List<Coordinate> coordinates = ship.getCoordinates();
 
         for (Coordinate coordinate : coordinates) {

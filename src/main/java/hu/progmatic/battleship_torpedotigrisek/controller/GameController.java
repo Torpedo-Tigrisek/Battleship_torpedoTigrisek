@@ -22,7 +22,7 @@ public class GameController {
 
     private void initializeEnemyShips() {
         List<EnemyShip> enemyShips = generateEnemyShips();
-        enemyBoard.placeShipsRandomly(enemyShips);
+        enemyBoard.placeEnemyShipsRandomly(enemyShips);
     }
 
     private List<EnemyShip> generateEnemyShips() {
