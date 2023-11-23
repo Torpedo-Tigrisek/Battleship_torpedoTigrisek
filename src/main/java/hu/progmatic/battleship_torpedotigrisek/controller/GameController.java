@@ -2,37 +2,29 @@ package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.Board;
 import hu.progmatic.battleship_torpedotigrisek.model.EnemyShip;
-import hu.progmatic.battleship_torpedotigrisek.model.ShipType;
+import hu.progmatic.battleship_torpedotigrisek.service.ShipService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class GameController {
     private final Board playerBoard = new Board();
     private final Board enemyBoard = new Board();
-    private ShipType[] shipTypes = {ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER};
+    private final ShipService shipService;
 
-    public GameController() {
+    @Autowired
+    public GameController(ShipService shipService) {
+        this.shipService = shipService;
         initializeEnemyShips();
     }
 
     private void initializeEnemyShips() {
-        List<EnemyShip> enemyShips = generateEnemyShips();
+        List<EnemyShip> enemyShips = shipService.initializeEnemyShips();
         enemyBoard.placeEnemyShipsRandomly(enemyShips);
-    }
-
-    private List<EnemyShip> generateEnemyShips() {
-        List<EnemyShip> enemyShips = new ArrayList<>();
-        for (ShipType type : shipTypes) {
-            boolean orientation = Math.random() < 0.5; // true: HORIZONTAL, false: VERTICAL
-            EnemyShip enemyShip = new EnemyShip(type, type.getSize(), orientation);
-            enemyShips.add(enemyShip);
-        }
-        return enemyShips;
     }
 
     @GetMapping("/dinamicboard")
