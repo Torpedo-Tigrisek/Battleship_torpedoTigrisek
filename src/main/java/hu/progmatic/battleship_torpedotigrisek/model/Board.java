@@ -94,15 +94,20 @@ public class Board {
     public boolean canPlaceEnemyShip(int row, int col, EnemyShip ship, boolean orientation) {
         List<Coordinate> coordinates = ship.getCoordinates();
 
-        for (Coordinate coordinate : coordinates) {
-            int x = coordinate.getX();
-            int y = coordinate.getY();
+        for (int i = 0; i < ship.getSize(); i++) {
+            int x = row;
+            int y = col;
+
+            if (orientation) {
+                y += i;
+            } else {
+                x += i;
+            }
 
             if (!isCellValid(x, y) || !grid[x][y].equals(" ")) {
                 return false;
             }
         }
-
         return true;
     }
 }
