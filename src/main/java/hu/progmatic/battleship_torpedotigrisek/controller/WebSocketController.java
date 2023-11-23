@@ -2,6 +2,7 @@ package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.Board;
 import hu.progmatic.battleship_torpedotigrisek.model.CellUpdateRequest;
+import hu.progmatic.battleship_torpedotigrisek.model.Coordinate;
 import hu.progmatic.battleship_torpedotigrisek.model.Ship;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -26,7 +27,9 @@ public class WebSocketController {
     @MessageMapping("/placeShip")
     @SendTo("/topic/shipPlaced")
     public Board handleShipPlacement(Ship placement) {
+
         Ship newShip = new Ship(placement.getShipType(), placement.getStartX(), placement.getStartY(), placement.getOrientation());
+
         playerBoard.placeShip(newShip);
         ships.add(newShip);
         System.out.println(ships);

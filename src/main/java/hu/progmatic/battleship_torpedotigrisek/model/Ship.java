@@ -1,8 +1,10 @@
 package hu.progmatic.battleship_torpedotigrisek.model;
 
-import java.util.HashMap;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Ship {
 
@@ -77,3 +79,4 @@ public class Ship {
                 '}';
     }
 }
+
