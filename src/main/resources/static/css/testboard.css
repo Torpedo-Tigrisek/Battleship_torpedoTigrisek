@@ -35,3 +35,14 @@ body {
     height: 10px;
     background-color: #5e8a85;
 }
+
+.red-x {
+    color: red;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.blue-x {
+    color: blue;
+    font-size: 24px;
+}
