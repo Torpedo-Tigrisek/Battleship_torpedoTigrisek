@@ -1,11 +1,11 @@
 package hu.progmatic.battleship_torpedotigrisek.controller;
 
-import hu.progmatic.battleship_torpedotigrisek.model.Board;
-import hu.progmatic.battleship_torpedotigrisek.model.CellUpdateRequest;
-import hu.progmatic.battleship_torpedotigrisek.model.Coordinate;
-import hu.progmatic.battleship_torpedotigrisek.model.Ship;
+import hu.progmatic.battleship_torpedotigrisek.model.*;
+import hu.progmatic.battleship_torpedotigrisek.service.ShotService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
@@ -17,11 +17,13 @@ public class WebSocketController {
 
     private final Board playerBoard;
     private List<Ship> ships;
+    private ShotService shotService;
 
 
-    public WebSocketController(Board playerBoard) {
+    public WebSocketController(Board playerBoard, ShotService shotService) {
         this.playerBoard = playerBoard;
         this.ships = new ArrayList<>();
+        this.shotService = shotService;
     }
 
     @MessageMapping("/placeShip")
@@ -55,4 +57,19 @@ public class WebSocketController {
             return null;
         }
     }
+
+
+    @MessageMapping("battle.sendShot")
+    @SendTo("/topic/public")
+    public ShotCoordinate sendShot(@Payload ShotCoordinate shotCoordinate) {
+        System.out.println(shotCoordinate.getCoordinates());
+        return shotCoordinate;
+    }
+    @SubscribeMapping("/generatedShot")
+    public ShotCoordinate sendGeneratedShot() throws Exception {
+        ShotCoordinate generatedShot = shotService.randomGeneratedShot();
+        System.out.println("generatedShot = " + generatedShot.toString());
+        return generatedShot;
+    }
+
 }
