@@ -2,7 +2,8 @@ body {
     margin: 0;
     padding: 0;
     background-image: url('https://i.pinimg.com/originals/de/4c/50/de4c50f62f62b9348d7c1af0f78b1056.jpg');
-    background-size: cover;
+    background-size: 100% 100%; /* 16:9-es arány megőrzése */
+    background-attachment: fixed; /* Háttérkép fix pozícióban */
 }
 
 .board-container {
