@@ -23,9 +23,12 @@ function placeBlueXAutomatically(message) {
     //    cell.className ="table-cell ship"
 
         cell.appendChild(blueX);
+        // Set the background color to red if it's a hit
+        if (cell.textContent.includes("S")) {
+            cell.style.backgroundColor = "red";
+        }
 
         generatedPositions.push(cellId);
-
 
     }, 2000); // késleltetés
 }
