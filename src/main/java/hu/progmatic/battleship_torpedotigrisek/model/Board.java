@@ -42,6 +42,7 @@ public class Board {
 
     public void addShip(EnemyShip ship) {
         shipMap.put(ship.getShipType(), ship);
+        // (BUBU) Save to DB
     }
 
     public boolean updateCell(int rowIndex, int colIndex, String newValue) {
@@ -109,5 +110,9 @@ public class Board {
             }
         }
         return true;
+    }
+
+    public Map<ShipType, EnemyShip> getShipMap() {
+        return shipMap;
     }
 }

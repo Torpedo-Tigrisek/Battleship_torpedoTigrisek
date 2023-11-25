@@ -21,6 +21,16 @@ public class EnemyShip {
         this.coordinates = new ArrayList<>();
     }
 
+    public Boolean SaveEnemyShip() {
+        // (BUBU) Save to DB (insert)
+        return true;
+    }
+
+    public static EnemyShip getEnemyShipById(Integer id) {
+        // (BUBU) Get from DB (select * from ships where id = ? VALUES)
+        return new EnemyShip(ShipType.ATTACKER, 3, true);
+    }
+
     public void addCoordinate(int x, int y) {
         coordinates.add(new Coordinate(x, y));
     }

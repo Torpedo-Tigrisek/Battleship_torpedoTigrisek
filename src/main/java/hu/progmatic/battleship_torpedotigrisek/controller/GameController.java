@@ -1,12 +1,14 @@
 package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.Board;
+import hu.progmatic.battleship_torpedotigrisek.model.Coordinate;
 import hu.progmatic.battleship_torpedotigrisek.model.EnemyShip;
 import hu.progmatic.battleship_torpedotigrisek.service.ShipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 

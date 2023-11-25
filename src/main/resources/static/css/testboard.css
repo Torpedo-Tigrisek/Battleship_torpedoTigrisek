@@ -36,3 +36,22 @@ body {
     height: 10px;
     background-color: #5e8a85;
 }
+.play-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    /* Egyéb stílusok hozzáadása a gombhoz a játék stílusához igazodva */
+}
+
+/* A gomb stílusa, a játékhoz igazítva */
+#startGameButton {
+    background-color: #5e8a85;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    /* Egyéb stílusok hozzáadása a gombhoz a játék stílusához igazodva */
+}
