@@ -16,6 +16,7 @@ public class Board {
     private String[][] grid;
     private Map<ShipType,Ship> shipMap= new HashMap<>();
 
+
     public Board() {
         grid = new String[height][width];
         for (String[] row : grid) {
@@ -23,15 +24,27 @@ public class Board {
         }
     }
 
-
+/*
     public void placeShip(Ship ship) {
-        if ("HORIZONTAL".equals(ship.getOrientation())) {
+        if ("HORIZONTAL".equals(ship.isOrientation())) {
             for (int i = 0; i < ship.getSize(); i++) {
                 grid[ship.getStartY()][ship.getStartX() + i] = "S";
             }
         } else if ("VERTICAL".equals(ship.getOrientation())) {
             for (int i = 0; i < ship.getSize(); i++) {
                 grid[ship.getStartY() + i][ship.getStartX()] = "S";
+            }
+        }
+    }
+
+ */
+
+    public void placeShips (Ship ship, int startX, int startY, boolean isHorizontal){
+        ship.setCoordinates(startX, startY, isHorizontal);
+
+        for(Coordinate actual : ship.getCoordinates()){
+            if (isCellValid(actual.getX(), actual.getY())){
+                grid[actual.getY()][actual.getX()] = "S";
             }
         }
     }

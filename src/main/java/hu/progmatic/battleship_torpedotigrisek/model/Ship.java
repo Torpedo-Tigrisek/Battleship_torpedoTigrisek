@@ -1,5 +1,6 @@
 package hu.progmatic.battleship_torpedotigrisek.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,23 +9,44 @@ public class Ship {
 
     private ShipType shipType;
     private int size;
-    private int startX;
-    private int startY;
-    private String orientation;
+    private boolean orientation;
+    private List<Coordinate> coordinates;
 
 
 
 
-    public Ship(ShipType shipType, int startX, int startY, String orientation) {
+
+    public Ship(ShipType shipType, boolean orientation) {
         this.shipType = shipType;
         this.size = shipType.getSize();
-        this.startX = startX;
-        this.startY = startY;
         this.orientation = orientation;
+        this.coordinates = new ArrayList<>(this.size);
+
+        for (int i = 0; i < size; i++) {
+            coordinates.add(new Coordinate(0,0));
+
+        }
+
 
     }
 
+    public Ship(ShipType shipType) {
+        this.shipType = shipType;
+    }
 
+    public void setCoordinates(int startX, int startY, boolean isHorizontal) {
+      //  this.coordinates.clear(); // Először töröljük a korábbi koordinátákat
+
+        for (int i = 0; i < this.size; i++) {
+            if (isHorizontal) {
+                // Vízszintes elhelyezés: növeljük az X koordinátát
+                this.coordinates.add(new Coordinate(startX + i, startY));
+            } else {
+                // Függőleges elhelyezés: növeljük az Y koordinátát
+                this.coordinates.add(new Coordinate(startX, startY + i));
+            }
+        }
+    }
 
     public ShipType getShipType() {
         return shipType;
@@ -42,28 +64,16 @@ public class Ship {
         this.size = size;
     }
 
-    public int getStartX() {
-        return startX;
-    }
-
-    public void setStartX(int startX) {
-        this.startX = startX;
-    }
-
-    public int getStartY() {
-        return startY;
-    }
-
-    public void setStartY(int startY) {
-        this.startY = startY;
-    }
-
-    public String getOrientation() {
+    public boolean isOrientation() {
         return orientation;
     }
 
-    public void setOrientation(String orientation) {
+    public void setOrientation(boolean orientation) {
         this.orientation = orientation;
+    }
+
+    public List<Coordinate> getCoordinates() {
+        return coordinates;
     }
 
     @Override
@@ -71,9 +81,8 @@ public class Ship {
         return "Ship{" +
                 "shipType=" + shipType +
                 ", size=" + size +
-                ", startX=" + startX +
-                ", startY=" + startY +
-                ", orientation='" + orientation + '\'' +
+                ", orientation=" + orientation +
+                ", coordinates=" + coordinates +
                 '}';
     }
 }
