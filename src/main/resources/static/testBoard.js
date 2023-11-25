@@ -18,7 +18,12 @@ function connect() {
         stompClient.subscribe('/topic/shipPlaced', function (boardMessage) {
             console.log("Board update message:", boardMessage);
             var board = JSON.parse(boardMessage.body);
-            updateBoard(board);
+            updateBoard(board); // player's board
+        });
+        stompClient.subscribe('/topic/boardUpdate', function (boardMessage) {
+            console.log("Board update message:", boardMessage);
+            var board = JSON.parse(boardMessage.body);
+            updateBoard(board, false); // Opponent's board
         });
     });
 }
@@ -42,11 +47,21 @@ function updateBoard(board) {
             var cellElement = document.getElementById(cellId);
             if (cellElement) {
                 cellElement.textContent = cell;
-                cellElement.className = cell === 'S' ? 'table-cell ship' : 'table-cell';
+
+                // Ellenőrizzük, hogy a cella "X"-et tartalmaz és van "S" is a táblán
+                if (cell.textContent === 'X' && cellElement.textContent === 'S') {
+                    // Ha igaz, akkor pirosra állítjuk a háttérszínt
+                    cellElement.style.backgroundColor = 'red';
+                } else {
+                    // Ellenkező esetben visszaállítjuk a cella színét az eredeti állapotra
+                    cellElement.style.backgroundColor = cell === 'S' ? 'lightblue' : 'white';
+                }
             }
         });
     });
 }
+
+
 
 // Egy funkció, amely hozzáadja a kattintás eseménykezelőket a tábla minden cellájához.
 function addClickHandlersToCells() {

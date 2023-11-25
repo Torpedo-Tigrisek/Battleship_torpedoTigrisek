@@ -1,8 +1,10 @@
 package hu.progmatic.battleship_torpedotigrisek.model;
 
-import java.util.HashMap;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Ship {
 
@@ -13,8 +15,6 @@ public class Ship {
     private String orientation;
 
 
-
-
     public Ship(ShipType shipType, int startX, int startY, String orientation) {
         this.shipType = shipType;
         this.size = shipType.getSize();
@@ -23,8 +23,6 @@ public class Ship {
         this.orientation = orientation;
 
     }
-
-
 
     public ShipType getShipType() {
         return shipType;
@@ -77,3 +75,4 @@ public class Ship {
                 '}';
     }
 }
+
