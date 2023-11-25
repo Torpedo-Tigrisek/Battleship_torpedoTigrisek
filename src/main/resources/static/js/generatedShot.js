@@ -26,6 +26,7 @@ function placeBlueXAutomatically(message) {
 
         generatedPositions.push(cellId);
 
+
     }, 2000); // késleltetés
 }
 

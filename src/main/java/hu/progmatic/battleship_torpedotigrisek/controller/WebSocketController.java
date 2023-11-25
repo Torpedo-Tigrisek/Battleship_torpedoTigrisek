@@ -35,6 +35,7 @@ public class WebSocketController {
         playerBoard.placeShip(newShip);
         ships.add(newShip);
         System.out.println(ships);
+        // Frissítjük a tábla állapotát és visszaküldjük a frissített táblát a kliensnek
         return playerBoard;
     }
     @MessageMapping("/updateCell")
@@ -70,6 +71,12 @@ public class WebSocketController {
         ShotCoordinate generatedShot = shotService.randomGeneratedShot();
         System.out.println("generatedShot = " + generatedShot.toString());
         return generatedShot;
+    }
+    @MessageMapping("battle.sendHit")
+    @SendTo("/topic/public")
+    public HitCoordinate sendHit(@Payload HitCoordinate hitCoordinate) {
+        System.out.println(hitCoordinate.getHitCoordinates());
+        return hitCoordinate;
     }
 
 }

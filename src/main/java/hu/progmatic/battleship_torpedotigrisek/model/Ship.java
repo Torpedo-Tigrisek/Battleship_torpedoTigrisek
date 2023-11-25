@@ -15,8 +15,6 @@ public class Ship {
     private String orientation;
 
 
-
-
     public Ship(ShipType shipType, int startX, int startY, String orientation) {
         this.shipType = shipType;
         this.size = shipType.getSize();
@@ -25,8 +23,6 @@ public class Ship {
         this.orientation = orientation;
 
     }
-
-
 
     public ShipType getShipType() {
         return shipType;
