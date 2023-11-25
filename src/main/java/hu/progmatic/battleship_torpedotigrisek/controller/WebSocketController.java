@@ -1,14 +1,15 @@
 package hu.progmatic.battleship_torpedotigrisek.controller;
 
-import hu.progmatic.battleship_torpedotigrisek.model.Board;
-import hu.progmatic.battleship_torpedotigrisek.model.CellUpdateRequest;
-import hu.progmatic.battleship_torpedotigrisek.model.Fleet;
-import hu.progmatic.battleship_torpedotigrisek.model.Ship;
+import hu.progmatic.battleship_torpedotigrisek.model.*;
+import hu.progmatic.battleship_torpedotigrisek.service.ShotService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -16,10 +17,13 @@ public class WebSocketController {
 
     private final Board playerBoard;
     private List<Ship> ships;
+    private ShotService shotService;
 
-    public WebSocketController(Board playerBoard) {
+
+    public WebSocketController(Board playerBoard, ShotService shotService) {
         this.playerBoard = playerBoard;
         this.ships = new ArrayList<>();
+        this.shotService = shotService;
     }
 
     /*
@@ -43,11 +47,9 @@ public class WebSocketController {
     @SendTo("/topic/shipPlaced")
     public Board handleShipPlacement(Ship placement) {
 
-        Ship newShip = new Ship(placement.getShipType(), placement.isOrientation());
+        Ship newShip = new Ship(placement.getShipType(), placement.getStartX(), placement.getStartY(), placement.getOrientation());
 
-
-
-        playerBoard.placeShips(newShip, 0,0,true);
+        playerBoard.placeShip(newShip);
         ships.add(newShip);
         System.out.println(ships);
         return playerBoard;
@@ -74,5 +76,18 @@ public class WebSocketController {
         }
     }
 
+
+    @MessageMapping("battle.sendShot")
+    @SendTo("/topic/public")
+    public ShotCoordinate sendShot(@Payload ShotCoordinate shotCoordinate) {
+        System.out.println(shotCoordinate.getCoordinates());
+        return shotCoordinate;
+    }
+    @SubscribeMapping("/generatedShot")
+    public ShotCoordinate sendGeneratedShot() throws Exception {
+        ShotCoordinate generatedShot = shotService.randomGeneratedShot();
+        System.out.println("generatedShot = " + generatedShot.toString());
+        return generatedShot;
+    }
 
 }

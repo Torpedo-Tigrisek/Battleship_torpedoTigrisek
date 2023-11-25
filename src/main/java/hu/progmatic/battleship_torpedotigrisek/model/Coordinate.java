@@ -8,7 +8,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Coordinate {
+<<<<<<< HEAD
 
+=======
+>>>>>>> b8e9395072cb902ebf95067d73815828d987af10
     private int x;
     private int y;
 
@@ -16,6 +19,7 @@ public class Coordinate {
         this.x = x;
         this.y = y;
     }
-
-
 }
+=======
+}
+>>>>>>> b8e9395072cb902ebf95067d73815828d987af10

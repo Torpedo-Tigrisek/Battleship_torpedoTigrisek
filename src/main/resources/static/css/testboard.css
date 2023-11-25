@@ -1,41 +1,48 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url('https://i.pinimg.com/originals/de/4c/50/de4c50f62f62b9348d7c1af0f78b1056.jpg');
+    background-size: cover;
+}
+
 .board-container {
     display: flex;
     justify-content: space-around;
     align-items: center;
-
+    margin-bottom: 20px; /* Opcionális: térköz a táblák között */
 }
 
-.player-board,
-.opponent-board {
+/* Általános tábla stílus */
+.board-table {
     margin: 0 10px;
-
+    /* width: 250px; */ /* Opcionális: adhatunk szélességet a táblának */
 }
 
+.board-table table {
+    border-collapse: collapse; /* A cellák közötti vonalak kialakítása */
+    width: 100%; /* Teljes szélességű tábla */
+}
 
-/* Tábla alap stílusa */
-.table-cell {
+.board-table td {
     width: 40px;
     height: 40px;
-    background-color: aqua;
+    background-color: rgba(229, 234, 234, 0.94);
     border: 1px solid #000;
 }
 
-/* Hajók stílusa */
-.ship {
+.board-table .ship {
     width: 10px;
     height: 10px;
-    background-color: black;
-}
-.background-color{
-
-    background-color: #f8fcf8;
-    opacity: 0.6;
-    background-image:  linear-gradient(135deg, #074fe3 25%, transparent 25%), linear-gradient(225deg, #074fe3 25%, transparent 25%), linear-gradient(45deg, #074fe3 25%, transparent 25%), linear-gradient(315deg, #074fe3 25%, #f8fcf8 25%);
-    background-position:  11px 0, 11px 0, 0 0, 0 0;
-    background-size: 22px 22px;
-    background-repeat: repeat;
+    background-color: #5e8a85;
 }
 
+.red-x {
+    color: red;
+    font-size: 24px;
+    cursor: pointer;
+}
 
-
-
+.blue-x {
+    color: blue;
+    font-size: 24px;
+}
