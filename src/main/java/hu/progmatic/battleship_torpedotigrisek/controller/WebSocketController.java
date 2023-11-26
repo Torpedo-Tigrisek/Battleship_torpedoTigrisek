@@ -56,13 +56,38 @@ public class WebSocketController {
     @MessageMapping("/placeRandomShips")
     @SendTo("/topic/shipPlaced")
     public Board handleRandomShipPlacement() {
+        // Töröljük a korábban elhelyezett hajók listáját
+        ships.clear();
+
+        // Töröljük a hajókat a tábláról
+        shipPlacementService.clearShips();
+
+        remainingShips = Arrays.asList(
+                ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE,
+                ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
+                ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER
+        );
+
+
+        // Újra elhelyezzük a hajókat random módon
         for (ShipType shipType : remainingShips) {
             Ship ship = new Ship(shipType, Math.random() < 0.5);
-            shipPlacementService.placeShipRandomly(ship);
-            ships.add(ship);
+            if (shipPlacementService.placeShipRandomly(ship)) {
+                ships.add(ship);
+            }
         }
-        remainingShips.clear();
+
+
+
+
+        // Loggoljuk a hajókat a konzolra (opcionális)
+        for (Ship ship : ships) {
+            System.out.println("Hajó elhelyezve: " + ship);
+        }
+
         System.out.println(ships);
+
+        // Visszatérünk az új táblával
         return playerBoard;
     }
 

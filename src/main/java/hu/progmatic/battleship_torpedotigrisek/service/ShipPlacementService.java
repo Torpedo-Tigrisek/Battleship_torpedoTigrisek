@@ -1,9 +1,6 @@
 package hu.progmatic.battleship_torpedotigrisek.service;
 
-import hu.progmatic.battleship_torpedotigrisek.model.Board;
-import hu.progmatic.battleship_torpedotigrisek.model.Coordinate;
-import hu.progmatic.battleship_torpedotigrisek.model.EnemyShip;
-import hu.progmatic.battleship_torpedotigrisek.model.Ship;
+import hu.progmatic.battleship_torpedotigrisek.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,14 +63,30 @@ public class ShipPlacementService {
 
     private boolean canPlaceShip(int startX, int startY, Ship ship, boolean horizontal) {
         String[][] grid = board.getGrid();
-        for (int i = 0; i < ship.getShipType().getSize(); i++) {
+        int shipSize = ship.getShipType().getSize();
+
+        for (int i = 0; i < shipSize; i++) {
             int x = horizontal ? startX + i : startX;
             int y = horizontal ? startY : startY + i;
 
+            // Ellenőrizzük a hajó aktuális celláját
             if (!isCellValid(x, y) || isCellOccupied(x, y, grid)) {
                 return false;
             }
+
+            // Ellenőrizzük a szomszédos cellákat
+            int[] dx = {-1, 1, 0, 0, -1, -1, 1, 1};
+            int[] dy = {0, 0, -1, 1, -1, 1, -1, 1};
+            for (int j = 0; j < dx.length; j++) {
+                int adjX = x + dx[j];
+                int adjY = y + dy[j];
+                if (isCellValid(adjX, adjY) && isCellOccupied(adjX, adjY, grid)) {
+                    return false; // A hajó nem helyezhető el, mert a szomszédos cella már foglalt
+                }
+            }
         }
+
+        // Ha minden ellenőrzés sikeres, akkor a hajót el lehet helyezni
         return true;
     }
 
@@ -83,6 +96,22 @@ public class ShipPlacementService {
 
     private boolean isCellOccupied(int x, int y, String[][] grid) {
         return !grid[y][x].equals(" ");
+    }
+    public void placeAllShipsRandomly(List<ShipType> shipTypes) {
+        clearShips(); // Először töröljük a táblát
+        for (ShipType shipType : shipTypes) {
+            Ship ship = new Ship(shipType, random.nextBoolean());
+            placeShipRandomly(ship);
+            // Itt nem adunk hozzá a ships listához, mivel azt a kontrollerben kezeljük
+        }
+    }
+
+    public void clearShips() {
+        for (int y = 0; y < board.getHeight(); y++) {
+            for (int x = 0; x < board.getWidth(); x++) {
+                board.getGrid()[y][x] = " ";
+            }
+        }
     }
 
     /*
