@@ -1,6 +1,7 @@
 package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.*;
+import hu.progmatic.battleship_torpedotigrisek.service.ShipPlacementService;
 import hu.progmatic.battleship_torpedotigrisek.service.ShotService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -9,7 +10,7 @@ import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -18,40 +19,49 @@ public class WebSocketController {
     private final Board playerBoard;
     private List<Ship> ships;
     private ShotService shotService;
-
-
-    public WebSocketController(Board playerBoard, ShotService shotService) {
+    private List<ShipType> remainingShips;
+    private final ShipPlacementService shipPlacementService;
+    public WebSocketController(Board playerBoard, ShotService shotService, ShipPlacementService shipPlacementService) {
         this.playerBoard = playerBoard;
+        this.shipPlacementService = shipPlacementService;
         this.ships = new ArrayList<>();
         this.shotService = shotService;
+        this.remainingShips = new ArrayList<>(Arrays.asList(
+                ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE,
+                ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
+                ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER,ShipType.ATTACKER
+        ));
     }
 
-    /*
-    @MessageMapping("/placeShip")
-    @SendTo("/topic/shipPlaced")
-
-    public Ship handleShipPlacement(Ship placement) {
-        Ship newShip = new Ship(placement.getShipType(), placement.getStartX(), placement.getStartY(), placement.getOrientation());
-        playerBoard.addShip(newShip);
-        playerBoard.placeShip(newShip);
-        ships.add(newShip);
-        System.out.println(ships);
-
-        // Itt visszaküldheted a hajó adatokat a kliensnek, ha szükséges
-        return newShip;
-    }
-
-     */
 
     @MessageMapping("/placeShip")
     @SendTo("/topic/shipPlaced")
-    public Board handleShipPlacement(Ship placement) {
-
-        Ship newShip = new Ship(placement.getShipType(), placement.getStartX(), placement.getStartY(), placement.getOrientation());
-
-        playerBoard.placeShip(newShip);
-        ships.add(newShip);
-        System.out.println(ships);
+    public Board handleShipPlacement(@Payload Ship ship) {
+        if (remainingShips.contains(ship.getShipType())) {
+            boolean placedSuccessfully = shipPlacementService.placeShipRandomly(ship);
+            if (placedSuccessfully) {
+                ships.add(ship);
+                remainingShips.remove(ship.getShipType());
+                System.out.println("Hajó elhelyezve: " + ship);
+                return playerBoard;
+            } else {
+                System.out.println("Nem sikerült elhelyezni a hajót: " + ship);
+                return null; // vagy valamilyen hibaüzenet küldése
+            }
+        } else {
+            System.out.println("A hajó típusa már el lett helyezve vagy érvénytelen: " + ship.getShipType());
+            return null;
+        }
+    }
+    @MessageMapping("/placeRandomShips")
+    @SendTo("/topic/shipPlaced")
+    public Board handleRandomShipPlacement() {
+        for (ShipType shipType : remainingShips) {
+            Ship ship = new Ship(shipType, Math.random() < 0.5);
+            shipPlacementService.placeShipRandomly(ship);
+            ships.add(ship);
+        }
+        remainingShips.clear();
         return playerBoard;
     }
 
@@ -62,27 +72,29 @@ public class WebSocketController {
         int colIndex = request.getColIndex();
         String newValue = request.getNewValue();
 
-        // Feltételezve, hogy van egy olyan metódusod, ami frissíti a táblát és ellenőrzi az érvényességet
         boolean success = playerBoard.updateCell(rowIndex, colIndex, newValue);
 
         if (success) {
-            // Ha a frissítés sikerült, küldd vissza a frissített tábla állapotát
             return playerBoard;
         } else {
-            // Ha a frissítés nem sikerült (pl. érvénytelen koordináták vagy érték),
-            // kezeld le a hibát megfelelően (pl. küldj vissza hibaüzenetet)
-            // Itt egy egyszerű példa, de valóságban jobb lenne valamilyen hibaobjektumot küldeni
+            // Hiba kezelése
             return null;
         }
     }
 
+    @MessageMapping("/getRemainingShips")
+    @SendTo("/topic/remainingShips")
+    public List<ShipType> getRemainingShips() {
+        return remainingShips;
+    }
 
-    @MessageMapping("battle.sendShot")
+    @MessageMapping("/battle/sendShot")
     @SendTo("/topic/public")
     public ShotCoordinate sendShot(@Payload ShotCoordinate shotCoordinate) {
         System.out.println(shotCoordinate.getCoordinates());
         return shotCoordinate;
     }
+
     @SubscribeMapping("/generatedShot")
     public ShotCoordinate sendGeneratedShot() throws Exception {
         ShotCoordinate generatedShot = shotService.randomGeneratedShot();

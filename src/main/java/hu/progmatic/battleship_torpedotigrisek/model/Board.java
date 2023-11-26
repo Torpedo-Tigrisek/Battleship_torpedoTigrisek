@@ -22,14 +22,8 @@ public class Board {
     }
 
     public void placeShip(Ship ship) {
-        if ("HORIZONTAL".equals(ship.getOrientation())) {
-            for (int i = 0; i < ship.getSize(); i++) {
-                grid[ship.getStartY()][ship.getStartX() + i] = "S";
-            }
-        } else if ("VERTICAL".equals(ship.getOrientation())) {
-            for (int i = 0; i < ship.getSize(); i++) {
-                grid[ship.getStartY() + i][ship.getStartX()] = "S";
-            }
+        for (Coordinate coord : ship.getCoordinates()) {
+            grid[coord.getY()][coord.getX()] = "S";
         }
     }
 

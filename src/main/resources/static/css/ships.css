@@ -1,0 +1,21 @@
+.ship {
+    cursor: pointer;
+    padding: 10px; /* Kis helyet adunk a szöveg köré */
+    margin: 5px; /* Minden hajó között kis távolságot hagyunk */
+    background-color: #007bff; /* Kék háttérszín */
+    color: white; /* Fehér szövegszín */
+    border-radius: 5px; /* Kerekített sarkok */
+    text-align: center; /* Szöveg középre igazítása */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Árnyék hozzáadása a 3D hatásért */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animáció a hover hatáshoz */
+}
+
+.ship:hover {
+    transform: translateY(-3px); /* Kicsit felemeli a hajót, amikor ráviszik a kurzort */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2); /* Nagyobb árnyék a hover hatáshoz */
+}
+
+.ship:active {
+    transform: translateY(-1px); /* Lenyomott állapotban visszahúzódik */
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15); /* Kis árnyék a lenyomott állapothoz */
+}
