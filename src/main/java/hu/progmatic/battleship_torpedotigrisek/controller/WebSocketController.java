@@ -62,6 +62,7 @@ public class WebSocketController {
             ships.add(ship);
         }
         remainingShips.clear();
+        System.out.println(ships);
         return playerBoard;
     }
 
@@ -82,11 +83,7 @@ public class WebSocketController {
         }
     }
 
-    @MessageMapping("/getRemainingShips")
-    @SendTo("/topic/remainingShips")
-    public List<ShipType> getRemainingShips() {
-        return remainingShips;
-    }
+
 
     @MessageMapping("/battle/sendShot")
     @SendTo("/topic/public")

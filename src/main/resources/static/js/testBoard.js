@@ -76,16 +76,4 @@ document.addEventListener('DOMContentLoaded', function() {
     connect();
 });
 
-// Feliratkozás a maradék hajók listájának fogadására
-stompClient.subscribe('/topic/remainingShips', function (message) {
-    var remainingShips = JSON.parse(message.body);
-    updateShipSelect(remainingShips);
-});
 
-// Maradék hajók listájának lekérése
-function requestRemainingShips() {
-    stompClient.send("/app/getRemainingShips", {}, {});
-}
-
-// A játék kezdetén vagy hajó elhelyezése után hívható
-requestRemainingShips();

@@ -24,19 +24,45 @@ public class ShipPlacementService {
     public boolean placeShipRandomly(Ship ship) {
         int tries = 0;
         while (tries < 100) {
-            int startX = random.nextInt(board.getWidth());
-            int startY = random.nextInt(board.getHeight());
+            int startX, startY;
             boolean horizontal = random.nextBoolean();
 
+            if (horizontal) {
+                startX = random.nextInt(board.getWidth() - ship.getShipType().getSize() + 1);
+                startY = random.nextInt(board.getHeight());
+            } else {
+                startX = random.nextInt(board.getWidth());
+                startY = random.nextInt(board.getHeight() - ship.getShipType().getSize() + 1);
+            }
+
             if (canPlaceShip(startX, startY, ship, horizontal)) {
-                ship.setStartPosition(startX, startY);
-                board.placeShip(ship);
+                setShipPosition(ship, startX, startY, horizontal);
                 return true;
             }
             tries++;
         }
         return false;
     }
+
+    private void setShipPosition(Ship ship, int startX, int startY, boolean horizontal) {
+        List<Coordinate> coordinates = new ArrayList<>();
+        for (int i = 0; i < ship.getShipType().getSize(); i++) {
+            if (horizontal) {
+                coordinates.add(new Coordinate(startX + i, startY));
+            } else {
+                coordinates.add(new Coordinate(startX, startY + i));
+            }
+        }
+        ship.setCoordinates(coordinates);
+        placeShipOnBoard(ship);
+    }
+
+    private void placeShipOnBoard(Ship ship) {
+        for (Coordinate coord : ship.getCoordinates()) {
+            board.getGrid()[coord.getY()][coord.getX()] = "S";
+        }
+    }
+
 
     private boolean canPlaceShip(int startX, int startY, Ship ship, boolean horizontal) {
         String[][] grid = board.getGrid();
