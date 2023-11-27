@@ -72,26 +72,6 @@
 
 <button id="placeShip">Place Ships</button>
 
-<!--
-<form id="shipForm"  method="post">
-    Hajó típusa:
-    <select name="shipType" id="shipType">
-
-        <option value="CRUISER">Cruiser</option>
-        <option value="SUBMARINE">Submarine</option>
-        <option value="DESTROYER">Destroyer</option>
-        <option value="ATTACKER">Attacker</option>
-    </select>
-    X koordináta: <input type="number" name="startX" id="startX"/>
-    Y koordináta: <input type="number" name="startY" id="startY"/>
-    Orientáció:
-    <select name="orientation" id="orientation">
-        <option value="HORIZONTAL">Horizontal</option>
-        <option value="VERTICAL">Vertical</option>
-    </select>
-    <input type="submit" value="Hajó elhelyezése" />
-</form>
--->
 <div class="board-container" id="board-container"></div>
 
 <script type="text/javascript" src="/js/testBoard.js"></script>
@@ -99,16 +79,6 @@
 <script type="text/javascript" src="/js/generatedShot.js"></script>
 <script type="text/javascript" src="/js/ships.js"></script>
 
-<!--
-
-<select name="shipType" id="shipType">
-    <option th:each="shipType : ${remainingShips}"
-            th:value="${shipType}"
-            th:text="${shipType}">
-        Cruiser
-    </option>
-</select>
--->
 
 </body>
 </html>

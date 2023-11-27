@@ -1,8 +1,7 @@
 package hu.progmatic.battleship_torpedotigrisek.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 @Data
