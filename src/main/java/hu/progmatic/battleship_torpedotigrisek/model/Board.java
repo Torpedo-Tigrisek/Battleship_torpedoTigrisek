@@ -21,12 +21,6 @@ public class Board {
         }
     }
 
-    public void placeShip(Ship ship) {
-        for (Coordinate coord : ship.getCoordinates()) {
-            grid[coord.getY()][coord.getX()] = "S";
-        }
-    }
-
     public void placeEnemyShip(EnemyShip ship) {
         for (Coordinate coordinate : ship.getCoordinates()) {
             int x = coordinate.getX();

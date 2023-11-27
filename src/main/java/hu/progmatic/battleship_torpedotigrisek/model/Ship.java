@@ -26,16 +26,6 @@ public class Ship {
     public Ship() {
     }
 
-    public void setStartPosition(int startX, int startY) {
-        coordinates.clear();
-        for (int i = 0; i < shipType.getSize(); i++) {
-            if (orientation) { // HORIZONTAL
-                coordinates.add(new Coordinate(startX + i, startY));
-            } else { // VERTICAL
-                coordinates.add(new Coordinate(startX, startY + i));
-            }
-        }
-    }
 
 
 }
