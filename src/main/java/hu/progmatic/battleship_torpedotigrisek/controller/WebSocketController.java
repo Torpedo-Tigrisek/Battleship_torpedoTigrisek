@@ -6,12 +6,11 @@ import hu.progmatic.battleship_torpedotigrisek.service.ShotService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class WebSocketController {
@@ -21,9 +20,12 @@ public class WebSocketController {
     private ShotService shotService;
     private List<ShipType> remainingShips;
     private final ShipPlacementService shipPlacementService;
-    public WebSocketController(Board playerBoard, ShotService shotService, ShipPlacementService shipPlacementService) {
+    private final SimpMessagingTemplate messagingTemplate;
+
+    public WebSocketController(Board playerBoard, ShotService shotService, ShipPlacementService shipPlacementService, SimpMessagingTemplate messagingTemplate) {
         this.playerBoard = playerBoard;
         this.shipPlacementService = shipPlacementService;
+        this.messagingTemplate = messagingTemplate;
         this.ships = new ArrayList<>();
         this.shotService = shotService;
         this.remainingShips = new ArrayList<>(Arrays.asList(
@@ -33,42 +35,35 @@ public class WebSocketController {
         ));
     }
 
-
-    @MessageMapping("/placeShip")
-    @SendTo("/topic/shipPlaced")
-    public Board handleShipPlacement(@Payload Ship ship) {
-        if (remainingShips.contains(ship.getShipType())) {
-            boolean placedSuccessfully = shipPlacementService.placeShipRandomly(ship);
-            if (placedSuccessfully) {
-                ships.add(ship);
-                remainingShips.remove(ship.getShipType());
-                System.out.println("Hajó elhelyezve: " + ship);
-                return playerBoard;
-            } else {
-                System.out.println("Nem sikerült elhelyezni a hajót: " + ship);
-                return null; // vagy valamilyen hibaüzenet küldése
-            }
-        } else {
-            System.out.println("A hajó típusa már el lett helyezve vagy érvénytelen: " + ship.getShipType());
-            return null;
-        }
-    }
+  
     @MessageMapping("/placeRandomShips")
     @SendTo("/topic/shipPlaced")
-    public Board handleRandomShipPlacement() {
-        // Hajólista törlése
-        ships.clear();
+    public Board handleRandomShipPlacement(){
+        resetGame();
+        placeAllShips();
+        sendShipData();
 
-        // Tábla törlése
-        shipPlacementService.clearShips();
+        for (Ship ship : ships) {
+            System.out.println("Hajó elhelyezve: " + ship);
+        }
+        System.out.println(ships);
+        
+        return playerBoard;
+    }
 
-        remainingShips = Arrays.asList(
-                ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE,
-                ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
-                ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER
-        );
+    private void sendShipData() {
+        List<Map<String, Object>> shipData = new ArrayList<>();
+        for (Ship ship : ships) {
+            Map<String, Object> shipInfo = new HashMap<>();
+            shipInfo.put("type", ship.getShipType().toString());
+            shipInfo.put("coordinates", ship.getCoordinates());
+            shipData.add(shipInfo);
+        }
+        messagingTemplate.convertAndSend("/topic/shipData", shipData);
 
+    }
 
+    private void placeAllShips() {
         // Hajókat újra lerakjuk a listából
         for (ShipType shipType : remainingShips) {
             Ship ship = new Ship(shipType, Math.random() < 0.5);
@@ -76,33 +71,25 @@ public class WebSocketController {
                 ships.add(ship);
             }
         }
-
-        for (Ship ship : ships) {
-            System.out.println("Hajó elhelyezve: " + ship);
-        }
-        System.out.println(ships);
-
-        return playerBoard;
     }
 
-    @MessageMapping("/updateCell")
-    @SendTo("/topic/boardUpdate")
-    public Board updateCell(CellUpdateRequest request) {
-        int rowIndex = request.getRowIndex();
-        int colIndex = request.getColIndex();
-        String newValue = request.getNewValue();
+    private void resetGame() {
+        // Hajólista törlése
+        ships.clear();
 
-        boolean success = playerBoard.updateCell(rowIndex, colIndex, newValue);
-
-        if (success) {
-            return playerBoard;
-        } else {
-            // Hiba kezelése
-            return null;
-        }
+        // Tábla törlése
+        shipPlacementService.clearShips();
+        
+        resetRemainingShips();
     }
 
-
+    private void resetRemainingShips() {
+        remainingShips = Arrays.asList(
+                ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE,
+                ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
+                ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER
+        );
+    }
 
     @MessageMapping("/battle/sendShot")
     @SendTo("/topic/public")
