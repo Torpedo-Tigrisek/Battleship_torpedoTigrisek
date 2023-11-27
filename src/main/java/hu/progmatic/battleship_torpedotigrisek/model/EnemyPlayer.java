@@ -1,5 +1,6 @@
 package hu.progmatic.battleship_torpedotigrisek.model;
 
+import java.util.List;
 import java.util.Random;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,10 +18,13 @@ public class EnemyPlayer {
         this.enemyPlayer = enemyPlayer;
     }
 
-    public void makeMove() {
+    public void makeMove(List <String>hitCoordinates) {
         Random random = new Random();
 
-        if (lastMoveHit) {
+        lastHitRow= Integer.parseInt(hitCoordinates.get(0));
+        lastHitCol=Integer.parseInt(hitCoordinates.get(1));
+
+        if (hitCoordinates.contains(lastMoveHit)) {
             // Ha az előző lépés talált, akkor véletlenszerűen válaszd meg a következő célpontot körülötte
             int row = random.nextInt(3) - 1 + lastHitRow; // -1, 0, vagy 1 hozzáadása a talált sorhoz
             int col = random.nextInt(3) - 1 + lastHitCol; // -1, 0, vagy 1 hozzáadása a talált oszlophoz
@@ -88,9 +92,6 @@ public class EnemyPlayer {
         return name;
     }
 
-    public boolean receiveAttack(int row, int col) {
-        // Implementáld ezt a metódust a saját játékos osztályodban
-        // Az ellenfél támadásának eredményét kell visszaadnia (talált-e vagy sem)
-        return false;
-    }
+
+
 }
