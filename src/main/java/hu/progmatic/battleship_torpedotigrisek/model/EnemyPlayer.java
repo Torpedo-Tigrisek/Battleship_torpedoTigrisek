@@ -1,97 +1,64 @@
 package hu.progmatic.battleship_torpedotigrisek.model;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.HashSet;
-import java.util.Set;
 
 public class EnemyPlayer {
+    private List<String> shotsFired;  // Tárolja a már leadott lövések koordinátáit
+    private boolean lastShotHit;      // Igaz, ha az előző lövés talált
 
-    private EnemyPlayer enemyPlayer;
-    private String name = "Computer";
-    private Set<String> firedCoordinates = new HashSet<>();
-    private boolean lastMoveHit = false;
-    private int lastHitRow;
-    private int lastHitCol;
-
-    public EnemyPlayer(String name, EnemyPlayer enemyPlayer) {
-        this.enemyPlayer = enemyPlayer;
+    public EnemyPlayer() {
+        this.shotsFired = new ArrayList<>();
+        this.lastShotHit = false;
     }
 
-    public void makeMove(List <String>hitCoordinates) {
-        Random random = new Random();
+    public String fireShot() {
+        String coordinates;
 
-        lastHitRow= Integer.parseInt(hitCoordinates.get(0));
-        lastHitCol=Integer.parseInt(hitCoordinates.get(1));
-
-        if (hitCoordinates.contains(lastMoveHit)) {
-            // Ha az előző lépés talált, akkor véletlenszerűen válaszd meg a következő célpontot körülötte
-            int row = random.nextInt(3) - 1 + lastHitRow; // -1, 0, vagy 1 hozzáadása a talált sorhoz
-            int col = random.nextInt(3) - 1 + lastHitCol; // -1, 0, vagy 1 hozzáadása a talált oszlophoz
-
-            // Ellenőrizd, hogy a célmezőn már lőttek-e, és hogy a koordináta a tábla határain belül van-e
-            while (hasAlreadyFired(row, col) || row < 0 || row >= 10 || col < 0 || col >= 10) {
-                // Ha a választott koordináta már lőtt vagy kilép a tábla határain, válassz új koordinátát
-                row = random.nextInt(3) - 1 + lastHitRow;
-                col = random.nextInt(3) - 1 + lastHitCol;
-            }
-
-            // Jelöld meg a célpontot lőttként
-            markAsFired(row, col);
-
-            // Ellenőrizd, hogy a lőtt lövéssel talált-e el valamit a játékos
-            lastMoveHit = enemyPlayer.receiveAttack(row, col);
-
-            // Ha talált, frissítsd a talált koordinátákat
-            if (lastMoveHit) {
-                lastHitRow = row;
-                lastHitCol = col;
-            }
-
-            // Kiírhatod a lépést vagy bármilyen egyéb információt
-            System.out.println(name + " shoots at " + row + "," + col + " and " + (lastMoveHit ? "hits!" : "misses."));
+        if (lastShotHit) {
+            coordinates = generateRandomAroundLastHit();
         } else {
-            // Ha az előző lépés nem talált, úgy mint a jelenlegi implementáció
-            int row = random.nextInt(10);
-            int col = random.nextInt(10);
-
-            // Ellenőrizd, hogy a célmezőn már lőttek-e
-            while (hasAlreadyFired(row, col)) {
-                row = random.nextInt(10);
-                col = random.nextInt(10);
-            }
-
-            // Jelöld meg a célpontot lőttként
-            markAsFired(row, col);
-
-            // Ellenőrizd, hogy a lőtt lövéssel talált-e el valamit a játékos
-            lastMoveHit = enemyPlayer.receiveAttack(row, col);
-
-            // Ha talált, frissítsd a talált koordinátákat
-            if (lastMoveHit) {
-                lastHitRow = row;
-                lastHitCol = col;
-            }
-
-            // Kiírhatod a lépést vagy bármilyen egyéb információt
-            System.out.println(name + " shoots at " + row + "," + col + " and " + (lastMoveHit ? "hits!" : "misses."));
+            coordinates = generateRandomNotFired();
         }
+
+        shotsFired.add(coordinates);
+        return coordinates;
     }
 
-    private boolean hasAlreadyFired(int row, int col) {
-        String coordinateKey = row + "," + col;
-        return firedCoordinates.contains(coordinateKey);
+    private String generateRandomAroundLastHit() {
+        Random rand = new Random();
+        String lastShot = shotsFired.get(shotsFired.size() - 1);
+
+        int row = Character.getNumericValue(lastShot.charAt(0));
+        int col = Character.getNumericValue(lastShot.charAt(1));
+
+        // Generálj random koordinátát a talált hely körül
+        int newRow = row + rand.nextInt(3) - 1;
+        int newCol = col + rand.nextInt(3) - 1;
+
+        // Ellenőrizd, hogy a generált koordináta a táblán belül van-e
+        newRow = Math.max(0, Math.min(9, newRow));
+        newCol = Math.max(0, Math.min(9, newCol));
+
+        return newRow + "" + newCol;
     }
 
-    private void markAsFired(int row, int col) {
-        String coordinateKey = row + "," + col;
-        firedCoordinates.add(coordinateKey);
+    private String generateRandomNotFired() {
+        Random rand = new Random();
+        String coordinates;
+
+        do {
+            int row = rand.nextInt(10);
+            int col = rand.nextInt(10);
+            coordinates = row + "" + col;
+        } while (shotsFired.contains(coordinates));
+
+        return coordinates;
     }
 
-    public String getName() {
-        return name;
+    public void setLastShotHit(boolean lastShotHit) {
+        this.lastShotHit = lastShotHit;
     }
-
 
 
 }
