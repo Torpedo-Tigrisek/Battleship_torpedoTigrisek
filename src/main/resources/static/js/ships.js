@@ -17,11 +17,18 @@ function connect() {
             var board = JSON.parse(boardMessage.body);
             updateBoard(board);
         });
-        stompClient.subscribe('/topic/remainingShips', function (message) {
-            var remainingShips = JSON.parse(message.body);
-            updateShipSelect(remainingShips);
+        stompClient.subscribe('/topic/shipData', function (shipDataMessage) {
+            var shipData = JSON.parse(shipDataMessage.body);
+            handleShipData(shipData);
         });
     });
+}
+
+function handleShipData(shipData) {
+
+    console.log("Received ship data:", shipData);
+    // Implementáld a hajóadatok kezelését a táblán, például megjelenítheted a hajókat
+
 }
 
 function updateBoard(board) {
@@ -37,17 +44,7 @@ function updateBoard(board) {
     });
 }
 
-function updateShipSelect(remainingShips) {
-    var shipSelect = document.getElementById("shipType");
-    shipSelect.innerHTML = ''; // Töröljük a korábbi opciókat
 
-    remainingShips.forEach(shipType => {
-        var option = document.createElement("option");
-        option.value = shipType;
-        option.textContent = shipType.charAt(0).toUpperCase() + shipType.slice(1).toLowerCase(); // Formázott megjelenítés
-        shipSelect.appendChild(option);
-    });
-}
 
 document.addEventListener('DOMContentLoaded', function() {
     connect();
