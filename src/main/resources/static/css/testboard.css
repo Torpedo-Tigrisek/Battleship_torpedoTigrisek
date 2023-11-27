@@ -29,6 +29,7 @@ body {
     height: 40px;
     background-color: rgba(229, 234, 234, 0.94);
     border: 1px solid #000;
+    text-align: center;
 }
 
 .board-table .ship {
