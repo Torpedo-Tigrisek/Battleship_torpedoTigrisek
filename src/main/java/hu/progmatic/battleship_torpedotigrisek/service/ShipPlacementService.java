@@ -4,21 +4,14 @@ import hu.progmatic.battleship_torpedotigrisek.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class ShipPlacementService {
     private final Random random = new Random();
-    private final Board board;
 
-    @Autowired
-    public ShipPlacementService(Board board) {
-        this.board = board;
-    }
 
-    public boolean placeShipRandomly(Ship ship) {
+    public boolean placeShipRandomly(Board board, Ship ship) {
         int tries = 0;
         while (tries < 100) {
             int startX, startY;
@@ -32,8 +25,8 @@ public class ShipPlacementService {
                 startY = random.nextInt(board.getHeight() - ship.getShipType().getSize() + 1);
             }
 
-            if (canPlaceShip(startX, startY, ship, horizontal)) {
-                setShipPosition(ship, startX, startY, horizontal);
+            if (canPlaceShip(board, startX, startY, ship, horizontal)) {
+                setShipPosition(board, ship, startX, startY, horizontal);
                 return true;
             }
             tries++;
@@ -41,7 +34,7 @@ public class ShipPlacementService {
         return false;
     }
 
-    private void setShipPosition(Ship ship, int startX, int startY, boolean horizontal) {
+    private void setShipPosition(Board board, Ship ship, int startX, int startY, boolean horizontal) {
         List<Coordinate> coordinates = new ArrayList<>();
         for (int i = 0; i < ship.getShipType().getSize(); i++) {
             if (horizontal) {
@@ -51,26 +44,27 @@ public class ShipPlacementService {
             }
         }
         ship.setCoordinates(coordinates);
-        placeShipOnBoard(ship);
+        placeShipOnBoard(board, ship);
     }
 
-    private void placeShipOnBoard(Ship ship) {
+    private void placeShipOnBoard(Board board, Ship ship) {
         for (Coordinate coord : ship.getCoordinates()) {
             board.getGrid()[coord.getY()][coord.getX()] = "S";
         }
     }
 
 
-    private boolean canPlaceShip(int startX, int startY, Ship ship, boolean horizontal) {
-        String[][] grid = board.getGrid();
+
+
+    private boolean canPlaceShip(Board board, int startX, int startY, Ship ship, boolean horizontal) {
         int shipSize = ship.getShipType().getSize();
 
         for (int i = 0; i < shipSize; i++) {
             int x = horizontal ? startX + i : startX;
             int y = horizontal ? startY : startY + i;
 
-            // Ellenőrizzük a hajó aktuális celláját
-            if (!isCellValid(x, y) || isCellOccupied(x, y, grid)) {
+            // Ellenőrizzük, hogy a hajó aktuális cellája érvényes-e és szabad-e
+            if (!isCellValid(board, x, y) || isCellOccupied(board, x, y)) {
                 return false;
             }
 
@@ -80,33 +74,23 @@ public class ShipPlacementService {
             for (int j = 0; j < dx.length; j++) {
                 int adjX = x + dx[j];
                 int adjY = y + dy[j];
-                if (isCellValid(adjX, adjY) && isCellOccupied(adjX, adjY, grid)) {
+                if (isCellValid(board, adjX, adjY) && isCellOccupied(board, adjX, adjY)) {
                     return false; // A hajó nem helyezhető el, mert a szomszédos cella már foglalt
                 }
             }
         }
-
-        // Ha minden ellenőrzés sikeres, akkor a hajót el lehet helyezni
         return true;
     }
-
-    private boolean isCellValid(int x, int y) {
+    private boolean isCellValid(Board board, int x, int y) {
         return x >= 0 && x < board.getWidth() && y >= 0 && y < board.getHeight();
     }
 
-    private boolean isCellOccupied(int x, int y, String[][] grid) {
-        return !grid[y][x].equals(" ");
-    }
-    public void placeAllShipsRandomly(List<ShipType> shipTypes) {
-        clearShips(); // Először töröljük a táblát
-        for (ShipType shipType : shipTypes) {
-            Ship ship = new Ship(shipType, random.nextBoolean());
-            placeShipRandomly(ship);
-            // Itt nem adunk hozzá a ships listához, mivel azt a kontrollerben kezeljük
-        }
+    private boolean isCellOccupied(Board board, int x, int y) {
+        return !" ".equals(board.getGrid()[y][x]);
     }
 
-    public void clearShips() {
+
+    public void clearShips(Board board) {
         for (int y = 0; y < board.getHeight(); y++) {
             for (int x = 0; x < board.getWidth(); x++) {
                 board.getGrid()[y][x] = " ";
@@ -141,6 +125,13 @@ public class ShipPlacementService {
     }
 
      */
+
+
+
+
+
+
+
 
 }
 

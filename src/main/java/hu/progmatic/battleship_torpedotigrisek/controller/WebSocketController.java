@@ -16,14 +16,16 @@ import java.util.*;
 public class WebSocketController {
 
     private final Board playerBoard;
+    private final Board enemyBoard;
     private List<Ship> ships;
     private ShotService shotService;
     private List<ShipType> remainingShips;
     private final ShipPlacementService shipPlacementService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public WebSocketController(Board playerBoard, ShotService shotService, ShipPlacementService shipPlacementService, SimpMessagingTemplate messagingTemplate) {
+    public WebSocketController(Board playerBoard, Board enemyBoard, ShotService shotService, ShipPlacementService shipPlacementService, SimpMessagingTemplate messagingTemplate) {
         this.playerBoard = playerBoard;
+        this.enemyBoard = enemyBoard;
         this.shipPlacementService = shipPlacementService;
         this.messagingTemplate = messagingTemplate;
         this.ships = new ArrayList<>();
@@ -67,7 +69,7 @@ public class WebSocketController {
         // Hajókat újra lerakjuk a listából
         for (ShipType shipType : remainingShips) {
             Ship ship = new Ship(shipType, Math.random() < 0.5);
-            if (shipPlacementService.placeShipRandomly(ship)) {
+            if (shipPlacementService.placeShipRandomly(playerBoard, ship)){
                 ships.add(ship);
             }
         }
@@ -78,8 +80,9 @@ public class WebSocketController {
         ships.clear();
 
         // Tábla törlése
-        shipPlacementService.clearShips();
-        
+        shipPlacementService.clearShips(playerBoard);
+        shipPlacementService.clearShips(enemyBoard);
+
         resetRemainingShips();
     }
 
@@ -87,7 +90,7 @@ public class WebSocketController {
         remainingShips = Arrays.asList(
                 ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE,
                 ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
-                ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER
+                ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER
         );
     }
 

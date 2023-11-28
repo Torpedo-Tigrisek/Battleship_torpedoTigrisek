@@ -74,6 +74,6 @@ function placeX(cell) {
             JSON.stringify(hitCoordinates)
         );
         console.log("Hit was sent to server:", hitCoordinates.coordinates);
-        gettingRandomShotsFromServer();
+
     }
 }
