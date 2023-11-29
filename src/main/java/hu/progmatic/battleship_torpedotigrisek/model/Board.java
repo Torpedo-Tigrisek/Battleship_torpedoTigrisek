@@ -12,7 +12,7 @@ public class Board {
     private final int height = 10;
     private String[][] grid;
     private Map<ShipType, EnemyShip> shipMap = new HashMap<>();
-
+    private boolean isActive;
     public Board() {
         grid = new String[height][width];
         for (String[] row : grid) {

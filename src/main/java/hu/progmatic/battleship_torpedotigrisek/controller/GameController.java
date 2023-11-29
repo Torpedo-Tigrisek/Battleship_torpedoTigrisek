@@ -3,6 +3,7 @@ package hu.progmatic.battleship_torpedotigrisek.controller;
 import hu.progmatic.battleship_torpedotigrisek.model.Board;
 import hu.progmatic.battleship_torpedotigrisek.model.EnemyShip;
 import hu.progmatic.battleship_torpedotigrisek.model.ShipType;
+import hu.progmatic.battleship_torpedotigrisek.service.GameService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,27 +13,10 @@ import java.util.List;
 
 @Controller
 public class GameController {
-    private final Board playerBoard = new Board();
-    private final Board enemyBoard = new Board();
-    private ShipType[] shipTypes = {ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER};
+    private GameService gameService;
 
-    public GameController() {
-        initializeEnemyShips();
-    }
-
-    private void initializeEnemyShips() {
-        List<EnemyShip> enemyShips = generateEnemyShips();
-        enemyBoard.placeEnemyShipsRandomly(enemyShips);
-    }
-
-    private List<EnemyShip> generateEnemyShips() {
-        List<EnemyShip> enemyShips = new ArrayList<>();
-        for (ShipType type : shipTypes) {
-            boolean orientation = Math.random() < 0.5; // true: HORIZONTAL, false: VERTICAL
-            EnemyShip enemyShip = new EnemyShip(type, type.getSize(), orientation);
-            enemyShips.add(enemyShip);
-        }
-        return enemyShips;
+    public GameController(GameService gameService) {
+        this.gameService = gameService;
     }
 
     @GetMapping("/dinamicboard")
@@ -42,8 +26,9 @@ public class GameController {
 
     @GetMapping("/testBoard")
     public String gameBoard(Model model) {
-        model.addAttribute("playerBoard", playerBoard);
-        model.addAttribute("enemyBoard", enemyBoard);
+        model.addAttribute("playerBoard", gameService.getGame().getPlayerBoard());
+        model.addAttribute("enemyBoard", gameService.getGame().getEnemyBoard());
+        System.out.println(gameService.getGame().getEnemyBoard().getShipMap());
         return "test-board";
     }
 }

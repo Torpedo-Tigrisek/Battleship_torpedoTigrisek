@@ -1,6 +1,7 @@
 package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.*;
+import hu.progmatic.battleship_torpedotigrisek.service.GameService;
 import hu.progmatic.battleship_torpedotigrisek.service.ShotService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -15,14 +16,13 @@ import java.util.List;
 @Controller
 public class WebSocketController {
 
-    private final Board playerBoard;
-    private List<Ship> ships;
+    private GameService gameService;
+
     private ShotService shotService;
 
 
-    public WebSocketController(Board playerBoard, ShotService shotService) {
-        this.playerBoard = playerBoard;
-        this.ships = new ArrayList<>();
+    public WebSocketController(GameService gameService, ShotService shotService) {
+        this.gameService = gameService;
         this.shotService = shotService;
     }
 
@@ -32,11 +32,11 @@ public class WebSocketController {
 
         Ship newShip = new Ship(placement.getShipType(), placement.getStartX(), placement.getStartY(), placement.getOrientation());
 
-        playerBoard.placeShip(newShip);
-        ships.add(newShip);
-        System.out.println(ships);
+        gameService.getGame().getPlayerBoard().placeShip(newShip);
+        gameService.getGame().getShips().add(newShip);
+        System.out.println(gameService.getGame().getShips());
         // Frissítjük a tábla állapotát és visszaküldjük a frissített táblát a kliensnek
-        return playerBoard;
+        return gameService.getGame().getPlayerBoard();
     }
     @MessageMapping("/updateCell")
     @SendTo("/topic/boardUpdate")
@@ -46,11 +46,11 @@ public class WebSocketController {
         String newValue = request.getNewValue();
 
         // Feltételezve, hogy van egy olyan metódusod, ami frissíti a táblát és ellenőrzi az érvényességet
-        boolean success = playerBoard.updateCell(rowIndex, colIndex, newValue);
+        boolean success = gameService.getGame().getPlayerBoard().updateCell(rowIndex, colIndex, newValue);
 
         if (success) {
             // Ha a frissítés sikerült, küldd vissza a frissített tábla állapotát
-            return playerBoard;
+            return gameService.getGame().getPlayerBoard();
         } else {
             // Ha a frissítés nem sikerült (pl. érvénytelen koordináták vagy érték),
             // kezeld le a hibát megfelelően (pl. küldj vissza hibaüzenetet)
@@ -63,19 +63,19 @@ public class WebSocketController {
     @MessageMapping("battle.sendShot")
     @SendTo("/topic/public")
     public ShotCoordinate sendShot(@Payload ShotCoordinate shotCoordinate) {
-        System.out.println(shotCoordinate.getCoordinates());
+        System.out.println("This was a shotcoordinate towards the enemys board: " + shotCoordinate.getCoordinates());
         return shotCoordinate;
     }
     @SubscribeMapping("/generatedShot")
     public ShotCoordinate sendGeneratedShot() throws Exception {
         ShotCoordinate generatedShot = shotService.randomGeneratedShot();
-        System.out.println("generatedShot = " + generatedShot.toString());
+        System.out.println("The computer generated this generatedShot = " + generatedShot.toString());
         return generatedShot;
     }
     @MessageMapping("battle.sendHit")
     @SendTo("/topic/public")
     public HitCoordinate sendHit(@Payload HitCoordinate hitCoordinate) {
-        System.out.println(hitCoordinate.getHitCoordinates());
+        System.out.println("On the enemy board this coordinate was a hit: " + hitCoordinate.getHitCoordinates());
         return hitCoordinate;
     }
 

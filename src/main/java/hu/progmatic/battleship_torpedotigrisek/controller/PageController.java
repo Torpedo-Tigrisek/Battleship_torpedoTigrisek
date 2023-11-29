@@ -2,6 +2,7 @@ package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.User;
 import hu.progmatic.battleship_torpedotigrisek.model.UserProfile;
+import hu.progmatic.battleship_torpedotigrisek.service.GameService;
 import hu.progmatic.battleship_torpedotigrisek.service.UserProfileService;
 import hu.progmatic.battleship_torpedotigrisek.service.UserService;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ public class PageController {
     private UserService userService;
     private UserProfileService userProfileService;
     private PasswordEncoder passwordEncoder;
+    private GameService gameService;
 
     @GetMapping({"/home","/", ""})
     public String getHome(){
@@ -26,6 +28,7 @@ public class PageController {
 
     @GetMapping("/play")
     public String getPlay(){
+        gameService.newGame();
         return "play";
     }
     @GetMapping("/reg")
