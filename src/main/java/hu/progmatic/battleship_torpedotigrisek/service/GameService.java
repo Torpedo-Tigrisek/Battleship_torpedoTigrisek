@@ -1,9 +1,6 @@
 package hu.progmatic.battleship_torpedotigrisek.service;
 
-import hu.progmatic.battleship_torpedotigrisek.model.Board;
-import hu.progmatic.battleship_torpedotigrisek.model.Game;
-import hu.progmatic.battleship_torpedotigrisek.model.Ship;
-import hu.progmatic.battleship_torpedotigrisek.model.ShipType;
+import hu.progmatic.battleship_torpedotigrisek.model.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -99,4 +96,8 @@ public class GameService {
     public boolean isEnd(){ //ezt is lehet de az isGameFinished-et is lehet használni
         return game.isEnd();
     }
+
+//  public boolean evaluateShot(ShotCoordinate shotCoordinate) {
+//      shipPlacementService.
+//  }
 }

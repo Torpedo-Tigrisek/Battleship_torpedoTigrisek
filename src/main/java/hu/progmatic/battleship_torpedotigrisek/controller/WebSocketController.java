@@ -57,7 +57,7 @@ public class WebSocketController {
     @MessageMapping("/battle/sendShot")
     @SendTo("/topic/public")
     public ShotCoordinate sendShot(@Payload ShotCoordinate shotCoordinate) {
-        System.out.println("This was a shotcoordinate towards the enemys board: " + shotCoordinate.getCoordinates());
+
         return shotCoordinate;
     }
 
@@ -72,6 +72,8 @@ public class WebSocketController {
     @SendTo("/topic/public")
     public HitCoordinate sendHit(@Payload HitCoordinate hitCoordinate) {
         System.out.println("On the enemy board this coordinate was a hit: " + hitCoordinate.getHitCoordinates());
+        gameService.getGame().setPlayerScore(gameService.getGame().getPlayerScore()+1);
+        System.out.println("Player score is changed to:" + gameService.getGame().getPlayerScore());
         return hitCoordinate;
     }
 
