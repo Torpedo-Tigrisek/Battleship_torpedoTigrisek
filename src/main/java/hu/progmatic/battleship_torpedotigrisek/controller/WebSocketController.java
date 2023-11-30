@@ -100,6 +100,7 @@ public class WebSocketController {
         System.out.println(shotCoordinate.getCoordinates());
         return shotCoordinate;
     }
+
     @SubscribeMapping("/generatedShot")
     public ShotCoordinate sendGeneratedShot() throws Exception {
         ShotCoordinate generatedShot = shotService.randomGeneratedShot();
