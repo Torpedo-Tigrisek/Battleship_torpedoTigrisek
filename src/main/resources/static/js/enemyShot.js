@@ -1,6 +1,8 @@
 var placedPositions = [];
 var placedHitPositions = [];
+var generatedPositions = [];
 var stompClient = null;
+var canPlaceShips = true;
 
 function connectToGame() {
     var socket = new SockJS('/battleship-websocket');
@@ -12,6 +14,11 @@ function connectToGame() {
 }
 
 connectToGame();
+
+function playHitSound() {
+    var audio = document.getElementById('hitSound');
+    audio.play();
+}
 
 function placeX(cell) {
     var cellId = cell.id;
@@ -40,6 +47,7 @@ function placeX(cell) {
         // Találat esetén pirosra változtatjuk a cella színét
         console.log("Hit detected!");
         cell.style.backgroundColor = "red";
+        playHitSound();
 
         // Hozzáadjuk a találat koordinátáit a "HitCoordinate" listához
         placedHitPositions.push(cellId);
@@ -74,6 +82,7 @@ function placeX(cell) {
             JSON.stringify(hitCoordinates)
         );
         console.log("Hit was sent to server:", hitCoordinates.coordinates);
-        gettingRandomShotsFromServer();
     }
 }
+
+

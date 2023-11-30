@@ -1,12 +1,3 @@
-document.getElementById("shipForm").addEventListener("submit", function (event) {
-    event.preventDefault(); // Megakadályozza az űrlap alapértelmezett beküldési viselkedését
-    var shipType = document.getElementById("shipType").value;
-    var startX = document.getElementById("startX").value;
-    var startY = document.getElementById("startY").value;
-    var orientation = document.getElementById("orientation").value;
-
-    placeShip(shipType, parseInt(startX, 10), parseInt(startY, 10), orientation);
-});
 
 var stompClient = null;
 
