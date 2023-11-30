@@ -97,20 +97,20 @@ public class WebSocketController {
     @MessageMapping("/battle/sendShot")
     @SendTo("/topic/public")
     public ShotCoordinate sendShot(@Payload ShotCoordinate shotCoordinate) {
-        System.out.println(shotCoordinate.getCoordinates());
+        System.out.println("This was a shotcoordinate towards the enemys board: " + shotCoordinate.getCoordinates());
         return shotCoordinate;
     }
 
     @SubscribeMapping("/generatedShot")
     public ShotCoordinate sendGeneratedShot() throws Exception {
         ShotCoordinate generatedShot = shotService.randomGeneratedShot();
-        System.out.println("generatedShot = " + generatedShot.toString());
+        System.out.println("The computer generated this generatedShot = " + generatedShot.toString());
         return generatedShot;
     }
     @MessageMapping("battle.sendHit")
     @SendTo("/topic/public")
     public HitCoordinate sendHit(@Payload HitCoordinate hitCoordinate) {
-        System.out.println(hitCoordinate.getHitCoordinates());
+        System.out.println("On the enemy board this coordinate was a hit: " + hitCoordinate.getHitCoordinates());
         return hitCoordinate;
     }
 
