@@ -45,7 +45,9 @@
 </nav>
 <div class="board-container">
     <div class="board-table player-board">
-        <h2>Player's board</h2>
+        <div class="board-header">
+            <h2>Player's board</h2>
+        </div>
         <table>
             <tr th:each="row, rowIndex : ${playerBoard.grid}">
                 <td th:each="cell, colIndex : ${row}"
@@ -55,8 +57,14 @@
             </tr>
         </table>
     </div>
+
+    <button id="playGame" onclick="startGame()">Play Game</button>
+
+
     <div class="board-table opponent-board">
-        <h2>Opponent's board</h2>
+        <div class="board-header">
+            <h2>Opponent's board</h2>
+        </div>
         <table>
             <tr th:each="row, rowIndex : ${enemyBoard.grid}">
                 <td th:each="cell, colIndex : ${row}"
@@ -78,6 +86,7 @@
 <script type="text/javascript" src="/js/enemyShot.js"></script>
 <script type="text/javascript" src="/js/generatedShot.js"></script>
 <script type="text/javascript" src="/js/ships.js"></script>
+<audio id="hitSound" src="/audio/blow_up.mp3"></audio>
 
 
 </body>

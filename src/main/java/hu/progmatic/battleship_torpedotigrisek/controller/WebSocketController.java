@@ -37,7 +37,7 @@ public class WebSocketController {
         ));
     }
 
-  
+
     @MessageMapping("/placeRandomShips")
     @SendTo("/topic/shipPlaced")
     public Board handleRandomShipPlacement(){
@@ -49,7 +49,7 @@ public class WebSocketController {
             System.out.println("Hajó elhelyezve: " + ship);
         }
         System.out.println(ships);
-        
+
         return playerBoard;
     }
 
@@ -100,7 +100,6 @@ public class WebSocketController {
         System.out.println(shotCoordinate.getCoordinates());
         return shotCoordinate;
     }
-
     @SubscribeMapping("/generatedShot")
     public ShotCoordinate sendGeneratedShot() throws Exception {
         ShotCoordinate generatedShot = shotService.randomGeneratedShot();

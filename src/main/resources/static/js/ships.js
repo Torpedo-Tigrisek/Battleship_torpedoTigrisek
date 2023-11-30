@@ -1,9 +1,26 @@
 document.getElementById("placeShip").addEventListener("click", function() {
-    placeRandomShips();
+    if (canPlaceShips) {
+        placeRandomShips();
+    } else {
+        alert("Game has already started. No more ship placements allowed.");
+    }
 });
+
+document.getElementById("playGame").addEventListener("click", startGame);
+
+function startGame() {
+    canPlaceShips = false;
+    alert("Game has started. No more ship placements allowed.");
+}
 
 function placeRandomShips() {
     stompClient.send("/app/placeRandomShips", {}, {});
+}
+function gettingRandomShotsFromServer() {
+    stompClient.subscribe('/app/generatedShot', function (message) {
+        console.log("EZ ITT BENYER KOORDINÁTA: " + message.body);
+        placeBlueXAutomatically(message.body);
+    });
 }
 
 var stompClient = null;
@@ -43,8 +60,6 @@ function updateBoard(board) {
         });
     });
 }
-
-
 
 document.addEventListener('DOMContentLoaded', function() {
     connect();
