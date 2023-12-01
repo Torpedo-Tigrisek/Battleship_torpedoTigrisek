@@ -45,9 +45,7 @@
 </nav>
 <div class="board-container">
     <div class="board-table player-board">
-        <div class="board-header">
             <h2>Player's board</h2>
-        </div>
         <table>
             <tr th:each="row, rowIndex : ${playerBoard.grid}">
                 <td th:each="cell, colIndex : ${row}"
@@ -61,9 +59,7 @@
     <button id="playGame" onclick="startGame()">Play Game</button>
 
     <div class="board-table opponent-board">
-        <div class="board-header">
             <h2>Opponent's board</h2>
-        </div>
         <table>
             <tr th:each="row, rowIndex : ${enemyBoard.grid}">
                 <td th:each="cell, colIndex : ${row}"
@@ -80,6 +76,12 @@
 <button id="placeShip">Place Ships</button>
 
 <div class="board-container" id="board-container"></div>
+
+<audio id="baseSound" src="/audio/battlefield_1942.mp3" autoplay></audio>
+<div id="volumeControl">
+    <label for="volumeRange">Music volume: </label>
+    <input type="range" id="volumeRange" min="0" max="1" step="0.1" value="1" />
+</div>
 
 <script type="text/javascript" src="/js/testBoard.js"></script>
 <script type="text/javascript" src="/js/enemyShot.js"></script>
