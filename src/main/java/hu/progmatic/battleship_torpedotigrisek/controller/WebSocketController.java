@@ -54,10 +54,10 @@ public class WebSocketController {
     }
 
 
-    @MessageMapping("/battle/sendShot")
+    @MessageMapping("/battle.sendShot")
     @SendTo("/topic/public")
     public ShotCoordinate sendShot(@Payload ShotCoordinate shotCoordinate) {
-
+        System.out.println("The shot was sent to the enemy's board: " + shotCoordinate.getCoordinates());
         return shotCoordinate;
     }
 
