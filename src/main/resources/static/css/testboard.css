@@ -6,19 +6,17 @@ body {
     background-attachment: fixed; /* Háttérkép fix pozícióban */
 }
 
-.board-header {
-    background-color: rgba(229, 234, 234, 0.94);
-    border: 1px solid #000000; /* Fekete keret */
-    padding: 10px; /* Belső tér a keret körül */
-    margin-bottom: 10px; /* Külső tér az alatta lévő tartalomtól */
-    text-align: center; /* Szöveg középre igazítása */
-}
-
 .board-container {
     display: flex;
     justify-content: space-around;
     align-items: center;
     margin-bottom: 20px; /* Opcionális: térköz a táblák között */
+}
+.board-header h2 {
+    color: black;
+    border: 1px solid white;
+    display: inline-block;
+    padding: 5px;
 }
 
 /* Általános tábla stílus */
@@ -55,4 +53,14 @@ body {
 .blue-x {
     color: blue;
     font-size: 24px;
+
 }
+#volumeControl {
+    margin-top: 10px;
+    width: 5cm;
+}
+
+#volumeRange {
+    width: 100%;
+}
+

@@ -1,3 +1,21 @@
+var baseSound = document.getElementById('baseSound');
+
+// Elérjük a hangerőszabályzó elemet
+var volumeControl = document.getElementById('volumeRange');
+
+// Figyeljük a hangerőszabályzó változásait
+volumeControl.addEventListener('input', function () {
+    // Beállítjuk az audio hangerőjét a hangerőszabályzó értékére
+    baseSound.volume = parseFloat(volumeControl.value);
+});
+
+// Amikor a zene véget ér, újra elindítjuk
+baseSound.addEventListener('ended', function () {
+    baseSound.currentTime = 0; // Visszaállítjuk a lejátszási időt
+    baseSound.play();
+});
+
+
 document.getElementById("shipForm").addEventListener("submit", function (event) {
     event.preventDefault();
     var shipType = document.getElementById("shipType").value;
@@ -40,9 +58,9 @@ function calculateCoordinatesForShip(shipType, startX, startY, isHorizontal) {
 
     for (let i = 0; i < shipSize; i++) {
         if (isHorizontal) {
-            coordinates.push({ x: startX + i, y: startY });
+            coordinates.push({x: startX + i, y: startY});
         } else {
-            coordinates.push({ x: startX, y: startY + i });
+            coordinates.push({x: startX, y: startY + i});
         }
     }
 
@@ -51,11 +69,16 @@ function calculateCoordinatesForShip(shipType, startX, startY, isHorizontal) {
 
 function getShipSize(shipType) {
     switch (shipType) {
-        case "CRUISER": return 4;
-        case "SUBMARINE": return 3;
-        case "DESTROYER": return 2;
-        case "ATTACKER": return 1;
-        default: return 0;
+        case "CRUISER":
+            return 4;
+        case "SUBMARINE":
+            return 3;
+        case "DESTROYER":
+            return 2;
+        case "ATTACKER":
+            return 1;
+        default:
+            return 0;
     }
 }
 
@@ -72,7 +95,7 @@ function updateBoard(board) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     connect();
 });
 
