@@ -26,6 +26,7 @@ function placeBlueXAutomatically(message) {
         // Set the background color to red if it's a hit
         if (cell.textContent.includes("S")) {
             cell.style.backgroundColor = "red";
+            playHitSound();
         }
 
         generatedPositions.push(cellId);

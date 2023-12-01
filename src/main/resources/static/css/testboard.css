@@ -6,6 +6,14 @@ body {
     background-attachment: fixed; /* Háttérkép fix pozícióban */
 }
 
+.board-header {
+    background-color: rgba(229, 234, 234, 0.94);
+    border: 1px solid #000000; /* Fekete keret */
+    padding: 10px; /* Belső tér a keret körül */
+    margin-bottom: 10px; /* Külső tér az alatta lévő tartalomtól */
+    text-align: center; /* Szöveg középre igazítása */
+}
+
 .board-container {
     display: flex;
     justify-content: space-around;
