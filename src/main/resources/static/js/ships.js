@@ -10,12 +10,11 @@ document.getElementById("playGame").addEventListener("click", startGame);
 
 function startGame() {
     canPlaceShips = false;
+    stompClient.send("/app/ready", {}, {});
     alert("Game has started. No more ship placements allowed.");
 }
 
-document.getElementById("readyButton").addEventListener("click", function() {
-    stompClient.send("/app/ready", {}, {});
-});
+
 
 function placeRandomShips() {
     stompClient.send("/app/placeRandomShips", {}, {});

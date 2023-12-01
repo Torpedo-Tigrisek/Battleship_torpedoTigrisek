@@ -18,6 +18,7 @@ public class Game {
     private int enemyScore;
     private ShipType[] shipTypes;
     private List<Ship> ships;
+    private List<Ship> enemyShips;
     private List<ShipType> remainingShips;
     private boolean isEnd;
 }

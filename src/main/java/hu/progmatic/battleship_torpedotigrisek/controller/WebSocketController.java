@@ -33,16 +33,13 @@ public class WebSocketController {
         gameService.placeAllShips();
         sendShipData();
 
-        for (Ship ship : gameService.getGame().getShips()) {
-            System.out.println("Hajó elhelyezve: " + ship);
-        }
         System.out.println(gameService.getGame().getShips());
 
         return gameService.getGame().getPlayerBoard();
     }
     @MessageMapping("/ready")
     public void handleReady() {
-        shipPlacementService.fixShipPosition(ships);
+        gameService.fixShipPositions(gameService.getGame().getShips(), gameService.getGame().getEnemyShips());
 
     }
 

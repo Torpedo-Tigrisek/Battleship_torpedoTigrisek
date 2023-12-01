@@ -10,6 +10,7 @@ import java.util.*;
 public class ShipPlacementService {
     private final Random random = new Random();
     private List<Ship> placedShips;
+    private List<Ship> placedEnemyShips;
     private boolean isShipsPlaced = false;
 
 
@@ -56,8 +57,6 @@ public class ShipPlacementService {
     }
 
 
-
-
     private boolean canPlaceShip(Board board, int startX, int startY, Ship ship, boolean horizontal) {
         int shipSize = ship.getShipType().getSize();
 
@@ -83,6 +82,7 @@ public class ShipPlacementService {
         }
         return true;
     }
+
     private boolean isCellValid(Board board, int x, int y) {
         return x >= 0 && x < board.getWidth() && y >= 0 && y < board.getHeight();
     }
@@ -100,18 +100,18 @@ public class ShipPlacementService {
         }
     }
 
-    public void fixShipPosition(List<Ship>shipsOnBoard){
+    public void fixShipPosition(List<Ship> shipsOnBoard, List<Ship> enemyShipsOnBoard) {
         this.placedShips = new ArrayList<>(shipsOnBoard);
+        this.placedEnemyShips = new ArrayList<>(enemyShipsOnBoard);
         System.out.println(placedShips);
+        System.out.println(placedEnemyShips);
 
 
-    }
-
-    public boolean areShipsPlaced(){
-        return isShipsPlaced;
     }
 
 }
+
+
 
 
 

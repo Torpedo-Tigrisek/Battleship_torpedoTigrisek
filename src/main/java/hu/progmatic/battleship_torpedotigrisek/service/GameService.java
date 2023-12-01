@@ -30,6 +30,7 @@ public class GameService {
         game.setShipTypes(new ShipType[]{ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER});
         initializeEnemyShips();
         game.setShips(new ArrayList<>());
+        game.setEnemyShips(game.getEnemyShips());
         game.setRemainingShips(new ArrayList<>(Arrays.asList(
                 ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE,
                 ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
@@ -38,10 +39,18 @@ public class GameService {
 
     public void initializeEnemyShips() {
         List<Ship> enemyShips = generateShips();
+        getGame().setEnemyShips(new ArrayList<>());
         for (Ship ship : enemyShips) {
-            shipPlacementService.placeShipRandomly(game.getEnemyBoard(), ship);
+            if(shipPlacementService.placeShipRandomly(game.getEnemyBoard(), ship)){
+                getGame().getEnemyShips().add(ship);
+            }
+
         }
+        System.out.println("Enemy ships:" + game.getEnemyShips());
+
     }
+
+
 
     public List<Ship> generateShips() {
         List<Ship> ships = new ArrayList<>();
@@ -79,6 +88,10 @@ public class GameService {
                 ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
                 ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER
         ));
+    }
+
+    public void fixShipPositions(List<Ship>shipsOnBoard, List<Ship>enemyShipsOnBoard){
+        shipPlacementService.fixShipPosition(shipsOnBoard, enemyShipsOnBoard);
     }
 
     public String whoIsTheWinner() {
