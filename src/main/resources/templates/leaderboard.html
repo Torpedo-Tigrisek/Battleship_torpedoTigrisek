@@ -54,31 +54,25 @@
     <thead>
     <tr>
         <th>#</th>
+        <th></th>
         <th>Name</th>
+        <th></th>
         <th>Score</th>
     </tr>
     </thead>
     <!-- Adatsorok -->
     <tbody>
-    <tr>
-        <td>1</td>
-        <td>Dzsoki</td>
-        <td>13000</td>
-    </tr>
-    <tr>
-        <td>2</td>
-        <td>Bobbi</td>
-        <td>9800</td>
-    </tr>
-    <!--  kiiratas
+
     <tr th:each="user, stats : ${userList}">
         <td th:text="${stats.index + 1}">#</td>
-        <td th:text="${user.name}">Bobbi</td>
-        <td th:text="${user.score}">Bobbi</td>
+        <td></td>
+        <td th:text="${user.name}">Name</td>
+        <td></td>
+        <td th:text="${user.getUserProfile().getScore()}">Score</td>
     </tr>
-    -->
+
     </tbody>
-    <!-- További sorokat adhatsz hozzá hasonló módon -->
+
 </table>
 
 

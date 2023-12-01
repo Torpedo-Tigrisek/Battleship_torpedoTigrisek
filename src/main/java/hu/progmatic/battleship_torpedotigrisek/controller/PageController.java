@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 @AllArgsConstructor
 public class PageController {
@@ -52,7 +54,9 @@ public class PageController {
     }
 
     @GetMapping("/leaderboard")
-    public String getLeaderBoard(){
+    public String getLeaderBoard(Model model){
+        List<User> users = userService.getAllUserSortedByScore();
+        model.addAttribute("userList", users);
         return "leaderboard";
     }
 
