@@ -16,10 +16,14 @@ public class GameController {
     private final Board playerBoard = new Board();
     private final Board enemyBoard = new Board();
     private final ShipPlacementService shipPlacementService;
+
+
     private ShipType[] shipTypes = {ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER};
 
     public GameController(ShipPlacementService shipPlacementService) {
         this.shipPlacementService = shipPlacementService;
+
+
         initializeEnemyShips();
     }
 
@@ -27,7 +31,7 @@ public class GameController {
         List<Ship> enemyShips = generateShips();
         for (Ship ship : enemyShips) {
             shipPlacementService.placeShipRandomly(enemyBoard, ship);
-        }
+         }
     }
 
     private List<Ship> generateShips() {

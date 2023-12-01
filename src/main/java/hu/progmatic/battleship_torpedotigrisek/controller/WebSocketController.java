@@ -16,16 +16,14 @@ import java.util.*;
 public class WebSocketController {
 
     private final Board playerBoard;
-    private final Board enemyBoard;
     private List<Ship> ships;
     private ShotService shotService;
     private List<ShipType> remainingShips;
     private final ShipPlacementService shipPlacementService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public WebSocketController(Board playerBoard, Board enemyBoard, ShotService shotService, ShipPlacementService shipPlacementService, SimpMessagingTemplate messagingTemplate) {
+    public WebSocketController(Board playerBoard, ShotService shotService, ShipPlacementService shipPlacementService, SimpMessagingTemplate messagingTemplate) {
         this.playerBoard = playerBoard;
-        this.enemyBoard = enemyBoard;
         this.shipPlacementService = shipPlacementService;
         this.messagingTemplate = messagingTemplate;
         this.ships = new ArrayList<>();
@@ -51,6 +49,11 @@ public class WebSocketController {
         System.out.println(ships);
         
         return playerBoard;
+    }
+    @MessageMapping("/ready")
+    public void handleReady() {
+        shipPlacementService.fixShipPosition(ships);
+
     }
 
     private void sendShipData() {
@@ -81,7 +84,7 @@ public class WebSocketController {
 
         // Tábla törlése
         shipPlacementService.clearShips(playerBoard);
-        shipPlacementService.clearShips(enemyBoard);
+
 
         resetRemainingShips();
     }

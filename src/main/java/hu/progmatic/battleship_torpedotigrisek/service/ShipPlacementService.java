@@ -9,6 +9,8 @@ import java.util.*;
 @Service
 public class ShipPlacementService {
     private final Random random = new Random();
+    private List<Ship> placedShips;
+    private boolean isShipsPlaced = false;
 
 
     public boolean placeShipRandomly(Board board, Ship ship) {
@@ -98,40 +100,16 @@ public class ShipPlacementService {
         }
     }
 
-    /*
-    public List<Ship> getPlacedShips() {
-        List<Ship> placedShips = new ArrayList<>();
-        // Itt végigiterálsz a táblán és összegyűjted a hajók koordinátáit
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                String cellValue = grid[y][x];
-                if ("S".equals(cellValue)) {
-                    // Itt meg kell határozni, melyik hajóhoz tartozik ez a koordináta
-                    // Ez a rész a kódod bővítését igényli, hogy nyomon követhesd a hajók egyedi azonosítóit
-                    Ship ship = findShipByCoordinate(x, y);
-                    if (ship != null && !placedShips.contains(ship)) {
-                        placedShips.add(ship);
-                    }
-                }
-            }
-        }
-        return placedShips;
-    }
-    private Ship findShipByCoordinate(int x, int y) {
-        // Megkeresi a hajót a koordináta alapján
-        // Ez a logika attól függ, hogyan tárolod a hajók információit
-        // Például ha van egy Map<Coordinate, Ship> map-od, akkor:
-        return shipMap.get(new Coordinate(x, y));
+    public void fixShipPosition(List<Ship>shipsOnBoard){
+        this.placedShips = new ArrayList<>(shipsOnBoard);
+        System.out.println(placedShips);
+
+
     }
 
-     */
-
-
-
-
-
-
-
+    public boolean areShipsPlaced(){
+        return isShipsPlaced;
+    }
 
 }
 

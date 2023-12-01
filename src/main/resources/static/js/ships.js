@@ -2,6 +2,10 @@ document.getElementById("placeShip").addEventListener("click", function() {
     placeRandomShips();
 });
 
+document.getElementById("readyButton").addEventListener("click", function() {
+    stompClient.send("/app/ready", {}, {});
+});
+
 function placeRandomShips() {
     stompClient.send("/app/placeRandomShips", {}, {});
 }
@@ -45,7 +49,7 @@ function updateBoard(board) {
 }
 
 
-
 document.addEventListener('DOMContentLoaded', function() {
     connect();
 });
+
