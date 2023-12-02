@@ -1,16 +1,18 @@
 package hu.progmatic.battleship_torpedotigrisek.service;
 
 import hu.progmatic.battleship_torpedotigrisek.model.*;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class GameService {
     private Game game;
     private ShipPlacementService shipPlacementService;
+    private Map<Long, Game> userGame = new HashMap<>();
 
     public GameService(Game game, ShipPlacementService shipPlacementService) {
         this.game = game;
@@ -21,6 +23,28 @@ public class GameService {
     public Game getGame(){
         return this.game;
     }
+
+    public Game startNewGame(Long userId){
+        Game game = new Game();
+        userGame.put(userId, game);
+        return game;
+    }
+
+    /*
+    public Long getCurrentUserId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            String username = authentication.getName();
+        }
+
+        Long userId = authentication.g
+
+    }
+
+     */
+
+
 
     public void newGame(){
         game.setPlayerBoard(new Board());
