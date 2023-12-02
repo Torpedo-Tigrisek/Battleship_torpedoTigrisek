@@ -55,11 +55,23 @@ public class WebSocketController {
 
     }
 
+    public void GamePlay(){
+
+    }
 
     @MessageMapping("/battle.sendShot")
     @SendTo("/topic/public")
     public ShotCoordinate sendShot(@Payload ShotCoordinate shotCoordinate) {
         System.out.println("The shot was sent to the enemy's board: " + shotCoordinate.getCoordinates());
+        System.out.println("was this shot a hit?" + gameService.evaluatePlayerShot(shotCoordinate));
+        boolean hit = gameService.evaluatePlayerShot(shotCoordinate);
+        if(hit){
+            gameService.getGame().setPlayerScore(gameService.getGame().getPlayerScore()+1);
+            System.out.println("Player " + gameService.getGame().getPlayerScore() + " : " + gameService.getGame().getEnemyScore() + " Enemy" );
+            if(gameService.isGameFinished()){
+                sendEnd();
+            }
+        }
         return shotCoordinate;
     }
 
@@ -67,6 +79,15 @@ public class WebSocketController {
     public ShotCoordinate sendGeneratedShot() throws Exception {
         ShotCoordinate generatedShot = shotService.randomGeneratedShot();
         System.out.println("The computer generated this generatedShot = " + generatedShot.toString());
+        System.out.println("was this generated shot a hit?" + gameService.evaluateGeneratedShot(generatedShot));
+        boolean hit = gameService.evaluateGeneratedShot(generatedShot);
+        if(hit){
+            gameService.getGame().setEnemyScore(gameService.getGame().getEnemyScore()+1);
+            System.out.println("Player " + gameService.getGame().getPlayerScore() + " : " + gameService.getGame().getEnemyScore() + " Enemy");
+            if(gameService.isGameFinished()){
+                sendEnd();
+            }
+        }
         return generatedShot;
     }
 
@@ -74,9 +95,12 @@ public class WebSocketController {
     @SendTo("/topic/public")
     public HitCoordinate sendHit(@Payload HitCoordinate hitCoordinate) {
         System.out.println("On the enemy board this coordinate was a hit: " + hitCoordinate.getHitCoordinates());
-        gameService.getGame().setPlayerScore(gameService.getGame().getPlayerScore()+1);
-        System.out.println("Player score is changed to:" + gameService.getGame().getPlayerScore());
         return hitCoordinate;
     }
 
+    @SubscribeMapping("/end")
+    public String sendEnd(){
+        System.out.println(gameService.whoIsTheWinner());
+        return gameService.whoIsTheWinner();
+    }
 }

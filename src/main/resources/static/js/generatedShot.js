@@ -10,7 +10,8 @@ function placeBlueXAutomatically(message) {
 
         // Check if the position has already been placed
         if (generatedPositions.includes(cellId)) {
-            alert("Ezen a helyen már van egy X!");
+        //    alert("Ezen a helyen már van egy X!");
+            gettingRandomShotsFromServer();
             return;
         }
 
@@ -27,6 +28,9 @@ function placeBlueXAutomatically(message) {
         if (cell.textContent.includes("S")) {
             cell.style.backgroundColor = "red";
             playHitSound();
+            enemyHit++;
+            isEnd();
+            console.log('PLAYER HIT ' + playerHit + ' : ' + enemyHit + ' ENEMY HIT' )
         } else {
             // Ha a találat nem hajóra esett, játssza le a vízcsepp hangot
             playWaterDropSound();
@@ -34,7 +38,7 @@ function placeBlueXAutomatically(message) {
 
         generatedPositions.push(cellId);
 
-    }, 2000); // késleltetés
+    }, 1000); // késleltetés
     function playWaterDropSound() {
         var waterDropSound = document.getElementById('waterDropSound');
         waterDropSound.play();

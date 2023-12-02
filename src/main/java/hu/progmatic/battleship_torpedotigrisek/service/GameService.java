@@ -1,16 +1,18 @@
 package hu.progmatic.battleship_torpedotigrisek.service;
 
 import hu.progmatic.battleship_torpedotigrisek.model.*;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class GameService {
     private Game game;
     private ShipPlacementService shipPlacementService;
+    private Map<Long, Game> userGame = new HashMap<>();
 
     public GameService(Game game, ShipPlacementService shipPlacementService) {
         this.game = game;
@@ -21,6 +23,28 @@ public class GameService {
     public Game getGame(){
         return this.game;
     }
+
+    public Game startNewGame(Long userId){
+        Game game = new Game();
+        userGame.put(userId, game);
+        return game;
+    }
+
+    /*
+    public Long getCurrentUserId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            String username = authentication.getName();
+        }
+
+        Long userId = authentication.g
+
+    }
+
+     */
+
+
 
     public void newGame(){
         game.setPlayerBoard(new Board());
@@ -96,7 +120,7 @@ public class GameService {
 
     public String whoIsTheWinner() {
         if (game.getPlayerScore() == 20) {
-            return "You won";
+            return "You win";
         } else if (game.getEnemyScore() == 20) {
             return "You lose";
         }
@@ -110,7 +134,30 @@ public class GameService {
         return game.isEnd();
     }
 
-//  public boolean evaluateShot(ShotCoordinate shotCoordinate) {
-//      shipPlacementService.
-//  }
+    public boolean evaluatePlayerShot(ShotCoordinate shotCoordinate) {
+        int y = Integer.parseInt(shotCoordinate.getCoordinates().get(0).substring(0,1));
+        int x = Integer.parseInt(shotCoordinate.getCoordinates().get(0).substring(3));
+        for ( Ship actual : game.getEnemyShips()) {
+            for (int i = 0; i < actual.getCoordinates().size(); i++) {
+                if((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public boolean evaluateGeneratedShot(ShotCoordinate generatedShot) {
+        int y = Integer.parseInt(generatedShot.getCoordinates().get(0));
+        int x = Integer.parseInt(generatedShot.getCoordinates().get(1));
+        for ( Ship actual : game.getShips()) {
+            for (int i = 0; i < actual.getCoordinates().size(); i++) {
+                if((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

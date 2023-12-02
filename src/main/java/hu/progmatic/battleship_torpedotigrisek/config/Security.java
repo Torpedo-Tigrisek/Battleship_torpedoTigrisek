@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,11 +26,13 @@ public class Security {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){return new BCryptPasswordEncoder();}
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider(){
-        DaoAuthenticationProvider provider=new DaoAuthenticationProvider();
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 
         provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(userService);
@@ -41,8 +44,10 @@ public class Security {
         http
                 .authorizeHttpRequests((requests) -> requests // ez a rész engedélyezi az app-ba való belépést login nélkül
                         .requestMatchers("/", "/reg", "/leaderboard").permitAll()
-                        .requestMatchers("/", "/home","/testBoard","/dinamicboard").permitAll()
+                        .requestMatchers("/", "/home", "/testBoard").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
+
                 )
                 .formLogin()
 
@@ -57,4 +62,6 @@ public class Security {
                 .permitAll();
         return http.build();
     }
+
+
 }

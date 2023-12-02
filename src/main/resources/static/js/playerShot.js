@@ -60,6 +60,9 @@ function placeX(cell) {
         var hitColumn = hitCoordinates[3];
         var cellIdHitCoordinates = [hitRow + ", " +hitColumn];
         sendHitPositionsToServer(cellIdHitCoordinates);
+        playerHit++;
+        isEnd();
+        console.log('PLAYER HIT ' + playerHit + ' : ' + enemyHit + ' ENEMY HIT' )
     } else {
         // Ha a találat nem hajóra esett, játssza le a vízcsepp hangot
         playWaterDropSound();

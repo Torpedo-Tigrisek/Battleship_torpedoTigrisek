@@ -17,7 +17,6 @@ import java.util.List;
 public class GameController {
     private GameService gameService;
     private final ShipPlacementService shipPlacementService;
-    private ShipType[] shipTypes = {ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER};
 @Autowired
     public GameController(ShipPlacementService shipPlacementService, GameService gameService) {
         this.shipPlacementService = shipPlacementService;

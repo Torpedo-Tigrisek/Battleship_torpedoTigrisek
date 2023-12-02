@@ -66,6 +66,13 @@ body {
 #effectVolumeRange {
     width: 100%;
 }
+.board-table .ship {
+    width: 10px;
+    height: 10px;
+    background-color: #5e8a85;
+    color: transparent; /* Áttetszővé tesszük a szöveget */
+    text-shadow: none;
+}
 
 
 
