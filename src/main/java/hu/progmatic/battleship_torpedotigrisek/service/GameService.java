@@ -96,7 +96,7 @@ public class GameService {
 
     public String whoIsTheWinner() {
         if (game.getPlayerScore() == 20) {
-            return "You won";
+            return "You win";
         } else if (game.getEnemyScore() == 20) {
             return "You lose";
         }
@@ -110,7 +110,30 @@ public class GameService {
         return game.isEnd();
     }
 
-//  public boolean evaluateShot(ShotCoordinate shotCoordinate) {
-//      shipPlacementService.
-//  }
+    public boolean evaluatePlayerShot(ShotCoordinate shotCoordinate) {
+        int y = Integer.parseInt(shotCoordinate.getCoordinates().get(0).substring(0,1));
+        int x = Integer.parseInt(shotCoordinate.getCoordinates().get(0).substring(3));
+        for ( Ship actual : game.getEnemyShips()) {
+            for (int i = 0; i < actual.getCoordinates().size(); i++) {
+                if((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public boolean evaluateGeneratedShot(ShotCoordinate generatedShot) {
+        int y = Integer.parseInt(generatedShot.getCoordinates().get(0));
+        int x = Integer.parseInt(generatedShot.getCoordinates().get(1));
+        for ( Ship actual : game.getShips()) {
+            for (int i = 0; i < actual.getCoordinates().size(); i++) {
+                if((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
