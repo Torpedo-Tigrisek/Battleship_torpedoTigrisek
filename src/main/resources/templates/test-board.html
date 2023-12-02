@@ -6,6 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/testboard.css" type="text/css">
+    <link rel="stylesheet" href="/css/popup.css" type="text/css">
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stomp-websocket/lib/stomp.min.js"></script>
 </head>
@@ -78,11 +79,18 @@
 
 <button id="placeShip">Place Ships</button>
 
+<div class="popup-container">
+    <div class="popup" id="popup">
+        <h2 id="popup-message"></h2>
+        <a type="button" class="pop-btn" th:href="@{/testBoard}">Restart</a>
+        <a type="button" class="pop-btn" th:href="@{/home}">Exit</a>
+    </div>
+</div>
 
 <div class="board-container" id="board-container"></div>
 
-
-<script type="text/javascript" src="/js/enemyShot.js"></script>
+<script type="text/javascript" src="/js/end.js"></script>
+<script type="text/javascript" src="/js/playerShot.js"></script>
 <script type="text/javascript" src="/js/generatedShot.js"></script>
 <script type="text/javascript" src="/js/ships.js"></script>
 <audio id="hitSound" src="/audio/blow_up.mp3"></audio>
