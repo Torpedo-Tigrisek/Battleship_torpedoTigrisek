@@ -56,12 +56,14 @@ body {
     font-size: 24px;
 
 }
-#volumeControl {
+#musicVolumeControl,
+#effectVolumeControl {
     margin-top: 10px;
     width: 5cm;
 }
 
-#volumeRange {
+#musicVolumeRange,
+#effectVolumeRange {
     width: 100%;
 }
 

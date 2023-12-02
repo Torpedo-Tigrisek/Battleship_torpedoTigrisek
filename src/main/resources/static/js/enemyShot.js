@@ -16,8 +16,12 @@ function connectToGame() {
 connectToGame();
 
 function playHitSound() {
-    var audio = document.getElementById('hitSound');
-    audio.play();
+    var audioHit = document.getElementById('hitSound');
+    audioHit.play();
+}
+function playWaterDropSound() {
+    var waterDropSound = document.getElementById('waterDropSound');
+    waterDropSound.play();
 }
 
 function placeX(cell) {
@@ -56,6 +60,9 @@ function placeX(cell) {
         var hitColumn = hitCoordinates[3];
         var cellIdHitCoordinates = [hitRow + ", " +hitColumn];
         sendHitPositionsToServer(cellIdHitCoordinates);
+    } else {
+        // Ha a találat nem hajóra esett, játssza le a vízcsepp hangot
+        playWaterDropSound();
     }
 
 

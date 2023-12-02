@@ -78,16 +78,22 @@
 <div class="board-container" id="board-container"></div>
 
 <audio id="baseSound" src="/audio/battlefield_1942.mp3" autoplay></audio>
-<div id="volumeControl">
-    <label for="volumeRange">Music volume: </label>
-    <input type="range" id="volumeRange" min="0" max="1" step="0.1" value="1" />
+<div id="musicVolumeControl">
+    <label for="musicVolumeRange">Music volume: </label>
+    <input type="range" id="musicVolumeRange" min="0" max="1" step="0.1" value="1" />
+</div>
+
+<audio id="hitSound" src="/audio/blow_up.mp3"></audio>
+<audio id="waterDropSound" src="/audio/water_drop.mp3"></audio>
+<div id="effectVolumeControl">
+    <label for="effectVolumeRange">Effect Volume: </label>
+    <input type="range" id="effectVolumeRange" min="0" max="1" step="0.1" value="1" />
 </div>
 
 <script type="text/javascript" src="/js/testBoard.js"></script>
 <script type="text/javascript" src="/js/enemyShot.js"></script>
 <script type="text/javascript" src="/js/generatedShot.js"></script>
 <script type="text/javascript" src="/js/ships.js"></script>
-<audio id="hitSound" src="/audio/blow_up.mp3"></audio>
 
 
 </body>

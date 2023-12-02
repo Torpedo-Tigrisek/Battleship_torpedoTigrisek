@@ -27,11 +27,18 @@ function placeBlueXAutomatically(message) {
         if (cell.textContent.includes("S")) {
             cell.style.backgroundColor = "red";
             playHitSound();
+        } else {
+            // Ha a találat nem hajóra esett, játssza le a vízcsepp hangot
+            playWaterDropSound();
         }
 
         generatedPositions.push(cellId);
 
     }, 2000); // késleltetés
+    function playWaterDropSound() {
+        var waterDropSound = document.getElementById('waterDropSound');
+        waterDropSound.play();
+    }
 }
 
 function gettingRandomShotsFromServer() {
