@@ -1,0 +1,47 @@
+body {
+    font-family: Impact, sans-serif;
+    background-image: url('/images/BS5.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    color: black;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+nav.navbar {
+    background-color: #004466;
+}
+
+table {
+    width: 80%;
+    margin: 2rem auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-collapse: collapse;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+th, td {
+    text-align: left;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #006699; /* Medium blue shade */
+    color: white;
+    font-size: 1.1rem;
+}
+
+td {
+    font-size: 1rem;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
