@@ -1,5 +1,5 @@
 let popup = document.getElementById("popup");
-var popupMessage = document.getElementById("popup-message");
+const popupMessage = document.getElementById("popup-message");
 var playerHit = 0;
 var enemyHit = 0;
 
@@ -12,12 +12,11 @@ function isEnd(){
 function getEndMessage() {
     stompClient.subscribe('/app/end', function (message) {
         console.log("A játék végekor ezt küldi a szerver: " + message.body);
-        openPopup(message.body);
+        popupMessage.innerHTML = message.body;
+        openPopup();
     });
 }
 
-function openPopup(message) {
-    console.log(message)
-    popupMessage = message;
+function openPopup() {
     popup.classList.add("open-popup");
 }

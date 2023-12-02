@@ -35,9 +35,9 @@
 .open-popup{
     visibility: visible;
 }
-.popup h2{
+.popup-h2{
     font-size: 38px;
     font-weight: 500;
-    margin: 30px 0 10px;
+    margin: 0 0 0;
     color: white;
 }
