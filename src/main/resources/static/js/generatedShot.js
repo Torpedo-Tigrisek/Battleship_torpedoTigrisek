@@ -10,7 +10,8 @@ function placeBlueXAutomatically(message) {
 
         // Check if the position has already been placed
         if (generatedPositions.includes(cellId)) {
-            alert("Ezen a helyen már van egy X!");
+        //    alert("Ezen a helyen már van egy X!");
+            gettingRandomShotsFromServer();
             return;
         }
 
@@ -27,11 +28,14 @@ function placeBlueXAutomatically(message) {
         if (cell.textContent.includes("S")) {
             cell.style.backgroundColor = "red";
             playHitSound();
+            enemyHit++;
+            isEnd();
+            console.log('PLAYER HIT ' + playerHit + ' : ' + enemyHit + ' ENEMY HIT' )
         }
 
         generatedPositions.push(cellId);
 
-    }, 2000); // késleltetés
+    }, 1000); // késleltetés
 }
 
 function gettingRandomShotsFromServer() {
