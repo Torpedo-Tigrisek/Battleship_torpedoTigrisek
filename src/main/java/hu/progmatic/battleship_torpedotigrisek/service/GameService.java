@@ -9,12 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Data
 public class GameService {
     private ShipPlacementService shipPlacementService;
-    private Map<Long, Game> userGame = new HashMap<>();
+    private Map<Long, Game> userGame = new ConcurrentHashMap<>();
 
     public GameService(ShipPlacementService shipPlacementService) {
 
@@ -27,9 +28,15 @@ public class GameService {
         if (userId != null) {
             Game game = newGame(userId);
             userGame.put(userId, game);
+            logMapState("startNewGameForUser");
+            System.out.println("New game started for user ID: " + userId + ", Game: " + game);
+            initializeEnemyShips(userId);
             return game;
         }
         return null;
+    }
+    private void logMapState(String startNewGameForUser) {
+        System.out.println("Map state after " + startNewGameForUser + ": " + userGame);
     }
 
 
@@ -62,22 +69,24 @@ public class GameService {
     }
 
     public void initializeEnemyShips(Long userId) {
-
         Game game = userGame.get(userId);
         if (game != null) {
+            if (game.getEnemyShips() == null) {
+                game.setEnemyShips(new ArrayList<>());
+            }
+
             List<Ship> enemyShips = generateShips(userId);
-            game.setEnemyShips(new ArrayList<>());
+
             for (Ship ship : enemyShips) {
                 if (shipPlacementService.placeShipRandomly(game.getEnemyBoard(), ship)) {
                     game.getEnemyShips().add(ship);
                 }
-
             }
+
             System.out.println("Enemy ships:" + game.getEnemyShips());
         } else {
             System.out.println("Game not initialized for user");
         }
-
     }
 
 

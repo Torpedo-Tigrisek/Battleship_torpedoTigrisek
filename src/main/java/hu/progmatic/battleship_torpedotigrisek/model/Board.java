@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Data
-@Component
 public class Board {
 
     private final int width = 10;

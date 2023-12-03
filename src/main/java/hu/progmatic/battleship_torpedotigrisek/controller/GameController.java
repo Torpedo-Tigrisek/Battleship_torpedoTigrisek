@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,19 +31,32 @@ public class GameController {
     }
 
     @GetMapping("/testBoard")
-    public String gameBoard(Model model, GameService gameService) {
+    public String gameBoard(Model model) {
         Long userId = gameService.getCurrentUserId();
-        System.out.println(gameService.getCurrentUserId());
+        System.out.println("Accessing /testBoard with userId: " + userId);
         if (userId != null) {
+            System.out.println("Looking up game for user ID: " + userId);
             Game game = gameService.getUserGame().get(userId);
+            System.out.println("Game found: " + game);
             if (game != null) {
                 model.addAttribute("playerBoard", game.getPlayerBoard());
                 model.addAttribute("enemyBoard", game.getEnemyBoard());
                 return "test-board";
             }
         }
-        // Ha nincs játék vagy a felhasználó nincs bejelentkezve, irányítsd át őket egy hibaoldalra vagy a főoldalra
         return "redirect:/some-error-page";
+    }
+
+    @GetMapping("/startGame")
+    public String startGame(RedirectAttributes redirectAttributes) {
+        Long userId = gameService.getCurrentUserId();
+        if (userId != null) {
+            gameService.startNewGameForUser(userId);
+            gameService.initializeEnemyShips(userId);
+            return "redirect:/testBoard";
+        }
+        redirectAttributes.addFlashAttribute("error", "Nem sikerült elindítani a játékot.");
+        return "redirect:/home";
     }
 
 

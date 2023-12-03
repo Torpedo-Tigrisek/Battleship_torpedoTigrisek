@@ -19,12 +19,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/battleship-websocket")
-                .addInterceptors(new CustomHandshakeInterceptor())
+
                 .withSockJS();
     }
-    @Override
-    public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
 
-    }
 
 }

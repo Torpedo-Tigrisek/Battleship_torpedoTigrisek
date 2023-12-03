@@ -10,6 +10,7 @@ document.getElementById("playGame").addEventListener("click", startGame);
 
 function startGame() {
     canPlaceShips = false;
+
     stompClient.send("/app/ready", {}, {});
     alert("Game has started. No more ship placements allowed.");
 }
@@ -18,6 +19,9 @@ function startGame() {
 
 function placeRandomShips() {
     stompClient.send("/app/placeRandomShips", {}, {});
+}
+function placeEnemyShips() {
+    stompClient.send("/app/placeEnemyShips", {}, {});
 }
 function gettingRandomShotsFromServer() {
     stompClient.subscribe('/app/generatedShot', function (message) {

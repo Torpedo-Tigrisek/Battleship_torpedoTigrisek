@@ -6,11 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-@Configuration
+
 public class GameConfig {
-    @Bean
-    public Game gameBean(){
-        return new Game();
-    }
+
 
 }
