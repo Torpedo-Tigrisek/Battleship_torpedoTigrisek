@@ -52,7 +52,7 @@ public class GameController {
         Long userId = gameService.getCurrentUserId();
         if (userId != null) {
             gameService.startNewGameForUser(userId);
-            gameService.initializeEnemyShips(userId);
+
             return "redirect:/testBoard";
         }
         redirectAttributes.addFlashAttribute("error", "Nem sikerült elindítani a játékot.");

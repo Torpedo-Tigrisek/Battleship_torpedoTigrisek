@@ -58,7 +58,6 @@ public class GameService {
         game.setPlayerScore(0);
         game.setEnemyScore(0);
         game.setShipTypes(new ShipType[]{ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER});
-        initializeEnemyShips(userId);
         game.setShips(new ArrayList<>());
         game.setEnemyShips(game.getEnemyShips());
         game.setRemainingShips(new ArrayList<>(Arrays.asList(
