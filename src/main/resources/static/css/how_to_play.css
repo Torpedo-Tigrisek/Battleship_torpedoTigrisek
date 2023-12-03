@@ -1,0 +1,11 @@
+body {
+    font-family: Impact, sans-serif;
+    background-image: url('/images/BS6.png');
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    color: black;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
