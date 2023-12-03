@@ -1,6 +1,7 @@
 package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.Board;
+import hu.progmatic.battleship_torpedotigrisek.model.Game;
 import hu.progmatic.battleship_torpedotigrisek.model.Ship;
 import hu.progmatic.battleship_torpedotigrisek.model.ShipType;
 import hu.progmatic.battleship_torpedotigrisek.service.GameService;
@@ -29,9 +30,20 @@ public class GameController {
     }
 
     @GetMapping("/testBoard")
-    public String gameBoard(Model model) {
-        model.addAttribute("playerBoard", gameService.getGame().getPlayerBoard());
-        model.addAttribute("enemyBoard", gameService.getGame().getEnemyBoard());
-        return "test-board";
+    public String gameBoard(Model model, GameService gameService) {
+        Long userId = gameService.getCurrentUserId();
+        System.out.println(gameService.getCurrentUserId());
+        if (userId != null) {
+            Game game = gameService.getUserGame().get(userId);
+            if (game != null) {
+                model.addAttribute("playerBoard", game.getPlayerBoard());
+                model.addAttribute("enemyBoard", game.getEnemyBoard());
+                return "test-board";
+            }
+        }
+        // Ha nincs játék vagy a felhasználó nincs bejelentkezve, irányítsd át őket egy hibaoldalra vagy a főoldalra
+        return "redirect:/some-error-page";
     }
+
+
 }

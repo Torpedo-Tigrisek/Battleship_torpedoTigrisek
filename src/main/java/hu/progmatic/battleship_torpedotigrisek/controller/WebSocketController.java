@@ -9,8 +9,10 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 
+import java.security.Principal;
 import java.util.*;
 
 @Controller
@@ -28,67 +30,87 @@ public class WebSocketController {
 
     @MessageMapping("/placeRandomShips")
     @SendTo("/topic/shipPlaced")
-    public Board handleRandomShipPlacement() {
-        gameService.resetGame();
-        gameService.placeAllShips();
-        sendShipData();
-
-        System.out.println(gameService.getGame().getShips());
-
-        return gameService.getGame().getPlayerBoard();
-    }
-    @MessageMapping("/ready")
-    public void handleReady() {
-        gameService.fixShipPositions(gameService.getGame().getShips(), gameService.getGame().getEnemyShips());
-
-    }
-
-    private void sendShipData() {
-        List<Map<String, Object>> shipData = new ArrayList<>();
-        for (Ship ship : gameService.getGame().getShips()) {
-            Map<String, Object> shipInfo = new HashMap<>();
-            shipInfo.put("type", ship.getShipType().toString());
-            shipInfo.put("coordinates", ship.getCoordinates());
-            shipData.add(shipInfo);
+    public Board handleRandomShipPlacement(Principal principal) {
+        Long userId = getUserIdFromPrincipal(principal);
+        System.out.println("userId: " + userId);
+        if (userId != null) {
+            Game game = gameService.startNewGameForUser(userId);
+            System.out.println("Game: " + game );
+            gameService.resetGame(userId);
+            gameService.placeAllShips(userId);
+            sendShipData(userId);
+            System.out.println(game.getShips());
+            return game.getPlayerBoard();
         }
-        messagingTemplate.convertAndSend("/topic/shipData", shipData);
+
+        return null;
+    }
+
+    @MessageMapping("/ready")
+    public void handleReady(Principal principal) {
+        Long userId = getUserIdFromPrincipal(principal);
+        if (userId != null) {
+            gameService.fixShipPositions(userId);
+        }
 
     }
 
-    public void GamePlay(){
+    private void sendShipData(Long userId) {
+        Game game = gameService.getUserGame().get(userId);
+        if (game != null) {
+            List<Map<String, Object>> shipData = new ArrayList<>();
+            for (Ship ship : game.getShips()) {
+                Map<String, Object> shipInfo = new HashMap<>();
+                shipInfo.put("type", ship.getShipType().toString());
+                shipInfo.put("coordinates", ship.getCoordinates());
+                shipData.add(shipInfo);
+            }
+            messagingTemplate.convertAndSend("/topic/shipData", shipData);
+        }
+
+    }
+
+
+    public void GamePlay() {
 
     }
 
     @MessageMapping("/battle.sendShot")
     @SendTo("/topic/public")
-    public ShotCoordinate sendShot(@Payload ShotCoordinate shotCoordinate) {
-        System.out.println("The shot was sent to the enemy's board: " + shotCoordinate.getCoordinates());
-        System.out.println("was this shot a hit?" + gameService.evaluatePlayerShot(shotCoordinate));
-        boolean hit = gameService.evaluatePlayerShot(shotCoordinate);
-        if(hit){
-            gameService.getGame().setPlayerScore(gameService.getGame().getPlayerScore()+1);
-            System.out.println("Player " + gameService.getGame().getPlayerScore() + " : " + gameService.getGame().getEnemyScore() + " Enemy" );
-            if(gameService.isGameFinished()){
-                sendEnd();
+    public ShotCoordinate sendShot(Principal principal, @Payload ShotCoordinate shotCoordinate) {
+        Long userId = getUserIdFromPrincipal(principal);
+        if (userId != null) {
+            boolean hit = gameService.evaluatePlayerShot(shotCoordinate, userId);
+            System.out.println("The shot was sent to the enemy's board: " + shotCoordinate.getCoordinates());
+            System.out.println("was this shot a hit? " + hit);
+            if (hit) {
+                gameService.updatePlayerScore(userId);
+                if (gameService.isGameFinished(userId)) {
+                    sendEnd(userId);
+                }
             }
+            return shotCoordinate;
         }
-        return shotCoordinate;
+        return null;
     }
 
     @SubscribeMapping("/generatedShot")
-    public ShotCoordinate sendGeneratedShot() throws Exception {
-        ShotCoordinate generatedShot = shotService.randomGeneratedShot();
-        System.out.println("The computer generated this generatedShot = " + generatedShot.toString());
-        System.out.println("was this generated shot a hit?" + gameService.evaluateGeneratedShot(generatedShot));
-        boolean hit = gameService.evaluateGeneratedShot(generatedShot);
-        if(hit){
-            gameService.getGame().setEnemyScore(gameService.getGame().getEnemyScore()+1);
-            System.out.println("Player " + gameService.getGame().getPlayerScore() + " : " + gameService.getGame().getEnemyScore() + " Enemy");
-            if(gameService.isGameFinished()){
-                sendEnd();
+    public ShotCoordinate sendGeneratedShot(Principal principal) throws Exception {
+        Long userId = getUserIdFromPrincipal(principal);
+        if (userId != null) {
+            ShotCoordinate generatedShot = shotService.randomGeneratedShot();
+            boolean hit = gameService.evaluateGeneratedShot(generatedShot, userId);
+            System.out.println("The computer generated this shot: " + generatedShot.toString());
+            System.out.println("was this generated shot a hit? " + hit);
+            if (hit) {
+                gameService.updateEnemyScore(userId);
+                if (gameService.isGameFinished(userId)) {
+                    sendEnd(userId);
+                }
             }
+            return generatedShot;
         }
-        return generatedShot;
+        return null;
     }
 
     @MessageMapping("battle.sendHit")
@@ -98,9 +120,21 @@ public class WebSocketController {
         return hitCoordinate;
     }
 
-    @SubscribeMapping("/end")
-    public String sendEnd(){
-        System.out.println(gameService.whoIsTheWinner());
-        return gameService.whoIsTheWinner();
+    private void sendEnd(Long userId) {
+        String winner = gameService.whoIsTheWinner(userId);
+        System.out.println(winner);
+        messagingTemplate.convertAndSend("/topic/end", winner);
+    }
+
+    private Long getUserIdFromPrincipal(Principal principal) {
+        if (principal instanceof Authentication) {
+            Authentication authentication = (Authentication) principal;
+            Object principalObj = authentication.getPrincipal();
+            if (principalObj instanceof User) {
+                User user = (User) principalObj;
+                return user.getId();
+            }
+        }
+        return null;
     }
 }
