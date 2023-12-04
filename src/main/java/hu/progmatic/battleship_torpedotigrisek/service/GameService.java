@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Data
@@ -23,7 +22,7 @@ public class GameService {
 
     }
 
-    public Game startNewGameForUser(Long userId) {
+    public void startNewGameForUser(Long userId) {
 
         if (userId != null) {
             Game game = newGame(userId);
@@ -31,9 +30,7 @@ public class GameService {
             logMapState("startNewGameForUser");
             System.out.println("New game started for user ID: " + userId + ", Game: " + game);
             initializeEnemyShips(userId);
-            return game;
         }
-        return null;
     }
     private void logMapState(String startNewGameForUser) {
         System.out.println("Map state after " + startNewGameForUser + ": " + userGame);
