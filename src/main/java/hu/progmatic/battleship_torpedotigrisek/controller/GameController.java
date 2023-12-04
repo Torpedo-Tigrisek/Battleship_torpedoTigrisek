@@ -18,17 +18,12 @@ import java.util.List;
 @Controller
 public class GameController {
     private GameService gameService;
-    private final ShipPlacementService shipPlacementService;
+
 @Autowired
-    public GameController(ShipPlacementService shipPlacementService, GameService gameService) {
-        this.shipPlacementService = shipPlacementService;
+    public GameController(GameService gameService) {
         this.gameService = gameService;
     }
 
-    @GetMapping("/dinamicboard")
-    public String getDynamicBoard() {
-        return "dinamichtml1";
-    }
 
     @GetMapping("/testBoard")
     public String gameBoard(Model model) {
@@ -52,6 +47,7 @@ public class GameController {
         Long userId = gameService.getCurrentUserId();
         if (userId != null) {
             gameService.startNewGameForUser(userId);
+
 
             return "redirect:/testBoard";
         }

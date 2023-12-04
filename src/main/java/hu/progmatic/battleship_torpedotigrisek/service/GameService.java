@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Data
 public class GameService {
     private ShipPlacementService shipPlacementService;
-    private Map<Long, Game> userGame = new ConcurrentHashMap<>();
+    private Map<Long, Game> userGame = new HashMap<>();
 
     public GameService(ShipPlacementService shipPlacementService) {
 
@@ -157,11 +157,7 @@ public class GameService {
 
     public boolean isGameFinished(Long userId) {
         Game game = userGame.get(userId);
-        if (game != null && (game.getPlayerScore() == 20 || game.getEnemyScore() == 20)) {
-            userGame.remove(userId);
-            return true;
-        }
-        return false;
+        return game != null && (game.getPlayerScore() >= 20 || game.getEnemyScore() >= 20);
     }
 
     public boolean isEnd() { //ezt is lehet de az isGameFinished-et is lehet használni
@@ -201,19 +197,6 @@ public class GameService {
         return false;
     }
 
-    public void updatePlayerScore(Long userId) {
-        Game game = userGame.get(userId);
-        if (game != null) {
-            game.setPlayerScore(game.getPlayerScore() + 1);
-        }
-    }
-
-    public void updateEnemyScore(Long userId) {
-        Game game = userGame.get(userId);
-        if (game != null) {
-            game.setEnemyScore(game.getEnemyScore() + 1);
-        }
-    }
     public Map<Long, Game> getUserGame() {
         return userGame;
     }
