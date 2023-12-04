@@ -157,6 +157,13 @@ public class GameService {
         return game != null && (game.getPlayerScore() >= 20 || game.getEnemyScore() >= 20);
     }
 
+    public void removeUserGame(Long userId) {
+        if (userId != null && userGame.containsKey(userId)) {
+            userGame.remove(userId);
+            System.out.println("Game for user ID " + userId + " removed.");
+        }
+    }
+
     public boolean isEnd() { //ezt is lehet de az isGameFinished-et is lehet használni
         Long userId = getCurrentUserId();
         Game game = userGame.get(userId);
