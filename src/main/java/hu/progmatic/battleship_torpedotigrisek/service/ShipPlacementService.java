@@ -11,7 +11,7 @@ public class ShipPlacementService {
     private final Random random = new Random();
     private List<Ship> placedShips;
     private List<Ship> placedEnemyShips;
-    private boolean isShipsPlaced = false;
+
 
 
     public boolean placeShipRandomly(Board board, Ship ship) {
