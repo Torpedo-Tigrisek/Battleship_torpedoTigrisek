@@ -2,7 +2,6 @@ package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.*;
 import hu.progmatic.battleship_torpedotigrisek.service.GameService;
-import hu.progmatic.battleship_torpedotigrisek.service.ShipPlacementService;
 import hu.progmatic.battleship_torpedotigrisek.service.ShotService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;

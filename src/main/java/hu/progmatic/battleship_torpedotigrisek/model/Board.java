@@ -20,6 +20,4 @@ public class Board {
             Arrays.fill(row, " ");
         }
     }
-
-
 }

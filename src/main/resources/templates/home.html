@@ -5,7 +5,7 @@
     <title>Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href="/css/testboard.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/css/home.css" type="text/css">
 </head>
 <body>
 
@@ -48,15 +48,11 @@
     </div>
 </nav>
 
-<h2> Welcome to the Battleship game Home Page</h2>
-<p> Üdvözlünk a fedélzeten! Reméljük, hogy a játékunk minden percét élvezni fogod.
-    Válassz stratégiát, helyezd el hajóidat, és induljon a tengeri csata. Kívánunk sok izgalmas pillanatot és diadalmas győzelmeket</p>
 
-
-<div class="d-grid gap-2 col-2 mx-auto">
-    <a sec:authorize="isAuthenticated()" class="btn btn-primary" type="button" th:href="@{/testBoard}">Play</a>
-    <a class="btn btn-primary" type="button" th:href="@{/reg}">Registration</a>
-    <a class="btn btn-primary" type="button" th:href="@{/login}">Sign in</a>
+<<div class="button-container">
+    <a sec:authorize="isAuthenticated()" class="button-89" type="button" th:href="@{/testBoard}">Play</a>
+    <a class="button-89" type="button" th:href="@{/reg}">Registration</a>
+    <a class="button-89" type="button" th:href="@{/login}">Sign in</a>
 
 </div>
 
