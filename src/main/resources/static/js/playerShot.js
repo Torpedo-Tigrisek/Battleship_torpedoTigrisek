@@ -16,8 +16,12 @@ function connectToGame() {
 connectToGame();
 
 function playHitSound() {
-    var audio = document.getElementById('hitSound');
-    audio.play();
+    var audioHit = document.getElementById('hitSound');
+    audioHit.play();
+}
+function playWaterDropSound() {
+    var waterDropSound = document.getElementById('waterDropSound');
+    waterDropSound.play();
 }
 
 function placeX(cell) {
@@ -59,6 +63,9 @@ function placeX(cell) {
         playerHit++;
         isEnd();
         console.log('PLAYER HIT ' + playerHit + ' : ' + enemyHit + ' ENEMY HIT' )
+    } else {
+        // Ha a találat nem hajóra esett, játssza le a vízcsepp hangot
+        playWaterDropSound();
     }
 
 

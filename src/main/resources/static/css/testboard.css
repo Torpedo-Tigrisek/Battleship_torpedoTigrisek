@@ -56,12 +56,14 @@ body {
     font-size: 24px;
 
 }
-#volumeControl {
+#musicVolumeControl,
+#effectVolumeControl {
     margin-top: 10px;
     width: 5cm;
 }
 
-#volumeRange {
+#musicVolumeRange,
+#effectVolumeRange {
     width: 100%;
 }
 .board-table .ship {
@@ -70,6 +72,7 @@ body {
     background-color: #5e8a85;
     color: transparent; /* Áttetszővé tesszük a szöveget */
     text-shadow: none;
+    text-indent: -9999px;
 }
 
 
