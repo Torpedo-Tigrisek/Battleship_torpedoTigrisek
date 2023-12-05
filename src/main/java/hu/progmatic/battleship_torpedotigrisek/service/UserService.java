@@ -3,14 +3,18 @@ package hu.progmatic.battleship_torpedotigrisek.service;
 import hu.progmatic.battleship_torpedotigrisek.model.User;
 import hu.progmatic.battleship_torpedotigrisek.repo.UserRepo;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -37,7 +41,7 @@ public class UserService implements UserDetailsService {
         return userRepo.findAll();
     }
 
-    public List<User> getAllUserSortedByScore(){
+    public List<User> getAllUserSortedByScore() {
         List<User> users = getAllUsers();
         users.sort(Comparator.comparing(u -> u.getUserProfile().getScore()));
         Collections.reverse(users);

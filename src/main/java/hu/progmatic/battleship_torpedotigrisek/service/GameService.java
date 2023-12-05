@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class GameService {
@@ -18,11 +19,11 @@ public class GameService {
         newGame();
     }
 
-    public Game getGame(){
+    public Game getGame() {
         return this.game;
     }
 
-    public void newGame(){
+    public void newGame() {
         game.setPlayerBoard(new Board());
         game.setEnemyBoard(new Board());
         game.setPlayerScore(0);
@@ -34,7 +35,8 @@ public class GameService {
         game.setRemainingShips(new ArrayList<>(Arrays.asList(
                 ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE,
                 ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
-                ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER,ShipType.ATTACKER)));
+                ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER)));
+        game.setAlreadyGeneratedShots(new ArrayList<>());
     }
 
     public void initializeEnemyShips() {
@@ -49,7 +51,6 @@ public class GameService {
         System.out.println("Enemy ships:" + game.getEnemyShips());
 
     }
-
 
 
     public List<Ship> generateShips() {
@@ -90,50 +91,67 @@ public class GameService {
         ));
     }
 
-    public void fixShipPositions(List<Ship>shipsOnBoard, List<Ship>enemyShipsOnBoard){
+    public void fixShipPositions(List<Ship> shipsOnBoard, List<Ship> enemyShipsOnBoard) {
         shipPlacementService.fixShipPosition(shipsOnBoard, enemyShipsOnBoard);
     }
 
     public String whoIsTheWinner() {
         if (game.getPlayerScore() == 20) {
             return "You win";
-        } else if (game.getEnemyScore() == 20) {
+        } else if (game.getEnemyScore() > 20) {
             return "You lose";
         }
         return null;
     }
 
-    public boolean isGameFinished() {
-        return game.getPlayerScore() == 20 || game.getEnemyScore() == 20;
-    }
-    public boolean isEnd(){ //ezt is lehet de az isGameFinished-et is lehet használni
-        return game.isEnd();
-    }
 
     public boolean evaluatePlayerShot(ShotCoordinate shotCoordinate) {
-        int y = Integer.parseInt(shotCoordinate.getCoordinates().get(0).substring(0,1));
+        int y = Integer.parseInt(shotCoordinate.getCoordinates().get(0).substring(0, 1));
         int x = Integer.parseInt(shotCoordinate.getCoordinates().get(0).substring(3));
-        for ( Ship actual : game.getEnemyShips()) {
+        for (Ship actual : game.getEnemyShips()) {
             for (int i = 0; i < actual.getCoordinates().size(); i++) {
-                if((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)){
+                if ((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    public ShotCoordinate randomGeneratedShot() {
+        ShotCoordinate shot = new ShotCoordinate();
+        Random randomGenerator = new Random();
+        List<String> shotArray = new ArrayList<>();
+        String x = String.valueOf(randomGenerator.nextInt(0, 10));
+        String y = String.valueOf(randomGenerator.nextInt(0, 10));
+        shotArray.add(x);
+        shotArray.add(y);
+        shot.setCoordinates(shotArray);
+        if(isGeneratedShotAlreadyBeenShot(shot)){
+            return randomGeneratedShot();
+        } else {
+            game.getAlreadyGeneratedShots().add(shot);
+            return shot;
+        }
     }
 
 
     public boolean evaluateGeneratedShot(ShotCoordinate generatedShot) {
         int y = Integer.parseInt(generatedShot.getCoordinates().get(0));
         int x = Integer.parseInt(generatedShot.getCoordinates().get(1));
-        for ( Ship actual : game.getShips()) {
+        for (Ship actual : game.getShips()) {
             for (int i = 0; i < actual.getCoordinates().size(); i++) {
-                if((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)){
+                if ((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    public boolean isGeneratedShotAlreadyBeenShot(ShotCoordinate generatedShot) {
+        return game.getAlreadyGeneratedShots().contains(generatedShot);
+
+        // esetleg ezt szigorúbbá tenni?
     }
 }
