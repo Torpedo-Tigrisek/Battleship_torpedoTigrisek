@@ -9,10 +9,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 @Service
 @Data
 public class GameService {
+    private Game game;
     private ShipPlacementService shipPlacementService;
     private Map<Long, Game> userGame = new HashMap<>();
 
@@ -55,12 +60,16 @@ public class GameService {
         game.setPlayerScore(0);
         game.setEnemyScore(0);
         game.setShipTypes(new ShipType[]{ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER});
+        initializeEnemyShips();
         game.setShips(new ArrayList<>());
         game.setEnemyShips(game.getEnemyShips());
         game.setRemainingShips(new ArrayList<>(Arrays.asList(
                 ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE,
                 ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
                 ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER)));
+
+                ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER)));
+        game.setAlreadyGeneratedShots(new ArrayList<>());
         return game;
     }
 
@@ -85,6 +94,7 @@ public class GameService {
         }
     }
 
+    }
 
     public List<Ship> generateShips(Long userId) {
 
@@ -108,7 +118,6 @@ public class GameService {
                 game.getShips().add(ship);
             }
         }
-
     }
 
     public void resetGame(Long userId) {
@@ -185,6 +194,21 @@ public class GameService {
         return false;
     }
 
+    public ShotCoordinate randomGeneratedShot() {
+        ShotCoordinate shot = new ShotCoordinate();
+        Random randomGenerator = new Random();
+        do{
+            List<String> shotArray = new ArrayList<>();
+            String x = String.valueOf(randomGenerator.nextInt(0, 10));
+            String y = String.valueOf(randomGenerator.nextInt(0, 10));
+            shotArray.add(x);
+            shotArray.add(y);
+            shot.setCoordinates(shotArray);
+        }while(isGeneratedShotAlreadyBeenShot(shot));
+        game.getAlreadyGeneratedShots().add(shot);
+        return shot;
+    }
+
 
     public boolean evaluateGeneratedShot(ShotCoordinate generatedShot, Long userId) {
 
@@ -199,6 +223,10 @@ public class GameService {
             }
         }
         return false;
+    }
+
+    public boolean isGeneratedShotAlreadyBeenShot(ShotCoordinate generatedShot) {
+        return game.getAlreadyGeneratedShots().contains(generatedShot);
     }
 
     public Map<Long, Game> getUserGame() {

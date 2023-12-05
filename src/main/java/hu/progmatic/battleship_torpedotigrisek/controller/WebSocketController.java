@@ -3,6 +3,8 @@ package hu.progmatic.battleship_torpedotigrisek.controller;
 import hu.progmatic.battleship_torpedotigrisek.model.*;
 import hu.progmatic.battleship_torpedotigrisek.service.GameService;
 import hu.progmatic.battleship_torpedotigrisek.service.ShotService;
+import hu.progmatic.battleship_torpedotigrisek.service.UserProfileService;
+import hu.progmatic.battleship_torpedotigrisek.service.UserService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -17,12 +19,14 @@ import java.util.*;
 @Controller
 public class WebSocketController {
     private GameService gameService;
-    private ShotService shotService;
+    private UserService userService;
+    private UserProfileService userProfileService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public WebSocketController(GameService gameService, ShotService shotService, SimpMessagingTemplate messagingTemplate) {
+    public WebSocketController(GameService gameService, UserService userService, UserProfileService userProfileService, SimpMessagingTemplate messagingTemplate) {
         this.gameService = gameService;
-        this.shotService = shotService;
+        this.userService = userService;
+        this.userProfileService = userProfileService;
         this.messagingTemplate = messagingTemplate;
     }
 
@@ -45,21 +49,6 @@ public class WebSocketController {
 
         return null;
     }
-    /*
-    @MessageMapping("/placeEnemyShips")
-    public void handleEnemyShipPlacement(Principal principal) {
-        Long userId = getUserIdFromPrincipal(principal);
-        if (userId != null) {
-            Game game = gameService.getUserGame().get(userId);
-            if (game != null) {
-                gameService.initializeEnemyShips(userId);
-                System.out.println("Enemy ships placed for user: " + userId);
-            }
-        }
-    }
-
-     */
-
 
     @MessageMapping("/ready")
     public void handleReady(Principal principal) {
@@ -161,5 +150,41 @@ public class WebSocketController {
             }
         }
         return null;
+    public String sendEnd(Principal principal) {
+        System.out.println(gameService.whoIsTheWinner());
+        if (gameService.whoIsTheWinner().equals("You win")) {
+            addScoreToPrincipal(principal);
+        } else {
+            addLossToPrincipal(principal);
+        }
+        return gameService.whoIsTheWinner();
+    }
+
+    private void addScoreToPrincipal(Principal principal) {
+        if (principal instanceof Authentication) {
+            Authentication authentication = (Authentication) principal;
+            Object principalObj = authentication.getPrincipal();
+            if (principalObj instanceof User) {
+                Long userId = ((User) principalObj).getId();
+                User user = userService.getUserById(userId).orElse(null);
+                System.out.println("The score before winning: " + user.getUserProfile().getScore());
+                user.getUserProfile().setScore(user.getUserProfile().getScore() + 20);
+                user.getUserProfile().setWins(user.getUserProfile().getWins() + 1);
+                userProfileService.addUserProfile(user.getUserProfile());
+                System.out.println("And after winning: " + user.getUserProfile().getScore());
+            }
+        }
+    }
+
+    private void addLossToPrincipal(Principal principal) {
+        if (principal instanceof Authentication) {
+            Authentication authentication = (Authentication) principal;
+            Object principalObj = authentication.getPrincipal();
+            if (principalObj instanceof User) {
+                User user = (User) principalObj;
+                user.getUserProfile().setLosses(user.getUserProfile().getLosses() + 1);
+                userProfileService.addUserProfile(user.getUserProfile());
+            }
+        }
     }
 }
