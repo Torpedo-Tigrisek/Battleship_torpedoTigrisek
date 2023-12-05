@@ -16,16 +16,10 @@ import java.util.List;
 @Controller
 public class GameController {
     private GameService gameService;
-    private final ShipPlacementService shipPlacementService;
-@Autowired
-    public GameController(ShipPlacementService shipPlacementService, GameService gameService) {
-        this.shipPlacementService = shipPlacementService;
-        this.gameService = gameService;
-    }
 
-    @GetMapping("/dinamicboard")
-    public String getDynamicBoard() {
-        return "dinamichtml1";
+@Autowired
+    public GameController( GameService gameService) {
+        this.gameService = gameService;
     }
 
     @GetMapping("/testBoard")
