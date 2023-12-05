@@ -3,6 +3,8 @@ package hu.progmatic.battleship_torpedotigrisek.controller;
 import hu.progmatic.battleship_torpedotigrisek.model.*;
 import hu.progmatic.battleship_torpedotigrisek.service.GameService;
 import hu.progmatic.battleship_torpedotigrisek.service.ShotService;
+import hu.progmatic.battleship_torpedotigrisek.service.UserProfileService;
+import hu.progmatic.battleship_torpedotigrisek.service.UserService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -17,12 +19,14 @@ import java.util.*;
 @Controller
 public class WebSocketController {
     private GameService gameService;
-    private ShotService shotService;
+    private UserService userService;
+    private UserProfileService userProfileService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public WebSocketController(GameService gameService, ShotService shotService, SimpMessagingTemplate messagingTemplate) {
+    public WebSocketController(GameService gameService, UserService userService, UserProfileService userProfileService, SimpMessagingTemplate messagingTemplate) {
         this.gameService = gameService;
-        this.shotService = shotService;
+        this.userService = userService;
+        this.userProfileService = userProfileService;
         this.messagingTemplate = messagingTemplate;
     }
 
@@ -87,7 +91,7 @@ public class WebSocketController {
     }
 
 
-    public void GamePlay() {
+    public void GamePlay(){
 
     }
 
@@ -116,7 +120,7 @@ public class WebSocketController {
     @SubscribeMapping("/generatedShot")
     public ShotCoordinate sendGeneratedShot(Principal principal) throws Exception {
         Long userId = getUserIdFromPrincipal(principal);
-        ShotCoordinate generatedShot = shotService.randomGeneratedShot();
+        ShotCoordinate generatedShot = gameService.randomGeneratedShot();
         System.out.println("The computer generated this generatedShot = " + generatedShot.toString());
         System.out.println("was this generated shot a hit?" + gameService.evaluateGeneratedShot(generatedShot, userId));
         if (userId != null) {
@@ -148,6 +152,12 @@ public class WebSocketController {
     public String sendEnd(Principal principal){
         Long userId = getUserIdFromPrincipal(principal);
         System.out.println(gameService.whoIsTheWinner(userId));
+        if (gameService.whoIsTheWinner(userId).equals("You win")) {
+            addScoreToPrincipal(principal);
+        } else {
+            addLossToPrincipal(principal);
+        }
+
         return gameService.whoIsTheWinner(userId);
     }
 
@@ -161,5 +171,33 @@ public class WebSocketController {
             }
         }
         return null;
+    }
+
+    private void addScoreToPrincipal(Principal principal) {
+        if (principal instanceof Authentication) {
+            Authentication authentication = (Authentication) principal;
+            Object principalObj = authentication.getPrincipal();
+            if (principalObj instanceof User) {
+                Long userId = ((User) principalObj).getId();
+                User user = userService.getUserById(userId).orElse(null);
+                System.out.println("The score before winning: " + user.getUserProfile().getScore());
+                user.getUserProfile().setScore(user.getUserProfile().getScore() + 20);
+                user.getUserProfile().setWins(user.getUserProfile().getWins() + 1);
+                userProfileService.addUserProfile(user.getUserProfile());
+                System.out.println("And after winning: " + user.getUserProfile().getScore());
+            }
+        }
+    }
+
+    private void addLossToPrincipal(Principal principal) {
+        if (principal instanceof Authentication) {
+            Authentication authentication = (Authentication) principal;
+            Object principalObj = authentication.getPrincipal();
+            if (principalObj instanceof User) {
+                User user = (User) principalObj;
+                user.getUserProfile().setLosses(user.getUserProfile().getLosses() + 1);
+                userProfileService.addUserProfile(user.getUserProfile());
+            }
+        }
     }
 }

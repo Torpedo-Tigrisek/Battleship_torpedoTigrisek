@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepo userRepo;
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -37,10 +37,19 @@ public class UserService implements UserDetailsService {
         return userRepo.findAll();
     }
 
-    public List<User> getAllUserSortedByScore(){
+    public List<User> getAllUserSortedByScore() {
         List<User> users = getAllUsers();
         users.sort(Comparator.comparing(u -> u.getUserProfile().getScore()));
         Collections.reverse(users);
         return users;
     }
+
+    public Optional<User> getUserById(Long id){
+        return userRepo.findById(id);
+    }
+
+    public User updateUser(User user){
+        return userRepo.save(user);
+    }
+
 }
