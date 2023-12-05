@@ -49,9 +49,10 @@
 <h1>Welcome, <span sec:authentication="name"></span>!</h1>
 <p>Name: <span sec:authentication="name"></span></p>
 <p>Email: <span sec:authentication="principal.email"></span></p>
-<p>Score: <span sec:authentication="principal.userProfile.score"></span></p>
-<p>Wins: <span sec:authentication="principal.userProfile.wins"></span></p>
-<p>Losses: <span sec:authentication="principal.userProfile.losses"></span></p>
-<p>Win Ratio: <span sec:authentication="principal.userProfile.winLossRatio"></span></p>
+<p>Score: <span th:text="${userprofile.getScore()}"></span></p>
+<p>Wins: <span th:text="${userprofile.getWins()}"></span></p>
+<p>Losses: <span th:text="${userprofile.getLosses()}"></span></p>
+<p>Win Ratio: <span th:text="${userprofile.getWinLossRatio()}"></span></p>
+
 </body>
 </html>

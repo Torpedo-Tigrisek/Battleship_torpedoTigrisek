@@ -2,6 +2,7 @@ package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.*;
 import hu.progmatic.battleship_torpedotigrisek.service.GameService;
+import hu.progmatic.battleship_torpedotigrisek.service.UserProfileService;
 import hu.progmatic.battleship_torpedotigrisek.service.UserService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -18,11 +19,13 @@ import java.util.*;
 public class WebSocketController {
     private GameService gameService;
     private UserService userService;
+    private UserProfileService userProfileService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    public WebSocketController(GameService gameService, UserService userService, SimpMessagingTemplate messagingTemplate) {
+    public WebSocketController(GameService gameService, UserService userService, UserProfileService userProfileService, SimpMessagingTemplate messagingTemplate) {
         this.gameService = gameService;
         this.userService = userService;
+        this.userProfileService = userProfileService;
         this.messagingTemplate = messagingTemplate;
     }
 
@@ -38,6 +41,7 @@ public class WebSocketController {
 
         return gameService.getGame().getPlayerBoard();
     }
+
     @MessageMapping("/ready")
     public void handleReady() {
         gameService.fixShipPositions(gameService.getGame().getShips(), gameService.getGame().getEnemyShips());
@@ -56,7 +60,7 @@ public class WebSocketController {
 
     }
 
-    public void GamePlay(){
+    public void GamePlay() {
 
     }
 
@@ -66,9 +70,9 @@ public class WebSocketController {
         System.out.println("The shot was sent to the enemy's board: " + shotCoordinate.getCoordinates());
         System.out.println("was this shot a hit?" + gameService.evaluatePlayerShot(shotCoordinate));
         boolean hit = gameService.evaluatePlayerShot(shotCoordinate);
-        if(hit){
-            gameService.getGame().setPlayerScore(gameService.getGame().getPlayerScore()+1);
-            System.out.println("Player " + gameService.getGame().getPlayerScore() + " : " + gameService.getGame().getEnemyScore() + " Enemy" );
+        if (hit) {
+            gameService.getGame().setPlayerScore(gameService.getGame().getPlayerScore() + 1);
+            System.out.println("Player " + gameService.getGame().getPlayerScore() + " : " + gameService.getGame().getEnemyScore() + " Enemy");
         }
         return shotCoordinate;
     }
@@ -79,8 +83,8 @@ public class WebSocketController {
         System.out.println("The computer generated this generatedShot = " + generatedShot.toString());
         System.out.println("was this generated shot a hit?" + gameService.evaluateGeneratedShot(generatedShot));
         boolean hit = gameService.evaluateGeneratedShot(generatedShot);
-        if(hit){
-            gameService.getGame().setEnemyScore(gameService.getGame().getEnemyScore()+1);
+        if (hit) {
+            gameService.getGame().setEnemyScore(gameService.getGame().getEnemyScore() + 1);
             System.out.println("Player " + gameService.getGame().getPlayerScore() + " : " + gameService.getGame().getEnemyScore() + " Enemy");
         }
         return generatedShot;
@@ -94,11 +98,11 @@ public class WebSocketController {
     }
 
     @SubscribeMapping("/end")
-    public String sendEnd(Principal principal){
+    public String sendEnd(Principal principal) {
         System.out.println(gameService.whoIsTheWinner());
-        if(gameService.whoIsTheWinner().equals("You win")){
+        if (gameService.whoIsTheWinner().equals("You win")) {
             addScoreToPrincipal(principal);
-        }else{
+        } else {
             addLossToPrincipal(principal);
         }
         return gameService.whoIsTheWinner();
@@ -109,11 +113,13 @@ public class WebSocketController {
             Authentication authentication = (Authentication) principal;
             Object principalObj = authentication.getPrincipal();
             if (principalObj instanceof User) {
-                User user = (User) principalObj;
+                Long userId = ((User) principalObj).getId();
+                User user = userService.getUserById(userId).orElse(null);
                 System.out.println("The score before winning: " + user.getUserProfile().getScore());
-                user.getUserProfile().setScore(user.getUserProfile().getScore()+20);
-                user.getUserProfile().setWins(user.getUserProfile().getWins()+1);
-                System.out.println("And after winning: " + user.getUserProfile().getScore() );
+                user.getUserProfile().setScore(user.getUserProfile().getScore() + 20);
+                user.getUserProfile().setWins(user.getUserProfile().getWins() + 1);
+                userProfileService.addUserProfile(user.getUserProfile());
+                System.out.println("And after winning: " + user.getUserProfile().getScore());
             }
         }
     }
@@ -124,7 +130,8 @@ public class WebSocketController {
             Object principalObj = authentication.getPrincipal();
             if (principalObj instanceof User) {
                 User user = (User) principalObj;
-                user.getUserProfile().setLosses(user.getUserProfile().getLosses()+1);
+                user.getUserProfile().setLosses(user.getUserProfile().getLosses() + 1);
+                userProfileService.addUserProfile(user.getUserProfile());
             }
         }
     }

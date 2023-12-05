@@ -19,4 +19,7 @@ public class UserProfileService {
         userProfileRepository.save(userProfile);
     }
 
+    public UserProfile getUserProfileById(Long id){
+        return userProfileRepository.findById(id).orElse(null);
+    }
 }

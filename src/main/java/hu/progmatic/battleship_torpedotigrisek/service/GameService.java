@@ -98,7 +98,7 @@ public class GameService {
     public String whoIsTheWinner() {
         if (game.getPlayerScore() == 20) {
             return "You win";
-        } else if (game.getEnemyScore() > 20) {
+        } else if (game.getEnemyScore() == 20) {
             return "You lose";
         }
         return null;
@@ -121,18 +121,16 @@ public class GameService {
     public ShotCoordinate randomGeneratedShot() {
         ShotCoordinate shot = new ShotCoordinate();
         Random randomGenerator = new Random();
-        List<String> shotArray = new ArrayList<>();
-        String x = String.valueOf(randomGenerator.nextInt(0, 10));
-        String y = String.valueOf(randomGenerator.nextInt(0, 10));
-        shotArray.add(x);
-        shotArray.add(y);
-        shot.setCoordinates(shotArray);
-        if(isGeneratedShotAlreadyBeenShot(shot)){
-            return randomGeneratedShot();
-        } else {
-            game.getAlreadyGeneratedShots().add(shot);
-            return shot;
-        }
+        do{
+            List<String> shotArray = new ArrayList<>();
+            String x = String.valueOf(randomGenerator.nextInt(0, 10));
+            String y = String.valueOf(randomGenerator.nextInt(0, 10));
+            shotArray.add(x);
+            shotArray.add(y);
+            shot.setCoordinates(shotArray);
+        }while(isGeneratedShotAlreadyBeenShot(shot));
+        game.getAlreadyGeneratedShots().add(shot);
+        return shot;
     }
 
 
@@ -151,7 +149,5 @@ public class GameService {
 
     public boolean isGeneratedShotAlreadyBeenShot(ShotCoordinate generatedShot) {
         return game.getAlreadyGeneratedShots().contains(generatedShot);
-
-        // esetleg ezt szigorúbbá tenni?
     }
 }
