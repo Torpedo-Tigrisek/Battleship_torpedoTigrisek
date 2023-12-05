@@ -3,6 +3,7 @@ var placedHitPositions = [];
 var generatedPositions = [];
 var stompClient = null;
 var canPlaceShips = true;
+var shipsPlaced = false;
 
 function connectToGame() {
     var socket = new SockJS('/battleship-websocket');
@@ -23,9 +24,20 @@ function playWaterDropSound() {
     var waterDropSound = document.getElementById('waterDropSound');
     waterDropSound.play();
 }
-
+document.getElementById('placeShip').addEventListener('click', function() {
+    shipsPlaced = true;
+    document.getElementById('playGame').disabled = false;
+});
 function placeX(cell) {
     var cellId = cell.id;
+    if (canPlaceShips) {
+        alert("Előbb helyezd el a hajókat majd nyomj a Start gombra!");
+        return;
+    }
+    if (!shipsPlaced) {
+        alert("Előbb helyezd le a hajókat!");
+        return;
+    }
 
     // Ellenőrizzük, hogy az adott helyre már lett-e "X" elhelyezve
     if (placedPositions.includes(cellId)) {
@@ -92,8 +104,5 @@ function placeX(cell) {
             JSON.stringify(hitCoordinates)
         );
         console.log("Hit was sent to server:", hitCoordinates.coordinates);
-
     }
 }
-
-

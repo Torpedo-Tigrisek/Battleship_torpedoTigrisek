@@ -11,11 +11,9 @@ import java.util.List;
 @RestController
 public class Rest {
     private UserService userService;
-    private UserProfileService userProfileService;
 
-    public Rest(UserService userService, UserProfileService userProfileService) {
+    public Rest(UserService userService) {
         this.userService = userService;
-        this.userProfileService = userProfileService;
     }
 
     @GetMapping("/users")
