@@ -11,7 +11,7 @@ public class ShipPlacementService {
     private final Random random = new Random();
     private List<Ship> placedShips;
     private List<Ship> placedEnemyShips;
-    private boolean isShipsPlaced = false;
+
 
 
     public boolean placeShipRandomly(Board board, Ship ship) {
@@ -101,12 +101,20 @@ public class ShipPlacementService {
     }
 
     public void fixShipPosition(List<Ship> shipsOnBoard, List<Ship> enemyShipsOnBoard) {
-        this.placedShips = new ArrayList<>(shipsOnBoard);
-        this.placedEnemyShips = new ArrayList<>(enemyShipsOnBoard);
-        System.out.println(placedShips);
-        System.out.println(placedEnemyShips);
+        if (shipsOnBoard != null) {
+            this.placedShips = new ArrayList<>(shipsOnBoard);
+        } else {
+            this.placedShips = new ArrayList<>();
+        }
 
+        if (enemyShipsOnBoard != null) {
+            this.placedEnemyShips = new ArrayList<>(enemyShipsOnBoard);
+        } else {
+            this.placedEnemyShips = new ArrayList<>();
+        }
 
+        System.out.println("Player ships: " + placedShips);
+        System.out.println("Enemy ships: " + placedEnemyShips);
     }
 
 }

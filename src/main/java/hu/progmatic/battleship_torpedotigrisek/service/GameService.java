@@ -2,81 +2,94 @@ package hu.progmatic.battleship_torpedotigrisek.service;
 
 import hu.progmatic.battleship_torpedotigrisek.model.*;
 
+import lombok.Data;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@Data
 public class GameService {
-    private Game game;
     private ShipPlacementService shipPlacementService;
     private Map<Long, Game> userGame = new HashMap<>();
 
-    public GameService(Game game, ShipPlacementService shipPlacementService) {
-        this.game = game;
+    public GameService(ShipPlacementService shipPlacementService) {
+
         this.shipPlacementService = shipPlacementService;
-        newGame();
+
     }
 
-    public Game getGame(){
-        return this.game;
-    }
+    public void startNewGameForUser(Long userId) {
 
-    public Game startNewGame(Long userId){
-        Game game = new Game();
-        userGame.put(userId, game);
-        return game;
-    }
-
-    /*
-    public Long getCurrentUserId(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            String username = authentication.getName();
+        if (userId != null) {
+            Game game = newGame(userId);
+            userGame.put(userId, game);
+            logMapState("startNewGameForUser");
+            System.out.println("New game started for user ID: " + userId + ", Game: " + game);
+            initializeEnemyShips(userId);
         }
-
-        Long userId = authentication.g
-
+    }
+    private void logMapState(String startNewGameForUser) {
+        System.out.println("Map state after " + startNewGameForUser + ": " + userGame);
     }
 
-     */
+
+    public Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
+            User user = (User) authentication.getPrincipal();
+            System.out.println("Current userId: " + user.getId());
+            return user.getId();
+        }
+        return null;
+    }
 
 
-
-    public void newGame(){
+    public Game newGame(Long userId) {
+        Game game = new Game();
         game.setPlayerBoard(new Board());
         game.setEnemyBoard(new Board());
         game.setPlayerScore(0);
         game.setEnemyScore(0);
         game.setShipTypes(new ShipType[]{ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER});
-        initializeEnemyShips();
         game.setShips(new ArrayList<>());
         game.setEnemyShips(game.getEnemyShips());
         game.setRemainingShips(new ArrayList<>(Arrays.asList(
                 ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE,
                 ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
-                ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER,ShipType.ATTACKER)));
+                ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER)));
+        return game;
     }
 
-    public void initializeEnemyShips() {
-        List<Ship> enemyShips = generateShips();
-        getGame().setEnemyShips(new ArrayList<>());
-        for (Ship ship : enemyShips) {
-            if(shipPlacementService.placeShipRandomly(game.getEnemyBoard(), ship)){
-                getGame().getEnemyShips().add(ship);
+    public void initializeEnemyShips(Long userId) {
+        Game game = userGame.get(userId);
+        if (game != null) {
+            if (game.getEnemyShips() == null) {
+                game.setEnemyShips(new ArrayList<>());
             }
 
-        }
-        System.out.println("Enemy ships:" + game.getEnemyShips());
+            List<Ship> enemyShips = generateShips(userId);
 
+            for (Ship ship : enemyShips) {
+                if (shipPlacementService.placeShipRandomly(game.getEnemyBoard(), ship)) {
+                    game.getEnemyShips().add(ship);
+                }
+            }
+
+            System.out.println("Enemy ships:" + game.getEnemyShips());
+        } else {
+            System.out.println("Game not initialized for user");
+        }
     }
 
 
+    public List<Ship> generateShips(Long userId) {
 
-    public List<Ship> generateShips() {
+        Game game = userGame.get(userId);
+
         List<Ship> ships = new ArrayList<>();
         for (ShipType type : game.getShipTypes()) {
             boolean orientation = Math.random() < 0.5; // true: HORIZONTAL, false: VERTICAL
@@ -85,17 +98,22 @@ public class GameService {
         return ships;
     }
 
-    public void placeAllShips() {
+    public void placeAllShips(Long userId) {
         // Hajókat újra lerakjuk a listából
+
+        Game game = userGame.get(userId);
         for (ShipType shipType : game.getRemainingShips()) {
             Ship ship = new Ship(shipType, Math.random() < 0.5);
             if (shipPlacementService.placeShipRandomly(game.getPlayerBoard(), ship)) {
                 game.getShips().add(ship);
             }
         }
+
     }
 
-    public void resetGame() {
+    public void resetGame(Long userId) {
+
+        Game game = userGame.get(userId);
         // Hajólista törlése
         game.getShips().clear();
 
@@ -103,10 +121,12 @@ public class GameService {
         shipPlacementService.clearShips(game.getPlayerBoard());
         shipPlacementService.clearShips(game.getEnemyBoard());
 
-        resetRemainingShips();
+        resetRemainingShips(userId);
     }
 
-    public void resetRemainingShips() {
+    public void resetRemainingShips(Long userId) {
+
+        Game game = userGame.get(userId);
         game.setRemainingShips(Arrays.asList(
                 ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE,
                 ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
@@ -114,11 +134,16 @@ public class GameService {
         ));
     }
 
-    public void fixShipPositions(List<Ship>shipsOnBoard, List<Ship>enemyShipsOnBoard){
-        shipPlacementService.fixShipPosition(shipsOnBoard, enemyShipsOnBoard);
+    public void fixShipPositions(Long userId) {
+        Game game = userGame.get(userId);
+        if (game != null) {
+            shipPlacementService.fixShipPosition(game.getShips(), game.getEnemyShips());
+        }
     }
 
-    public String whoIsTheWinner() {
+    public String whoIsTheWinner(Long userId) {
+
+        Game game = userGame.get(userId);
         if (game.getPlayerScore() == 20) {
             return "You win";
         } else if (game.getEnemyScore() == 20) {
@@ -127,19 +152,32 @@ public class GameService {
         return null;
     }
 
-    public boolean isGameFinished() {
-        return game.getPlayerScore() == 20 || game.getEnemyScore() == 20;
+    public boolean isGameFinished(Long userId) {
+        Game game = userGame.get(userId);
+        return game != null && (game.getPlayerScore() >= 20 || game.getEnemyScore() >= 20);
     }
-    public boolean isEnd(){ //ezt is lehet de az isGameFinished-et is lehet használni
+
+    public void removeUserGame(Long userId) {
+        if (userId != null && userGame.containsKey(userId)) {
+            userGame.remove(userId);
+            System.out.println("Game for user ID " + userId + " removed.");
+        }
+    }
+
+    public boolean isEnd() { //ezt is lehet de az isGameFinished-et is lehet használni
+        Long userId = getCurrentUserId();
+        Game game = userGame.get(userId);
         return game.isEnd();
     }
 
-    public boolean evaluatePlayerShot(ShotCoordinate shotCoordinate) {
-        int y = Integer.parseInt(shotCoordinate.getCoordinates().get(0).substring(0,1));
+    public boolean evaluatePlayerShot(ShotCoordinate shotCoordinate, Long userId) {
+
+        Game game = userGame.get(userId);
+        int y = Integer.parseInt(shotCoordinate.getCoordinates().get(0).substring(0, 1));
         int x = Integer.parseInt(shotCoordinate.getCoordinates().get(0).substring(3));
-        for ( Ship actual : game.getEnemyShips()) {
+        for (Ship actual : game.getEnemyShips()) {
             for (int i = 0; i < actual.getCoordinates().size(); i++) {
-                if((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)){
+                if ((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)) {
                     return true;
                 }
             }
@@ -148,16 +186,24 @@ public class GameService {
     }
 
 
-    public boolean evaluateGeneratedShot(ShotCoordinate generatedShot) {
+    public boolean evaluateGeneratedShot(ShotCoordinate generatedShot, Long userId) {
+
+        Game game = userGame.get(userId);
         int y = Integer.parseInt(generatedShot.getCoordinates().get(0));
         int x = Integer.parseInt(generatedShot.getCoordinates().get(1));
-        for ( Ship actual : game.getShips()) {
+        for (Ship actual : game.getShips()) {
             for (int i = 0; i < actual.getCoordinates().size(); i++) {
-                if((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)){
+                if ((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)) {
                     return true;
                 }
             }
         }
         return false;
     }
+
+    public Map<Long, Game> getUserGame() {
+        return userGame;
+    }
+
+
 }
