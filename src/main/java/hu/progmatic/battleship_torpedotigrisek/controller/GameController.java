@@ -28,7 +28,6 @@ public class GameController {
     @GetMapping("/testBoard")
     public String gameBoard(Model model) {
         Long userId = gameService.getCurrentUserId();
-        System.out.println("Accessing /testBoard with userId: " + userId);
         if (userId != null) {
             System.out.println("Looking up game for user ID: " + userId);
             Game game = gameService.getUserGame().get(userId);
