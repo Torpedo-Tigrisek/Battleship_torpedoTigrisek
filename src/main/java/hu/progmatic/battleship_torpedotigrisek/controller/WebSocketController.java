@@ -106,6 +106,7 @@ public class WebSocketController {
                 System.out.println("Player " + game.getPlayerScore() + " : " + game.getEnemyScore() + " Enemy");
                 if (gameService.isGameFinished(userId)) {
                     sendEnd(principal);
+
                 }
             }
             return shotCoordinate;
@@ -128,6 +129,7 @@ public class WebSocketController {
                 System.out.println("Player " + game.getPlayerScore() + " : " + game.getEnemyScore() + " Enemy");
                 if (gameService.isGameFinished(userId)) {
                     sendEnd(principal);
+
                 }
             }
             return generatedShot;
