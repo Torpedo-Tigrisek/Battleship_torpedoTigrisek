@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Battleship</title>
@@ -46,7 +46,7 @@
 <div class="board-container">
     <div class="board-table player-board">
         <div class="board-label">
-            <h4>Player's board</h4>
+            <h4><span sec:authentication="name"></span>'s board</h4>
         </div>
         <table>
             <tr th:each="row, rowIndex : ${playerBoard.grid}">
