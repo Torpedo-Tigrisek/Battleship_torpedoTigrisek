@@ -26,8 +26,6 @@ public class GameService {
 
     }
 
-    public Game getGame() {
-        return this.game;
         public void startNewGameForUser (Long userId){
 
             if (userId != null) {
@@ -38,10 +36,11 @@ public class GameService {
                 initializeEnemyShips(userId);
             }
         }
+
         private void logMapState (String startNewGameForUser){
             System.out.println("Map state after " + startNewGameForUser + ": " + userGame);
         }
-    }
+
 
         public Long getCurrentUserId () {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -171,11 +170,6 @@ public class GameService {
             }
         }
 
-        public boolean isEnd () { //ezt is lehet de az isGameFinished-et is lehet használni
-            Long userId = getCurrentUserId();
-            Game game = userGame.get(userId);
-            return game.isEnd();
-        }
 
         public boolean evaluatePlayerShot (ShotCoordinate shotCoordinate, Long userId){
             Game game = userGame.get(userId);
@@ -191,7 +185,8 @@ public class GameService {
             return false;
         }
 
-        public ShotCoordinate randomGeneratedShot () {
+        public ShotCoordinate randomGeneratedShot (Long userId) {
+            Game game = userGame.get(userId);
             ShotCoordinate shot = new ShotCoordinate();
             Random randomGenerator = new Random();
             do {
@@ -201,7 +196,7 @@ public class GameService {
                 shotArray.add(x);
                 shotArray.add(y);
                 shot.setCoordinates(shotArray);
-            } while (isGeneratedShotAlreadyBeenShot(shot));
+            } while (isGeneratedShotAlreadyBeenShot(shot, userId));
             game.getAlreadyGeneratedShots().add(shot);
             return shot;
         }
@@ -222,7 +217,8 @@ public class GameService {
             return false;
         }
 
-        public boolean isGeneratedShotAlreadyBeenShot (ShotCoordinate generatedShot){
+        public boolean isGeneratedShotAlreadyBeenShot (ShotCoordinate generatedShot, Long userId){
+            Game game = userGame.get(userId);
             return game.getAlreadyGeneratedShots().contains(generatedShot);
         }
 

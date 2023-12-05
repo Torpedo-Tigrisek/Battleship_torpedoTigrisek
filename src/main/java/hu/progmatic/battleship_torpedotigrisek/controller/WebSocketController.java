@@ -2,7 +2,6 @@ package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.*;
 import hu.progmatic.battleship_torpedotigrisek.service.GameService;
-import hu.progmatic.battleship_torpedotigrisek.service.ShotService;
 import hu.progmatic.battleship_torpedotigrisek.service.UserProfileService;
 import hu.progmatic.battleship_torpedotigrisek.service.UserService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -120,7 +119,7 @@ public class WebSocketController {
     @SubscribeMapping("/generatedShot")
     public ShotCoordinate sendGeneratedShot(Principal principal) throws Exception {
         Long userId = getUserIdFromPrincipal(principal);
-        ShotCoordinate generatedShot = gameService.randomGeneratedShot();
+        ShotCoordinate generatedShot = gameService.randomGeneratedShot(userId);
         System.out.println("The computer generated this generatedShot = " + generatedShot.toString());
         System.out.println("was this generated shot a hit?" + gameService.evaluateGeneratedShot(generatedShot, userId));
         if (userId != null) {
@@ -154,11 +153,11 @@ public class WebSocketController {
         System.out.println(gameService.whoIsTheWinner(userId));
         if (gameService.whoIsTheWinner(userId).equals("You win")) {
             addScoreToPrincipal(principal);
+            return gameService.whoIsTheWinner(userId);
         } else {
             addLossToPrincipal(principal);
+            return gameService.whoIsTheWinner(userId);
         }
-
-        return gameService.whoIsTheWinner(userId);
     }
 
     private Long getUserIdFromPrincipal(Principal principal) {
