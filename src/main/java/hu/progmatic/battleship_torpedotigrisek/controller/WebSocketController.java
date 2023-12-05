@@ -2,7 +2,6 @@ package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.*;
 import hu.progmatic.battleship_torpedotigrisek.service.GameService;
-import hu.progmatic.battleship_torpedotigrisek.service.ShotService;
 import hu.progmatic.battleship_torpedotigrisek.service.UserProfileService;
 import hu.progmatic.battleship_torpedotigrisek.service.UserService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -105,7 +104,7 @@ public class WebSocketController {
     @SubscribeMapping("/generatedShot")
     public ShotCoordinate sendGeneratedShot(Principal principal) throws Exception {
         Long userId = getUserIdFromPrincipal(principal);
-        ShotCoordinate generatedShot = shotService.randomGeneratedShot();
+        ShotCoordinate generatedShot = gameService.randomGeneratedShot(userId);
         System.out.println("The computer generated this generatedShot = " + generatedShot.toString());
         System.out.println("was this generated shot a hit?" + gameService.evaluateGeneratedShot(generatedShot, userId));
         if (userId != null) {
@@ -132,14 +131,6 @@ public class WebSocketController {
     }
 
 
-
-    @SubscribeMapping("/end")
-    public String sendEnd(Principal principal){
-        Long userId = getUserIdFromPrincipal(principal);
-        System.out.println(gameService.whoIsTheWinner(userId));
-        return gameService.whoIsTheWinner(userId);
-    }
-
     private Long getUserIdFromPrincipal(Principal principal) {
         if (principal instanceof Authentication) {
             Authentication authentication = (Authentication) principal;
@@ -150,14 +141,18 @@ public class WebSocketController {
             }
         }
         return null;
+    }
+    @SubscribeMapping("/end")
     public String sendEnd(Principal principal) {
-        System.out.println(gameService.whoIsTheWinner());
-        if (gameService.whoIsTheWinner().equals("You win")) {
+        Long userId = getUserIdFromPrincipal(principal);
+        System.out.println(gameService.whoIsTheWinner(userId));
+        if (gameService.whoIsTheWinner(userId).equals("You win")) {
             addScoreToPrincipal(principal);
         } else {
             addLossToPrincipal(principal);
         }
-        return gameService.whoIsTheWinner();
+
+        return gameService.whoIsTheWinner(userId);
     }
 
     private void addScoreToPrincipal(Principal principal) {

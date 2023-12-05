@@ -44,6 +44,7 @@ public class GameController {
     @GetMapping("/startGame")
     public String startGame(RedirectAttributes redirectAttributes) {
         Long userId = gameService.getCurrentUserId();
+        gameService.removeUserGame(userId);
         if (userId != null) {
             gameService.startNewGameForUser(userId);
 
@@ -56,3 +57,4 @@ public class GameController {
 
 
 }
+

@@ -60,14 +60,11 @@ public class GameService {
         game.setPlayerScore(0);
         game.setEnemyScore(0);
         game.setShipTypes(new ShipType[]{ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER});
-        initializeEnemyShips();
         game.setShips(new ArrayList<>());
         game.setEnemyShips(game.getEnemyShips());
         game.setRemainingShips(new ArrayList<>(Arrays.asList(
                 ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE,
                 ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
-                ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER)));
-
                 ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER)));
         game.setAlreadyGeneratedShots(new ArrayList<>());
         return game;
@@ -94,7 +91,7 @@ public class GameService {
         }
     }
 
-    }
+
 
     public List<Ship> generateShips(Long userId) {
 
@@ -163,7 +160,7 @@ public class GameService {
 
     public boolean isGameFinished(Long userId) {
         Game game = userGame.get(userId);
-        return game != null && (game.getPlayerScore() >= 20 || game.getEnemyScore() >= 20);
+        return game != null && (game.getPlayerScore() == 20 || game.getEnemyScore() == 20);
     }
 
     public void removeUserGame(Long userId) {
@@ -173,11 +170,6 @@ public class GameService {
         }
     }
 
-    public boolean isEnd() { //ezt is lehet de az isGameFinished-et is lehet használni
-        Long userId = getCurrentUserId();
-        Game game = userGame.get(userId);
-        return game.isEnd();
-    }
 
     public boolean evaluatePlayerShot(ShotCoordinate shotCoordinate, Long userId) {
 
@@ -194,7 +186,8 @@ public class GameService {
         return false;
     }
 
-    public ShotCoordinate randomGeneratedShot() {
+    public ShotCoordinate randomGeneratedShot(Long userId) {
+        Game game = userGame.get(userId);
         ShotCoordinate shot = new ShotCoordinate();
         Random randomGenerator = new Random();
         do{
@@ -204,7 +197,7 @@ public class GameService {
             shotArray.add(x);
             shotArray.add(y);
             shot.setCoordinates(shotArray);
-        }while(isGeneratedShotAlreadyBeenShot(shot));
+        }while(isGeneratedShotAlreadyBeenShot(shot, userId));
         game.getAlreadyGeneratedShots().add(shot);
         return shot;
     }
@@ -225,7 +218,8 @@ public class GameService {
         return false;
     }
 
-    public boolean isGeneratedShotAlreadyBeenShot(ShotCoordinate generatedShot) {
+    public boolean isGeneratedShotAlreadyBeenShot(ShotCoordinate generatedShot, Long userId) {
+        Game game = userGame.get(userId);
         return game.getAlreadyGeneratedShots().contains(generatedShot);
     }
 
