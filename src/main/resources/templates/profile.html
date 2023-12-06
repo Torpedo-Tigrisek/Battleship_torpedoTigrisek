@@ -52,7 +52,7 @@
 <p>Score: <span th:text="${userprofile.getScore()}"></span></p>
 <p>Wins: <span th:text="${userprofile.getWins()}"></span></p>
 <p>Losses: <span th:text="${userprofile.getLosses()}"></span></p>
-<p>Win Ratio: <span th:text="${userprofile.getWinLossRatio()}"></span></p>
+<p>Win Ratio: <span th:text="${#numbers.formatDecimal(userprofile.getWinLossRatio(), 0, 'POINT', 2, 'COMMA')}"></span></p>
 
 </body>
 </html>
