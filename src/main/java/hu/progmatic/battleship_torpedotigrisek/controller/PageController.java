@@ -5,16 +5,12 @@ import hu.progmatic.battleship_torpedotigrisek.model.UserProfile;
 import hu.progmatic.battleship_torpedotigrisek.service.UserProfileService;
 import hu.progmatic.battleship_torpedotigrisek.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import java.security.Principal;
-import java.util.List;
 
 @Controller
 @AllArgsConstructor
@@ -55,19 +51,25 @@ public class PageController {
         return "login";
     }
 
+
+
     @GetMapping("/leaderboard")
-    public String getLeaderBoard(Model model){
-        List<User> users = userService.getAllUserSortedByScore();
-        model.addAttribute("userList", users);
+    public String getLeaderBoard(){
         return "leaderboard";
     }
 
+
+
+
+
     @GetMapping("/profile")
-    public String userProfile(Model model, Principal principal) {
-        Authentication authentication = (Authentication) principal;
-        Object principalObj = authentication.getPrincipal();
-        Long userProfileId = ((User) principalObj).getUserProfile().getId();
-        model.addAttribute("userprofile", userProfileService.getUserProfileById(userProfileId));
+    public String userProfile() {
         return "/profile";
+    }
+
+
+    @GetMapping("/how_to_play")
+    public String getHowToPlay() {
+        return "/how_to_play";
     }
 }
