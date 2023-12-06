@@ -165,7 +165,7 @@ function placeX(cell) {
             }
 
             generatedPositions.push(cellId);
-        }, 800); // Késleltetés
+        }, 800);
 
         function playWaterDropSound() {
             var waterDropSound = document.getElementById('waterDropSound');
