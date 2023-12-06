@@ -158,11 +158,6 @@ public class GameService {
             return null;
         }
 
-        public boolean isGameFinished (Long userId){
-            Game game = userGame.get(userId);
-            return game != null && (game.getPlayerScore() >= 20 || game.getEnemyScore() >= 20);
-        }
-
         public void removeUserGame (Long userId){
             if (userId != null && userGame.containsKey(userId)) {
                 userGame.remove(userId);
@@ -226,6 +221,9 @@ public class GameService {
             return userGame;
         }
 
+        public double winLossRation(int win, int loss){
+            return ((double) win) /loss;
+        }
 
     }
 
