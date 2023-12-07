@@ -40,8 +40,8 @@ public class UserController {
                              RedirectAttributes redirectAttributes) {
         if (!confirmPassword.equals(updatedUser.getPassword())) {
 
-            redirectAttributes.addFlashAttribute("error", "A jelszavak nem egyeznek meg.");
-            return "redirect:/update"; // Vagy valamilyen másik oldalra irányítsd a felhasználót
+            redirectAttributes.addFlashAttribute("error", "Passwords are not matching");
+            return "redirect:/update";
         }
 
 
