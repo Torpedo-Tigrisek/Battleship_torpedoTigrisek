@@ -105,7 +105,6 @@ public class GameService {
         }
 
         public void placeAllShips (Long userId){
-            // Hajókat újra lerakjuk a listából
 
             Game game = userGame.get(userId);
             for (ShipType shipType : game.getRemainingShips()) {
@@ -120,10 +119,8 @@ public class GameService {
         public void resetGame (Long userId){
 
             Game game = userGame.get(userId);
-            // Hajólista törlése
             game.getShips().clear();
 
-            // Tábla törlése
             shipPlacementService.clearShips(game.getPlayerBoard());
             shipPlacementService.clearShips(game.getEnemyBoard());
 
@@ -161,13 +158,6 @@ public class GameService {
         public boolean isGameFinished (Long userId){
             Game game = userGame.get(userId);
             return game != null && (game.getPlayerScore() >= 20 || game.getEnemyScore() >= 20);
-        }
-
-        public void removeUserGame (Long userId){
-            if (userId != null && userGame.containsKey(userId)) {
-                userGame.remove(userId);
-                System.out.println("Game for user ID " + userId + " removed.");
-            }
         }
 
 
@@ -225,7 +215,5 @@ public class GameService {
         public Map<Long, Game> getUserGame () {
             return userGame;
         }
-
-
     }
 

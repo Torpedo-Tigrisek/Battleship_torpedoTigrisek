@@ -7,7 +7,6 @@ function isEnd(){
     if(playerHit === 20 || enemyHit === 20){
         getEndMessage();
     }
-
 }
 function getEndMessage() {
     stompClient.subscribe('/app/end', function (message) {

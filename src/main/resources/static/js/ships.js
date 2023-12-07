@@ -25,7 +25,7 @@ function placeEnemyShips() {
 }
 function gettingRandomShotsFromServer() {
     stompClient.subscribe('/app/generatedShot', function (message) {
-        console.log("EZ ITT BENYER KOORDINÁTA: " + message.body);
+        console.log("HERE ARE THE COORDINATES: " + message.body);
         placeBlueXAutomatically(message.body);
     });
 }
@@ -51,7 +51,6 @@ function connect() {
 function handleShipData(shipData) {
 
     console.log("Received ship data:", shipData);
-    // Implementáld a hajóadatok kezelését a táblán, például megjelenítheted a hajókat
 
 }
 

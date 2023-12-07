@@ -124,17 +124,14 @@ label {
     touch-action: manipulation;
 }
 
-/* Hover effektus */
 .button-80:not(:disabled):hover {
     transform: scale(1.05);
 }
 
-/* Active effektus */
 .button-80:not(:disabled):hover:active {
     transform: scale(1.05) translateY(.125rem);
 }
 
-/* Fókusz kezelés */
 .button-80:focus {
     outline: 0 solid transparent;
 }
@@ -157,10 +154,9 @@ label {
     border-width: 0;
 }
 
-/* Aktív állapot */
 .button-80:not(:disabled):active {
     transform: translateY(.125rem);
 }
 .opponent-table-cell.ship {
-    background-color: rgba(229, 234, 234, 0.94);
+    background-color: rgba(255, 255, 255, 0.9);
 }

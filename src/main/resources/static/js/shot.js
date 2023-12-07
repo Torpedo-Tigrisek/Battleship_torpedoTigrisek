@@ -7,8 +7,6 @@ var shipsPlaced = false;
 let isPlayerTurn = true;
 let isEnemyTurn = false;
 
-
-
 function connectToGame() {
     var socket = new SockJS('/battleship-websocket');
     stompClient = Stomp.over(socket);
@@ -40,22 +38,21 @@ document.getElementById('placeShip').addEventListener('click', function() {
 
 function placeX(cell) {
     if (!isPlayerTurn) {
-        alert("Nem a te köröd van!");
+        alert("It's not your turn!");
         return;
     }
     var cellId = cell.id;
     if (canPlaceShips) {
-        alert("Előbb helyezd el a hajókat majd nyomj a Start gombra!");
+        alert("Place your ships first and then press the Start button!");
         return;
     }
     if (!shipsPlaced) {
-        alert("Előbb helyezd le a hajókat!");
+        alert("Place your ships first!");
         return;
     }
 
-    // Ellenőrizzük, hogy az adott helyre már lett-e "X" elhelyezve
     if (placedPositions.includes(cellId)) {
-        alert("Ezen a helyen már van egy X!");
+        alert("You've already shot here!");
         return;
     }
 
@@ -64,7 +61,6 @@ function placeX(cell) {
     redX.textContent = "X";
     cell.appendChild(redX);
 
-    // Az "X" koordinátáit hozzáadjuk a listához, kinyerjük a két koordinátát
     placedPositions.push(cellId);
     var coordinates = cellId.split("-");
     var row = coordinates[2];
@@ -72,14 +68,11 @@ function placeX(cell) {
     var cellIdCoordinates = [row + ", " + column];
     sendXPositionsToServer(cellIdCoordinates);
 
-    // Ellenőrizzük, hogy az adott helyen van-e hajó ("S")
     if (cell.textContent.includes("S")) {
-        // Találat esetén pirosra változtatjuk a cella színét
         console.log("Hit detected!");
         cell.style.backgroundColor = "red";
         playHitSound();
 
-        // Hozzáadjuk a találat koordinátáit a "HitCoordinate" listához
         placedHitPositions.push(cellId);
         var hitCoordinates = cellId.split("-");
         var hitRow = hitCoordinates[2];
@@ -89,15 +82,14 @@ function placeX(cell) {
         playerHit++;
         isEnd();
         console.log('PLAYER HIT ' + playerHit + ' : ' + enemyHit + ' ENEMY HIT' )
-        isPlayerTurn = true; // Ezt beállítjuk, ha a játékos talált
+        isPlayerTurn = true;
         isEnemyTurn = false;
     } else {
-        // Ha a találat nem hajóra esett, játssza le a vízcsepp hangot
         playWaterDropSound();
-        isPlayerTurn = false; // Ezzel jelezzük, hogy az ellenfél jön
+        isPlayerTurn = false;
         isEnemyTurn = true;
+        gettingRandomShotsFromServer();
     }
-
 
     function sendXPositionsToServer(cellIdCoordinates) {
         var shotCoordinates = {
@@ -109,7 +101,6 @@ function placeX(cell) {
             JSON.stringify(shotCoordinates)
         );
         console.log("Shot was sent to server:", shotCoordinates.coordinates);
-        gettingRandomShotsFromServer();
     }
 
     function sendHitPositionsToServer(cellIdHitCoordinates) {
@@ -123,11 +114,11 @@ function placeX(cell) {
         );
         console.log("Hit was sent to server:", hitCoordinates.coordinates);
     }
+
     function placeBlueXAutomatically(message) {
         if (!isEnemyTurn) {
             return;
         }
-
         setTimeout(function () {
             var convertedMessageObject = JSON.parse(message);
             var randomRow = convertedMessageObject.coordinates[0];
@@ -149,21 +140,17 @@ function placeX(cell) {
             if (cell.textContent.includes("S")) {
                 cell.style.backgroundColor = "red";
                 playHitSound();
-                enemyHit++;
                 isEnd();
                 console.log('PLAYER HIT ' + playerHit + ' : ' + enemyHit + ' ENEMY HIT' );
-                // Ha az ellenfél talált, marad az ő köre
+                enemyHit++;
                 isEnemyTurn = true;
                 isPlayerTurn = false;
-                // Itt visszatérünk, hogy újabb lövést végezzen az ellenfél
                 gettingRandomShotsFromServer();
             } else {
                 playWaterDropSound();
-                // Ha az ellenfél nem talált, akkor az ő köre véget ért
                 isEnemyTurn = false;
                 isPlayerTurn = true;
             }
-
             generatedPositions.push(cellId);
         }, 800);
 
@@ -175,8 +162,10 @@ function placeX(cell) {
 
     function gettingRandomShotsFromServer() {
         stompClient.subscribe('/app/generatedShot', function (message) {
-            console.log("EZ ITT BENYER KOORDINÁTA: " + message.body);
-            placeBlueXAutomatically(message.body);
+            if (isEnemyTurn) {
+                console.log("HERE ARE THE COORDINATES: " + message.body);
+                placeBlueXAutomatically(message.body);
+            }
         });
     }
 }

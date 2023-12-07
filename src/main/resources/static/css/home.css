@@ -9,11 +9,6 @@ body {
     background-position: center top; /* Horizontálisan középen tartja a háttérképet */
 }
 
-.navbar {
-    /* Add hozzá a stílust, amit már használtál a HTML-ben */
-    /* Pl. a háttérszín vagy a szöveg színe */
-}
-
 .button-container {
     display: flex;
     flex-direction: column;

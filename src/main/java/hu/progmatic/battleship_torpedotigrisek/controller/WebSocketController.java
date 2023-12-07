@@ -45,24 +45,8 @@ public class WebSocketController {
             System.out.println(game.getShips());
             return game.getPlayerBoard();
         }
-
         return null;
     }
-    /*
-    @MessageMapping("/placeEnemyShips")
-    public void handleEnemyShipPlacement(Principal principal) {
-        Long userId = getUserIdFromPrincipal(principal);
-        if (userId != null) {
-            Game game = gameService.getUserGame().get(userId);
-            if (game != null) {
-                gameService.initializeEnemyShips(userId);
-                System.out.println("Enemy ships placed for user: " + userId);
-            }
-        }
-    }
-
-     */
-
 
     @MessageMapping("/ready")
     public void handleReady(Principal principal) {
@@ -70,8 +54,6 @@ public class WebSocketController {
         if (userId != null) {
             gameService.fixShipPositions(userId);
         }
-        // ide kellene rakni, hogy a mapbe felülírja a hajókat a játékot és mentse?
-
     }
 
     private void sendShipData(Long userId) {
@@ -86,14 +68,7 @@ public class WebSocketController {
             }
             messagingTemplate.convertAndSend("/topic/shipData", shipData);
         }
-
     }
-
-
-    public void GamePlay(){
-
-    }
-
     @MessageMapping("/battle.sendShot")
     @SendTo("/topic/public")
     public ShotCoordinate sendShot(Principal principal, @Payload ShotCoordinate shotCoordinate) {
@@ -124,7 +99,6 @@ public class WebSocketController {
         System.out.println("was this generated shot a hit?" + gameService.evaluateGeneratedShot(generatedShot, userId));
         if (userId != null) {
             Game game = gameService.getUserGame().get(userId);
-
             boolean hit = gameService.evaluateGeneratedShot(generatedShot, userId);
             if (hit) {
                 game.setEnemyScore(game.getEnemyScore() + 1);
@@ -144,9 +118,6 @@ public class WebSocketController {
         System.out.println("On the enemy board this coordinate was a hit: " + hitCoordinate.getHitCoordinates());
         return hitCoordinate;
     }
-
-
-
     @SubscribeMapping("/end")
     public String sendEnd(Principal principal){
         Long userId = getUserIdFromPrincipal(principal);
