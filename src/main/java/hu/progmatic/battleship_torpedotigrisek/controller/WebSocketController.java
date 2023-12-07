@@ -190,7 +190,8 @@ public class WebSocketController {
             Authentication authentication = (Authentication) principal;
             Object principalObj = authentication.getPrincipal();
             if (principalObj instanceof User) {
-                User user = (User) principalObj;
+                Long userId = ((User) principalObj).getId();
+                User user = userService.getUserById(userId).orElse(null);
                 user.getUserProfile().setLosses(user.getUserProfile().getLosses() + 1);
                 double winloss = gameService.winLossRation(user.getUserProfile().getWins(), user.getUserProfile().getLosses());
                 user.getUserProfile().setWinLossRatio(winloss);

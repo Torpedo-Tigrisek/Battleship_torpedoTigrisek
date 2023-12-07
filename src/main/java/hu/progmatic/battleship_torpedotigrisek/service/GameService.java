@@ -222,7 +222,11 @@ public class GameService {
         }
 
         public double winLossRation(int win, int loss){
-            return ((double) win) /loss;
+            if(loss == 0){
+                return win;
+            } else {
+                return ((double) win) /loss;
+            }
         }
 
     }
