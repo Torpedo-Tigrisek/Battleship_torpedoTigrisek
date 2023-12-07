@@ -3,15 +3,15 @@ body {
     margin: 0;
     padding: 0;
     background-image: url('https://i.pinimg.com/originals/de/4c/50/de4c50f62f62b9348d7c1af0f78b1056.jpg');
-    background-size: 100% 100%; /* 16:9-es arány megőrzése */
-    background-attachment: fixed; /* Háttérkép fix pozícióban */
+    background-size: 100% 100%;
+    background-attachment: fixed;
 }
 
 .board-container {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin-bottom: 20px; /* Opcionális: térköz a táblák között */
+    margin-bottom: 20px;
 }
 .board-header h2 {
     color: black;
@@ -20,15 +20,13 @@ body {
     padding: 5px;
 }
 
-/* Általános tábla stílus */
 .board-table {
     margin: 0 10px;
-    /* width: 250px; */ /* Opcionális: adhatunk szélességet a táblának */
 }
 
 .board-table table {
-    border-collapse: collapse; /* A cellák közötti vonalak kialakítása */
-    width: 100%; /* Teljes szélességű tábla */
+    border-collapse: collapse;
+    width: 100%;
 }
 
 .board-table td {
@@ -70,28 +68,28 @@ body {
     width: 10px;
     height: 10px;
     background-color: #5e8a85;
-    color: transparent; /* Áttetszővé tesszük a szöveget */
+    color: transparent;
     text-shadow: none;
     text-indent: -9999px;
 }
 .board-label {
     text-align: center;
-    margin: 2px auto; /* Csökkentett távolság */
+    margin: 2px auto;
     padding: 5px;
-    background-color: rgb(148, 183, 180); /* Erősebb háttérszín */
+    background-color: rgb(148, 183, 180);
     display: inline-block;
     width: 250px;
     height: 40px;
-    position: relative; /* Abszolút pozícionálás */
-    left: 50%; /* 50%-kal jobbra tolás */
-    transform: translateX(-50%); /* Vissza a középre */
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.29);
 }
 label {
     font-weight: bold;
     color: #fff; /* Szöveg színe */
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.7); /* Árnyék */
-    margin-right: 10px; /* Opcionális: térköz a felirat és a slider között */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+    margin-right: 10px;
 }
 .button-wrapper {
     text-align: right;
@@ -124,17 +122,13 @@ label {
     touch-action: manipulation;
 }
 
-/* Hover effektus */
 .button-80:not(:disabled):hover {
     transform: scale(1.05);
 }
 
-/* Active effektus */
 .button-80:not(:disabled):hover:active {
     transform: scale(1.05) translateY(.125rem);
 }
-
-/* Fókusz kezelés */
 .button-80:focus {
     outline: 0 solid transparent;
 }
@@ -157,7 +151,6 @@ label {
     border-width: 0;
 }
 
-/* Aktív állapot */
 .button-80:not(:disabled):active {
     transform: translateY(.125rem);
 }

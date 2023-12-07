@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
 @Controller
 public class GameController {
     private GameService gameService;
@@ -28,7 +29,7 @@ public class GameController {
             if (game != null) {
                 model.addAttribute("playerBoard", game.getPlayerBoard());
                 model.addAttribute("enemyBoard", game.getEnemyBoard());
-                return "battle-ship";
+                return "test-board";
             }
         }
         return "redirect:/some-error-page";
@@ -37,7 +38,6 @@ public class GameController {
     @GetMapping("/startGame")
     public String startGame(RedirectAttributes redirectAttributes) {
         Long userId = gameService.getCurrentUserId();
-        gameService.removeUserGame(userId);
         if (userId != null) {
             gameService.startNewGameForUser(userId);
 
@@ -47,7 +47,4 @@ public class GameController {
         redirectAttributes.addFlashAttribute("error", "Nem sikerült elindítani a játékot.");
         return "redirect:/home";
     }
-
-
 }
-

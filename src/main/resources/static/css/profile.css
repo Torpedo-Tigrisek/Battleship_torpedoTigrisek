@@ -15,24 +15,24 @@ h1 {
     font-size: 2.5em;
     margin: 0.5em 0;
     padding: 0 20px;
-    color: white; /* This can be any color, but contrasts well against a dark background */
+    color: white;
     text-shadow:
             -1px -1px 0 #000,
             1px -1px 0 #000,
             -1px  1px 0 #000,
-            1px  1px 0 #000; /* This creates a solid black border around the text */
+            1px  1px 0 #000;
 }
 
 p {
     font-size: 2.5em;
     margin: 0.5em 0;
     padding: 0 20px;
-    color: white; /* This can be any color, but contrasts well against a dark background */
+    color: white;
     text-shadow:
             -1px -1px 0 #000,
             1px -1px 0 #000,
             -1px  1px 0 #000,
-            1px  1px 0 #000; /* This creates a solid black border around the text */
+            1px  1px 0 #000;
 }
 
 .table {

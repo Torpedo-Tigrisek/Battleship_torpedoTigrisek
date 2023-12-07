@@ -6,12 +6,7 @@ body {
     background-size: cover;
     background-attachment: fixed;
     overflow: hidden;
-    background-position: center top; /* Horizontálisan középen tartja a háttérképet */
-}
-
-.navbar {
-    /* Add hozzá a stílust, amit már használtál a HTML-ben */
-    /* Pl. a háttérszín vagy a szöveg színe */
+    background-position: center top;
 }
 
 .button-container {
