@@ -1,7 +1,6 @@
 package hu.progmatic.battleship_torpedotigrisek.controller;
 
 import hu.progmatic.battleship_torpedotigrisek.model.User;
-import hu.progmatic.battleship_torpedotigrisek.service.UserProfileService;
 import hu.progmatic.battleship_torpedotigrisek.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

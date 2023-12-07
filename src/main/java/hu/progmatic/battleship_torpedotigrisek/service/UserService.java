@@ -51,5 +51,4 @@ public class UserService implements UserDetailsService {
     public User updateUser(User user){
         return userRepo.save(user);
     }
-
 }

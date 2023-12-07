@@ -1,6 +1,5 @@
 package hu.progmatic.battleship_torpedotigrisek.model;
 
-import lombok.Getter;
 
 public enum ShipType {
     CRUISER(4),

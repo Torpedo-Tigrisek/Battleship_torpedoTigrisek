@@ -1,7 +1,6 @@
 package hu.progmatic.battleship_torpedotigrisek.model;
 
 import lombok.Data;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 

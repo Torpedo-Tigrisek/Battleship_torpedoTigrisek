@@ -19,7 +19,7 @@ public class Ship {
         this.orientation = orientation;
         this.coordinates = new ArrayList<>();
         for (int i = 0; i < this.shipType.getSize(); i++) {
-            coordinates.add(new Coordinate(0, 0)); // Kezdeti pozíciók, amik később frissítésre kerülnek
+            coordinates.add(new Coordinate(0, 0));
         }
     }
 

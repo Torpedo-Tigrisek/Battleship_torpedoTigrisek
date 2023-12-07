@@ -105,7 +105,6 @@ public class GameService {
         }
 
         public void placeAllShips (Long userId){
-            // Hajókat újra lerakjuk a listából
 
             Game game = userGame.get(userId);
             for (ShipType shipType : game.getRemainingShips()) {
@@ -120,10 +119,8 @@ public class GameService {
         public void resetGame (Long userId){
 
             Game game = userGame.get(userId);
-            // Hajólista törlése
             game.getShips().clear();
 
-            // Tábla törlése
             shipPlacementService.clearShips(game.getPlayerBoard());
             shipPlacementService.clearShips(game.getEnemyBoard());
 
