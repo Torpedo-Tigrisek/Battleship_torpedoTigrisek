@@ -48,6 +48,10 @@ public class UserService implements UserDetailsService {
         return userRepo.findById(id);
     }
 
+    public User fingUserById(Long id){
+        return userRepo.findById(id).orElse(null);
+    }
+
     public User updateUser(User user){
         return userRepo.save(user);
     }

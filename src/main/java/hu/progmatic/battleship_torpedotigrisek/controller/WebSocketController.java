@@ -48,21 +48,6 @@ public class WebSocketController {
 
         return null;
     }
-    /*
-    @MessageMapping("/placeEnemyShips")
-    public void handleEnemyShipPlacement(Principal principal) {
-        Long userId = getUserIdFromPrincipal(principal);
-        if (userId != null) {
-            Game game = gameService.getUserGame().get(userId);
-            if (game != null) {
-                gameService.initializeEnemyShips(userId);
-                System.out.println("Enemy ships placed for user: " + userId);
-            }
-        }
-    }
-
-     */
-
 
     @MessageMapping("/ready")
     public void handleReady(Principal principal) {
@@ -90,7 +75,7 @@ public class WebSocketController {
     }
 
 
-    public void GamePlay(){
+    public void GamePlay() {
 
     }
 

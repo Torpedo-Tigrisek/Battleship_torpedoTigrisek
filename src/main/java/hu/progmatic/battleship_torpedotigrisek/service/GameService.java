@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.*;
 @Service
 @Data
 public class GameService {
+    private Game game;
     private ShipPlacementService shipPlacementService;
     private Map<Long, Game> userGame = new HashMap<>();
 
@@ -26,7 +28,7 @@ public class GameService {
 
     }
 
-        public void startNewGameForUser (Long userId){
+    public void startNewGameForUser(Long userId) {
 
             if (userId != null) {
                 Game game = newGame(userId);
@@ -42,33 +44,33 @@ public class GameService {
         }
 
 
-        public Long getCurrentUserId () {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
-                User user = (User) authentication.getPrincipal();
-                System.out.println("Current userId: " + user.getId());
-                return user.getId();
-            }
-            return null;
+    public Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails) {
+            User user = (User) authentication.getPrincipal();
+            System.out.println("Current userId: " + user.getId());
+            return user.getId();
         }
+        return null;
+    }
 
 
-        public Game newGame (Long userId){
-            Game game = new Game();
-            game.setPlayerBoard(new Board());
-            game.setEnemyBoard(new Board());
-            game.setPlayerScore(0);
-            game.setEnemyScore(0);
-            game.setShipTypes(new ShipType[]{ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER});
-            game.setShips(new ArrayList<>());
-            game.setEnemyShips(game.getEnemyShips());
-            game.setRemainingShips(new ArrayList<>(Arrays.asList(
-                    ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE,
-                    ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
-                    ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER)));
-            game.setAlreadyGeneratedShots(new ArrayList<>());
-            return game;
-        }
+    public Game newGame(Long userId) {
+        Game game = new Game();
+        game.setPlayerBoard(new Board());
+        game.setEnemyBoard(new Board());
+        game.setPlayerScore(0);
+        game.setEnemyScore(0);
+        game.setShipTypes(new ShipType[]{ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER});
+        game.setShips(new ArrayList<>());
+        game.setEnemyShips(game.getEnemyShips());
+        game.setRemainingShips(new ArrayList<>(Arrays.asList(
+                ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE,
+                ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
+                ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER)));
+        game.setAlreadyGeneratedShots(new ArrayList<>());
+        return game;
+    }
 
         public void initializeEnemyShips (Long userId){
             Game game = userGame.get(userId);
@@ -92,30 +94,30 @@ public class GameService {
         }
 
 
-        public List<Ship> generateShips (Long userId){
+
+    public List<Ship> generateShips(Long userId) {
 
             Game game = userGame.get(userId);
 
-            List<Ship> ships = new ArrayList<>();
-            for (ShipType type : game.getShipTypes()) {
-                boolean orientation = Math.random() < 0.5; // true: HORIZONTAL, false: VERTICAL
-                ships.add(new Ship(type, orientation));
-            }
-            return ships;
+        List<Ship> ships = new ArrayList<>();
+        for (ShipType type : game.getShipTypes()) {
+            boolean orientation = Math.random() < 0.5; // true: HORIZONTAL, false: VERTICAL
+            ships.add(new Ship(type, orientation));
         }
+        return ships;
+    }
 
         public void placeAllShips (Long userId){
             // Hajókat újra lerakjuk a listából
 
-            Game game = userGame.get(userId);
-            for (ShipType shipType : game.getRemainingShips()) {
-                Ship ship = new Ship(shipType, Math.random() < 0.5);
-                if (shipPlacementService.placeShipRandomly(game.getPlayerBoard(), ship)) {
-                    game.getShips().add(ship);
-                }
+        Game game = userGame.get(userId);
+        for (ShipType shipType : game.getRemainingShips()) {
+            Ship ship = new Ship(shipType, Math.random() < 0.5);
+            if (shipPlacementService.placeShipRandomly(game.getPlayerBoard(), ship)) {
+                game.getShips().add(ship);
             }
-
         }
+    }
 
         public void resetGame (Long userId){
 
@@ -140,12 +142,12 @@ public class GameService {
             ));
         }
 
-        public void fixShipPositions (Long userId){
-            Game game = userGame.get(userId);
-            if (game != null) {
-                shipPlacementService.fixShipPosition(game.getShips(), game.getEnemyShips());
-            }
+    public void fixShipPositions(Long userId) {
+        Game game = userGame.get(userId);
+        if (game != null) {
+            shipPlacementService.fixShipPosition(game.getShips(), game.getEnemyShips());
         }
+    }
 
         public String whoIsTheWinner (Long userId){
 
@@ -158,43 +160,49 @@ public class GameService {
             return null;
         }
 
-        public void removeUserGame (Long userId){
-            if (userId != null && userGame.containsKey(userId)) {
-                userGame.remove(userId);
-                System.out.println("Game for user ID " + userId + " removed.");
-            }
+    public boolean isGameFinished(Long userId) {
+        Game game = userGame.get(userId);
+        return game != null && (game.getPlayerScore() == 20 || game.getEnemyScore() == 20);
+    }
+
+    public void removeUserGame(Long userId) {
+        if (userId != null && userGame.containsKey(userId)) {
+            userGame.remove(userId);
+            System.out.println("Game for user ID " + userId + " removed.");
         }
+    }
 
 
-        public boolean evaluatePlayerShot (ShotCoordinate shotCoordinate, Long userId){
-            Game game = userGame.get(userId);
-            int y = Integer.parseInt(shotCoordinate.getCoordinates().get(0).substring(0, 1));
-            int x = Integer.parseInt(shotCoordinate.getCoordinates().get(0).substring(3));
-            for (Ship actual : game.getEnemyShips()) {
-                for (int i = 0; i < actual.getCoordinates().size(); i++) {
-                    if ((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)) {
-                        return true;
-                    }
+    public boolean evaluatePlayerShot(ShotCoordinate shotCoordinate, Long userId) {
+
+        Game game = userGame.get(userId);
+        int y = Integer.parseInt(shotCoordinate.getCoordinates().get(0).substring(0, 1));
+        int x = Integer.parseInt(shotCoordinate.getCoordinates().get(0).substring(3));
+        for (Ship actual : game.getEnemyShips()) {
+            for (int i = 0; i < actual.getCoordinates().size(); i++) {
+                if ((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)) {
+                    return true;
                 }
             }
-            return false;
         }
+        return false;
+    }
 
-        public ShotCoordinate randomGeneratedShot (Long userId) {
-            Game game = userGame.get(userId);
-            ShotCoordinate shot = new ShotCoordinate();
-            Random randomGenerator = new Random();
-            do {
-                List<String> shotArray = new ArrayList<>();
-                String x = String.valueOf(randomGenerator.nextInt(0, 10));
-                String y = String.valueOf(randomGenerator.nextInt(0, 10));
-                shotArray.add(x);
-                shotArray.add(y);
-                shot.setCoordinates(shotArray);
-            } while (isGeneratedShotAlreadyBeenShot(shot, userId));
-            game.getAlreadyGeneratedShots().add(shot);
-            return shot;
-        }
+    public ShotCoordinate randomGeneratedShot(Long userId) {
+        Game game = userGame.get(userId);
+        ShotCoordinate shot = new ShotCoordinate();
+        Random randomGenerator = new Random();
+        do{
+            List<String> shotArray = new ArrayList<>();
+            String x = String.valueOf(randomGenerator.nextInt(0, 10));
+            String y = String.valueOf(randomGenerator.nextInt(0, 10));
+            shotArray.add(x);
+            shotArray.add(y);
+            shot.setCoordinates(shotArray);
+        }while(isGeneratedShotAlreadyBeenShot(shot, userId));
+        game.getAlreadyGeneratedShots().add(shot);
+        return shot;
+    }
 
 
         public boolean evaluateGeneratedShot (ShotCoordinate generatedShot, Long userId){
@@ -212,14 +220,14 @@ public class GameService {
             return false;
         }
 
-        public boolean isGeneratedShotAlreadyBeenShot (ShotCoordinate generatedShot, Long userId){
-            Game game = userGame.get(userId);
-            return game.getAlreadyGeneratedShots().contains(generatedShot);
-        }
+    public boolean isGeneratedShotAlreadyBeenShot(ShotCoordinate generatedShot, Long userId) {
+        Game game = userGame.get(userId);
+        return game.getAlreadyGeneratedShots().contains(generatedShot);
+    }
 
-        public Map<Long, Game> getUserGame () {
-            return userGame;
-        }
+    public Map<Long, Game> getUserGame() {
+        return userGame;
+    }
 
         public double winLossRation(int win, int loss){
             if(loss == 0){
@@ -229,5 +237,6 @@ public class GameService {
             }
         }
 
-    }
+
+}
 
