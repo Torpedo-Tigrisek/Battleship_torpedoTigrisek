@@ -29,7 +29,7 @@ public class GameController {
             if (game != null) {
                 model.addAttribute("playerBoard", game.getPlayerBoard());
                 model.addAttribute("enemyBoard", game.getEnemyBoard());
-                return "test-board";
+                return "battle-ship";
             }
         }
         return "redirect:/some-error-page";
