@@ -49,6 +49,6 @@ public class UserController {
         updatedUser.setPassword(encodedPassword);
         userService.updateUser(updatedUser);
 
-        return "redirect:/profile";
+        return "redirect:/login";
     }
 }
