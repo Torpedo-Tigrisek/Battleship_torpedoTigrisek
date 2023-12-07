@@ -29,7 +29,7 @@
                     <a class="nav-link" th:href="@{/leaderboard}">Leaderboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled" aria-disabled="true">About us</a>
+                    <a class="nav-link" th:href="@{/how_to_play}">How to Play</a>
                 </li>
             </ul>
 
@@ -52,7 +52,7 @@
 <p>Score: <span th:text="${userprofile.getScore()}"></span></p>
 <p>Wins: <span th:text="${userprofile.getWins()}"></span></p>
 <p>Losses: <span th:text="${userprofile.getLosses()}"></span></p>
-<p>Win Ratio: <span th:text="${userprofile.getWinLossRatio()}"></span></p>
+<p>Win Ratio: <span th:text="${#numbers.formatDecimal(userprofile.getWinLossRatio(), 0, 'POINT', 2, 'COMMA')}"></span></p>
 
 </body>
 </html>

@@ -2,12 +2,18 @@ let popup = document.getElementById("popup");
 const popupMessage = document.getElementById("popup-message");
 var playerHit = 0;
 var enemyHit = 0;
+var endMessageSent = false;
 
 function isEnd(){
-    if(playerHit === 20 || enemyHit === 20){
-        getEndMessage();
+    if (isGameEnd()) {
+        if(!endMessageSent){
+            endMessageSent = true;
+            getEndMessage();
+        }
     }
-
+}
+function isGameEnd() {
+    return playerHit === 20 || enemyHit === 20;
 }
 function getEndMessage() {
     stompClient.subscribe('/app/end', function (message) {

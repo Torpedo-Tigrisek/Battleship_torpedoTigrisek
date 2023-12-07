@@ -161,3 +161,6 @@ label {
 .button-80:not(:disabled):active {
     transform: translateY(.125rem);
 }
+.opponent-table-cell.ship {
+    background-color: rgba(229, 234, 234, 0.94);
+}

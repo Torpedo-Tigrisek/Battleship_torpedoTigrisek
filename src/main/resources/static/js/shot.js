@@ -4,6 +4,10 @@ var generatedPositions = [];
 var stompClient = null;
 var canPlaceShips = true;
 var shipsPlaced = false;
+let isPlayerTurn = true;
+let isEnemyTurn = false;
+
+
 
 function connectToGame() {
     var socket = new SockJS('/battleship-websocket');
@@ -26,9 +30,19 @@ function playWaterDropSound() {
 }
 document.getElementById('placeShip').addEventListener('click', function() {
     shipsPlaced = true;
-    document.getElementById('playGame').disabled = false;
+    var playGameButton = document.getElementById('playGame');
+    playGameButton.disabled = false;
+
+    playGameButton.addEventListener('click', function() {
+        playGameButton.disabled = true;
+    }, { once: true });
 });
+
 function placeX(cell) {
+    if (!isPlayerTurn) {
+        alert("Nem a te köröd van!");
+        return;
+    }
     var cellId = cell.id;
     if (canPlaceShips) {
         alert("Előbb helyezd el a hajókat majd nyomj a Start gombra!");
@@ -75,9 +89,13 @@ function placeX(cell) {
         playerHit++;
         isEnd();
         console.log('PLAYER HIT ' + playerHit + ' : ' + enemyHit + ' ENEMY HIT' )
+        isPlayerTurn = true; // Ezt beállítjuk, ha a játékos talált
+        isEnemyTurn = false;
     } else {
         // Ha a találat nem hajóra esett, játssza le a vízcsepp hangot
         playWaterDropSound();
+        isPlayerTurn = false; // Ezzel jelezzük, hogy az ellenfél jön
+        isEnemyTurn = true;
     }
 
 
@@ -104,5 +122,61 @@ function placeX(cell) {
             JSON.stringify(hitCoordinates)
         );
         console.log("Hit was sent to server:", hitCoordinates.coordinates);
+    }
+    function placeBlueXAutomatically(message) {
+        if (!isEnemyTurn) {
+            return;
+        }
+
+        setTimeout(function () {
+            var convertedMessageObject = JSON.parse(message);
+            var randomRow = convertedMessageObject.coordinates[0];
+            var randomColumn = convertedMessageObject.coordinates[1];
+            var cellId ='cell-' + randomRow + '-' + randomColumn;
+
+            if (generatedPositions.includes(cellId)) {
+                gettingRandomShotsFromServer();
+                return;
+            }
+
+            var blueX = document.createElement("span");
+            blueX.className = "blue-x";
+            blueX.textContent = "X";
+
+            var cell = document.getElementById(cellId);
+            cell.appendChild(blueX);
+
+            if (cell.textContent.includes("S")) {
+                cell.style.backgroundColor = "red";
+                playHitSound();
+                enemyHit++;
+                isEnd();
+                console.log('PLAYER HIT ' + playerHit + ' : ' + enemyHit + ' ENEMY HIT' );
+                // Ha az ellenfél talált, marad az ő köre
+                isEnemyTurn = true;
+                isPlayerTurn = false;
+                // Itt visszatérünk, hogy újabb lövést végezzen az ellenfél
+                gettingRandomShotsFromServer();
+            } else {
+                playWaterDropSound();
+                // Ha az ellenfél nem talált, akkor az ő köre véget ért
+                isEnemyTurn = false;
+                isPlayerTurn = true;
+            }
+
+            generatedPositions.push(cellId);
+        }, 800);
+
+        function playWaterDropSound() {
+            var waterDropSound = document.getElementById('waterDropSound');
+            waterDropSound.play();
+        }
+    }
+
+    function gettingRandomShotsFromServer() {
+        stompClient.subscribe('/app/generatedShot', function (message) {
+            console.log("EZ ITT BENYER KOORDINÁTA: " + message.body);
+            placeBlueXAutomatically(message.body);
+        });
     }
 }

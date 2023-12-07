@@ -92,9 +92,6 @@ public class WebSocketController {
             if (hit) {
                 game.setPlayerScore(game.getPlayerScore() + 1);
                 System.out.println("Player " + game.getPlayerScore() + " : " + game.getEnemyScore() + " Enemy");
-                if (gameService.isGameFinished(userId)) {
-                    sendEnd(principal);
-                }
             }
             return shotCoordinate;
         }
@@ -114,9 +111,6 @@ public class WebSocketController {
             if (hit) {
                 game.setEnemyScore(game.getEnemyScore() + 1);
                 System.out.println("Player " + game.getPlayerScore() + " : " + game.getEnemyScore() + " Enemy");
-                if (gameService.isGameFinished(userId)) {
-                    sendEnd(principal);
-                }
             }
             return generatedShot;
         }
@@ -131,6 +125,21 @@ public class WebSocketController {
     }
 
 
+
+    @SubscribeMapping("/end")
+    public String sendEnd(Principal principal){
+        Long userId = getUserIdFromPrincipal(principal);
+        System.out.println(gameService.whoIsTheWinner(userId));
+        if (gameService.whoIsTheWinner(userId).equals("You win")) {
+            addScoreToPrincipal(principal);
+            return gameService.whoIsTheWinner(userId);
+        } else if (gameService.whoIsTheWinner(userId).equals("You lose")){
+            addLossToPrincipal(principal);
+            return gameService.whoIsTheWinner(userId);
+        }
+        return null;
+    }
+
     private Long getUserIdFromPrincipal(Principal principal) {
         if (principal instanceof Authentication) {
             Authentication authentication = (Authentication) principal;
@@ -141,18 +150,6 @@ public class WebSocketController {
             }
         }
         return null;
-    }
-    @SubscribeMapping("/end")
-    public String sendEnd(Principal principal) {
-        Long userId = getUserIdFromPrincipal(principal);
-        System.out.println(gameService.whoIsTheWinner(userId));
-        if (gameService.whoIsTheWinner(userId).equals("You win")) {
-            addScoreToPrincipal(principal);
-        } else {
-            addLossToPrincipal(principal);
-        }
-
-        return gameService.whoIsTheWinner(userId);
     }
 
     private void addScoreToPrincipal(Principal principal) {
@@ -165,6 +162,8 @@ public class WebSocketController {
                 System.out.println("The score before winning: " + user.getUserProfile().getScore());
                 user.getUserProfile().setScore(user.getUserProfile().getScore() + 20);
                 user.getUserProfile().setWins(user.getUserProfile().getWins() + 1);
+                double winloss = gameService.winLossRation(user.getUserProfile().getWins(), user.getUserProfile().getLosses());
+                user.getUserProfile().setWinLossRatio(winloss);
                 userProfileService.addUserProfile(user.getUserProfile());
                 System.out.println("And after winning: " + user.getUserProfile().getScore());
             }
@@ -176,8 +175,11 @@ public class WebSocketController {
             Authentication authentication = (Authentication) principal;
             Object principalObj = authentication.getPrincipal();
             if (principalObj instanceof User) {
-                User user = (User) principalObj;
+                Long userId = ((User) principalObj).getId();
+                User user = userService.getUserById(userId).orElse(null);
                 user.getUserProfile().setLosses(user.getUserProfile().getLosses() + 1);
+                double winloss = gameService.winLossRation(user.getUserProfile().getWins(), user.getUserProfile().getLosses());
+                user.getUserProfile().setWinLossRatio(winloss);
                 userProfileService.addUserProfile(user.getUserProfile());
             }
         }

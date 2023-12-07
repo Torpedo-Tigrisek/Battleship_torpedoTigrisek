@@ -70,4 +70,10 @@ public class PageController {
         model.addAttribute("userprofile", userProfileService.getUserProfileById(userProfileId));
         return "/profile";
     }
+
+    @GetMapping("/how_to_play")
+    public String getHowToPlay() {
+        return "/how_to_play";
+    }
+
 }

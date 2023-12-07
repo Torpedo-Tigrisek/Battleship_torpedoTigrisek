@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.*;
 
 @Service
 @Data
@@ -29,17 +30,18 @@ public class GameService {
 
     public void startNewGameForUser(Long userId) {
 
-        if (userId != null) {
-            Game game = newGame(userId);
-            userGame.put(userId, game);
-            logMapState("startNewGameForUser");
-            System.out.println("New game started for user ID: " + userId + ", Game: " + game);
-            initializeEnemyShips(userId);
+            if (userId != null) {
+                Game game = newGame(userId);
+                userGame.put(userId, game);
+                logMapState("startNewGameForUser");
+                System.out.println("New game started for user ID: " + userId + ", Game: " + game);
+                initializeEnemyShips(userId);
+            }
         }
-    }
-    private void logMapState(String startNewGameForUser) {
-        System.out.println("Map state after " + startNewGameForUser + ": " + userGame);
-    }
+
+        private void logMapState (String startNewGameForUser){
+            System.out.println("Map state after " + startNewGameForUser + ": " + userGame);
+        }
 
 
     public Long getCurrentUserId() {
@@ -70,32 +72,32 @@ public class GameService {
         return game;
     }
 
-    public void initializeEnemyShips(Long userId) {
-        Game game = userGame.get(userId);
-        if (game != null) {
-            if (game.getEnemyShips() == null) {
-                game.setEnemyShips(new ArrayList<>());
-            }
-
-            List<Ship> enemyShips = generateShips(userId);
-
-            for (Ship ship : enemyShips) {
-                if (shipPlacementService.placeShipRandomly(game.getEnemyBoard(), ship)) {
-                    game.getEnemyShips().add(ship);
+        public void initializeEnemyShips (Long userId){
+            Game game = userGame.get(userId);
+            if (game != null) {
+                if (game.getEnemyShips() == null) {
+                    game.setEnemyShips(new ArrayList<>());
                 }
-            }
 
-            System.out.println("Enemy ships:" + game.getEnemyShips());
-        } else {
-            System.out.println("Game not initialized for user");
+                List<Ship> enemyShips = generateShips(userId);
+
+                for (Ship ship : enemyShips) {
+                    if (shipPlacementService.placeShipRandomly(game.getEnemyBoard(), ship)) {
+                        game.getEnemyShips().add(ship);
+                    }
+                }
+
+                System.out.println("Enemy ships:" + game.getEnemyShips());
+            } else {
+                System.out.println("Game not initialized for user");
+            }
         }
-    }
 
 
 
     public List<Ship> generateShips(Long userId) {
 
-        Game game = userGame.get(userId);
+            Game game = userGame.get(userId);
 
         List<Ship> ships = new ArrayList<>();
         for (ShipType type : game.getShipTypes()) {
@@ -105,8 +107,8 @@ public class GameService {
         return ships;
     }
 
-    public void placeAllShips(Long userId) {
-        // Hajókat újra lerakjuk a listából
+        public void placeAllShips (Long userId){
+            // Hajókat újra lerakjuk a listából
 
         Game game = userGame.get(userId);
         for (ShipType shipType : game.getRemainingShips()) {
@@ -117,28 +119,28 @@ public class GameService {
         }
     }
 
-    public void resetGame(Long userId) {
+        public void resetGame (Long userId){
 
-        Game game = userGame.get(userId);
-        // Hajólista törlése
-        game.getShips().clear();
+            Game game = userGame.get(userId);
+            // Hajólista törlése
+            game.getShips().clear();
 
-        // Tábla törlése
-        shipPlacementService.clearShips(game.getPlayerBoard());
-        shipPlacementService.clearShips(game.getEnemyBoard());
+            // Tábla törlése
+            shipPlacementService.clearShips(game.getPlayerBoard());
+            shipPlacementService.clearShips(game.getEnemyBoard());
 
-        resetRemainingShips(userId);
-    }
+            resetRemainingShips(userId);
+        }
 
-    public void resetRemainingShips(Long userId) {
+        public void resetRemainingShips (Long userId){
 
-        Game game = userGame.get(userId);
-        game.setRemainingShips(Arrays.asList(
-                ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE,
-                ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
-                ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER
-        ));
-    }
+            Game game = userGame.get(userId);
+            game.setRemainingShips(Arrays.asList(
+                    ShipType.CRUISER, ShipType.SUBMARINE, ShipType.SUBMARINE,
+                    ShipType.DESTROYER, ShipType.DESTROYER, ShipType.DESTROYER,
+                    ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER, ShipType.ATTACKER
+            ));
+        }
 
     public void fixShipPositions(Long userId) {
         Game game = userGame.get(userId);
@@ -147,16 +149,16 @@ public class GameService {
         }
     }
 
-    public String whoIsTheWinner(Long userId) {
+        public String whoIsTheWinner (Long userId){
 
-        Game game = userGame.get(userId);
-        if (game.getPlayerScore() == 20) {
-            return "You win";
-        } else if (game.getEnemyScore() == 20) {
-            return "You lose";
+            Game game = userGame.get(userId);
+            if (game.getPlayerScore() == 20) {
+                return "You win";
+            } else if (game.getEnemyScore() == 20) {
+                return "You lose";
+            }
+            return null;
         }
-        return null;
-    }
 
     public boolean isGameFinished(Long userId) {
         Game game = userGame.get(userId);
@@ -203,20 +205,20 @@ public class GameService {
     }
 
 
-    public boolean evaluateGeneratedShot(ShotCoordinate generatedShot, Long userId) {
+        public boolean evaluateGeneratedShot (ShotCoordinate generatedShot, Long userId){
 
-        Game game = userGame.get(userId);
-        int y = Integer.parseInt(generatedShot.getCoordinates().get(0));
-        int x = Integer.parseInt(generatedShot.getCoordinates().get(1));
-        for (Ship actual : game.getShips()) {
-            for (int i = 0; i < actual.getCoordinates().size(); i++) {
-                if ((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)) {
-                    return true;
+            Game game = userGame.get(userId);
+            int y = Integer.parseInt(generatedShot.getCoordinates().get(0));
+            int x = Integer.parseInt(generatedShot.getCoordinates().get(1));
+            for (Ship actual : game.getShips()) {
+                for (int i = 0; i < actual.getCoordinates().size(); i++) {
+                    if ((actual.getCoordinates().get(i).getX() == x) && (actual.getCoordinates().get(i).getY() == y)) {
+                        return true;
+                    }
                 }
             }
+            return false;
         }
-        return false;
-    }
 
     public boolean isGeneratedShotAlreadyBeenShot(ShotCoordinate generatedShot, Long userId) {
         Game game = userGame.get(userId);
@@ -227,5 +229,14 @@ public class GameService {
         return userGame;
     }
 
+        public double winLossRation(int win, int loss){
+            if(loss == 0){
+                return win;
+            } else {
+                return ((double) win) /loss;
+            }
+        }
+
 
 }
+
