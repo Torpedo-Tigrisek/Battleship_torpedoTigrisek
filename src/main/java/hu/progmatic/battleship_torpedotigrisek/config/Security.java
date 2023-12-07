@@ -50,16 +50,15 @@ public class Security {
 
                 )
                 .formLogin()
-
-
-                .defaultSuccessUrl("/home") // ide majd kell egy bejelentkezett felhasználói home page
-                .permitAll()
+                    .loginPage("/login")
+                        .defaultSuccessUrl("/home") // ide majd kell egy bejelentkezett felhasználói home page
+                    .permitAll()
                 .and()
                 .logout()
-                .logoutSuccessUrl("/home")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .permitAll();
+                    .logoutSuccessUrl("/home")
+                    .invalidateHttpSession(true)
+                    .deleteCookies("JSESSIONID")
+                    .permitAll();
         return http.build();
     }
 
