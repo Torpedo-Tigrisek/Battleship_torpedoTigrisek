@@ -140,9 +140,9 @@ function placeX(cell) {
             if (cell.textContent.includes("S")) {
                 cell.style.backgroundColor = "red";
                 playHitSound();
-                isEnd();
                 console.log('PLAYER HIT ' + playerHit + ' : ' + enemyHit + ' ENEMY HIT' );
                 enemyHit++;
+                isEnd();
                 isEnemyTurn = true;
                 isPlayerTurn = false;
                 gettingRandomShotsFromServer();
