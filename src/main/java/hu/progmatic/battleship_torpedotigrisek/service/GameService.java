@@ -154,7 +154,7 @@ public class GameService {
             } else if (game.getEnemyScore() == 20) {
                 return "You lose";
             }
-            return null;
+            return "You win";
         }
 
     public boolean isGameFinished(Long userId) {
