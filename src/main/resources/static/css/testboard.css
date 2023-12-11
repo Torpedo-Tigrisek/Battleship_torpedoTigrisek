@@ -155,5 +155,5 @@ label {
     transform: translateY(.125rem);
 }
 .opponent-table-cell.ship {
-    background-color: rgba(229, 234, 234, 0.94);
+    background-color: rgb(255, 255, 255);
 }
