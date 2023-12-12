@@ -120,13 +120,13 @@ public class WebSocketController {
     @SubscribeMapping("/end")
     public String sendEnd(Principal principal){
         Long userId = getUserIdFromPrincipal(principal);
-        System.out.println(gameService.whoIsTheWinner(userId));
-        if (gameService.whoIsTheWinner(userId).equals("You win")) {
+        String winLose = gameService.whoIsTheWinner(userId);
+        if (winLose.equals("You win")) {
             addScoreToPrincipal(principal);
-            return gameService.whoIsTheWinner(userId);
-        } else if (gameService.whoIsTheWinner(userId).equals("You lose")){
+            return winLose;
+        } else if (winLose.equals("You lose")){
             addLossToPrincipal(principal);
-            return gameService.whoIsTheWinner(userId);
+            return winLose;
         }
         return null;
     }

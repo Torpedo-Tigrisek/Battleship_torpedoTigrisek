@@ -149,9 +149,10 @@ public class GameService {
         public String whoIsTheWinner (Long userId){
 
             Game game = userGame.get(userId);
-            if (game.getPlayerScore() == 20) {
+            System.out.println(game);
+            if (game.getPlayerScore() == 20 || game.getPlayerScore() == 19) {
                 return "You win";
-            } else if (game.getEnemyScore() == 20) {
+            } else if (game.getEnemyScore() == 20 || game.getEnemyScore() == 19) {
                 return "You lose";
             }
             return null;
