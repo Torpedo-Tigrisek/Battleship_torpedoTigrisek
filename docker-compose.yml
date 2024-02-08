@@ -1,0 +1,50 @@
+version: '3.3'
+
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    networks:
+      - battleship-net
+    environment:
+      MYSQL_DATABASE: 'battleship'
+      MYSQL_USER: 'service'
+      MYSQL_PASSWORD: 'Asdf1234'
+      MYSQL_ROOT_PASSWORD: 'root'
+    volumes:
+      - ./battleship.sql:/docker-entrypoint-initdb.d/1.sql
+      - battleship-database:/var/lib/mysql
+
+  application:
+    build: .
+    restart: always
+    networks:
+      - battleship-net
+    environment:
+      - spring.datasource.url=jdbc:mysql://mysql:3306/battleship
+    ports:
+      - '8080:8080'
+    expose:
+      - '8080'
+    depends_on:
+      - mysql
+
+  tunnel:
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    environment:
+      NGROK_AUTHTOKEN: '2YDpOxIZvgEQKmCDuTVO1sd64x2_2jU1bqs4PQS2kspgT5pgD'
+    networks:
+      - battleship-net
+    command:
+      - "http"
+      - "application:8080"
+      - "--domain=delicate-sponge-moral.ngrok-free.app"
+    ports:
+      - '4040:4040'
+
+volumes:
+  battleship-database:
+
+networks:
+  battleship-net:
